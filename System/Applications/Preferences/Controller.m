@@ -48,7 +48,7 @@ static const char rcsid[] =
 
 @implementation Controller
 
-- (BOOL) application: (NSApplication *) app openFile: (NSString *) filename;
+- (BOOL) application: (NSApplication *) app openFile: (NSString *) filename
 {
 	BundleController	*bundler = [BundleController sharedBundleController];
 
