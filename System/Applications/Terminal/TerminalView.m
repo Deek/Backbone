@@ -1630,7 +1630,6 @@ Handle master_fd
 -(void) writePendingData
 {
 	int l,new_size;
-	printf("%i bytes pending\n",write_buf_len);
 	l=write(master_fd,write_buf,write_buf_len);
 	if (l<0)
 	{
