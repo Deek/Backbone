@@ -41,11 +41,6 @@
 // size of a Prefs view
 #define PrefsRect NSMakeRect (0, 0, 400, 196)
 
-// forward-declare our protocols
-@protocol PrefsApplication;
-@protocol PrefsController;
-@protocol PrefsModule;
-
 /*
 	This protocol defines the public interface that PrefsModules use to
 	communicate with the application's preferences module controller.
