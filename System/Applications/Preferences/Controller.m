@@ -35,6 +35,7 @@ static const char rcsid[] =
 
 #import <Foundation/NSDebug.h>
 #import <Foundation/NSPathUtilities.h>
+#import <Foundation/NSUserDefaults.h>
 
 #import <AppKit/NSApplication.h>
 #import <AppKit/NSMenu.h>
@@ -98,6 +99,11 @@ static const char rcsid[] =
 */
 - (void) applicationDidFinishLaunching: (NSNotification *) not;
 {
+	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
+
+	if ([defaults boolForKey: @"NXAutoLaunch"]
+			|| [defaults boolForKey: @"GSAutoLaunch"])
+		[NSApp hide: self];
 }
 
 /*
