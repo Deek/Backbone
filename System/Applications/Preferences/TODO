@@ -1,0 +1,17 @@
+LEGEND:
+* = To do
+? = Maybe
+I = in progress
+T = Needs testing
+W = waiting on other work
+X = Done
+
+? Do something neat with the appicon, like NeXT's clock (wmCalClock?)
+? UNIX module, to set things in Workspace
+* Colors module
+* Date/Time module
+* Fonts module
+* Localization (setting preferred language(s))
+* Mouse module (accel speed, double-click delay, menu button)
+* Services module, to deactivate/activate services
+* User Interface module (InterfaceStyle stuff, Open/Save panels, ...)

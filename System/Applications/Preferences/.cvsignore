@@ -1,4 +1,8 @@
+*-stamp
 *.app
+*.tar.bz2
+*.tar.gz
+ChangeLog
 obj
 shared_debug_obj
 shared_obj

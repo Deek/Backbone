@@ -34,12 +34,17 @@ SUBPROJECTS=	\
 	PrefsModule \
 	Modules/PrefsApp \
 	Modules/Keyboard
-
+#
+# Distribution information
+#
+CVS_MODULE_NAME=	Preferences
+CVS_FLAGS=		-d:pserver:anonymous@cvs.quakeforge.net:/cvsroot/prefsapp
 #
 # Main application
 #
 PACKAGE_NAME=		Preferences
 APP_NAME=		Preferences
+VERSION=		1.1.0
 Preferences_PRINCIPAL_CLASS=	NSApplication
 Preferences_APPLICATION_ICON=	Preferences.tiff
 

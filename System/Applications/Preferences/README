@@ -108,9 +108,3 @@ the current module.
 - (BOOL) setCurrentModule: (id) aPrefsModule;
 
 Use this to set yourself to be the current prefs module.
-
-3. To do:
-~~~~~~~~~
-* Need to write more modules
-* Maybe add some more functionality to the window.
-* Do something neat with the icon, like a clock or something.
