@@ -154,22 +154,15 @@ static id <PrefsModule>	currentModule = nil;
 	return currentModule;
 }
 
-/*
-	Note: This is ugly.
-*/
-#ifndef NeXT_RUNTIME
-extern BOOL __objc_responds_to (id, SEL);
-#endif
-
 - (BOOL) respondsToSelector: (SEL) aSelector
 {
 	if (!aSelector)
 		return NO;
 
-	if (__objc_responds_to (self, aSelector))
+	if ([[self class] instancesRespondToSelector: aSelector])
 		return YES;
 
-	if ([self methodSignatureForSelector: aSelector])
+	if (currentModule && [currentModule respondsToSelector: aSelector])
 		return YES;
 
 	return NO;
@@ -186,7 +179,7 @@ extern BOOL __objc_responds_to (id, SEL);
 		return nil;
 
 	if ([currentModule respondsToSelector: aSelector])
-		return [(id)currentModule methodSignatureForSelector: aSelector];
+		return [(NSObject *)currentModule methodSignatureForSelector: aSelector];
 
 	return nil;
 }
