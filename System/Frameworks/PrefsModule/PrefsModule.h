@@ -37,7 +37,7 @@
 #import <AppKit/NSButtonCell.h>
 
 // size of a Prefs view
-#define PrefsRect NSMakeRect (0, 0, 486, 228)
+#define PrefsRect NSMakeRect (0, 0, 384, 176)
 
 @protocol PrefsController <NSObject>
 
@@ -61,10 +61,6 @@
 	Call [[owner prefsController] registerPrefsModule: self] here
 */
 - (id) initWithOwner: (id <PrefsApplication>) anOwner;
-
-- (void) savePrefs: (id) sender;
-- (void) loadPrefs: (id) sender;
-- (void) resetPrefsToDefault: (id) sender;
 
 - (NSString *) buttonCaption;
 - (NSImage *) buttonImage;
