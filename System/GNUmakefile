@@ -14,3 +14,9 @@ SUBPROJECTS= \
 	Tools/open
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
+
+changelog: ChangeLog
+ChangeLog:
+	cvs2cl --stdout -b --utc -U .misc/logNames.txt > $@
+
+.PHONY: changelog ChangeLog
