@@ -83,7 +83,7 @@ static const char rcsid[] =
 	if (result == NSOKButton) {		// got a new dir
 		NSArray		*pathArray = [oPanel filenames];
 
-		[bundler loadBundleWithPath: [pathArray objectAtIndex:0]];
+		[bundler loadBundleWithPath: [pathArray objectAtIndex: 0]];
 	}
 }
 
