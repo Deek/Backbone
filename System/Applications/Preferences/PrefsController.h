@@ -31,28 +31,31 @@
 # include "Config.h"
 #endif
 
+#import <AppKit/NSNibDeclarations.h>
 #import <AppKit/NSWindowController.h>
 #import <AppKit/NSBox.h>
+#import <AppKit/NSMatrix.h>
+#import <AppKit/NSScrollView.h>
+#import <AppKit/NSWindow.h>
 
 #import <PrefsModule/PrefsModule.h>
 
-@interface PrefsController: NSWindowController <PrefsController>
+@interface PrefsController: NSObject <PrefsController>
 {
-	IBOutlet NSWindow	*window;
-	IBOutlet NSBox		*prefsViewBox;
+	IBOutlet NSBox			*prefsViewBox;
+	IBOutlet NSScrollView	*iconScrollView;
+	IBOutlet NSMatrix		*iconList;
+	IBOutlet NSWindow		*window;
+	IBOutlet id				owner;
 }
 
 + (PrefsController *) sharedPrefsController;
+- (id) init;
 - (void) dealloc;
 
 /*
 	Notification methods
 */
 - (void) windowWillClose: (NSNotification *) aNotification;
-
-/***
-	Stuff we do in our subclass
-***/
-- (id) initWithWindowNibName: (NSString *) windowNibName;
 
 @end

@@ -44,6 +44,7 @@ static const char rcsid[] =
 @interface Keyboard (Private)
 
 - (void) updateUI;
+- (void) preferencesFromDefaults;
 
 @end
 
@@ -184,6 +185,7 @@ static id <PrefsApplication>	owner = nil;
 		controller = [owner prefsController];
 		defaults = [NSUserDefaults standardUserDefaults];
 		domain = [[defaults persistentDomainForName: NSGlobalDomain] mutableCopy];
+		[self preferencesFromDefaults];
 
 		[controller registerPrefsModule: self];
 		if (![NSBundle loadNibNamed: @"Keyboard" owner: self]) {
@@ -218,6 +220,7 @@ static id <PrefsApplication>	owner = nil;
 				[obj addItemsWithTitles: commonMenu()];
 			}
 		}
+//		[popups autorelease];
 		[self updateUI];
 
 		sharedInstance = self;

@@ -1,5 +1,7 @@
 *-stamp
 *.app
+*.debug
+*.profile
 *.tar.bz2
 *.tar.gz
 ChangeLog

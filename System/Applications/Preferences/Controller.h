@@ -39,8 +39,13 @@
 
 #import <PrefsModule/PrefsModule.h>
 
+#import "BundleController.h"
+#import "PrefsController.h"
+
 @interface Controller: NSObject <PrefsApplication>
 {
+	IBOutlet BundleController		*bundleController;
+	IBOutlet PrefsController		*prefsController;
 }
 
 // App delegate methods
@@ -54,7 +59,6 @@
 - (void) applicationWillTerminate: (NSNotification *) not;
 
 // Action methods
-- (IBAction) infoPanel: (id) sender;
 - (IBAction) open: (id) sender;
 
 @end

@@ -37,6 +37,8 @@ static const char rcsid[] =
 #import <Foundation/NSDebug.h>
 #import <Foundation/NSFileManager.h>
 #import <Foundation/NSPathUtilities.h>
+#import <Foundation/NSUserDefaults.h>
+
 #import <AppKit/NSPanel.h>
 
 #import "BundleController.h"
@@ -147,8 +149,9 @@ static BundleController *	sharedInstance = nil;
 			Fire off the notification if we have a delegate that adopts the
 			PrefsApplication protocol
 		*/
-		if (delegate && [delegate conformsToProtocol: @protocol(PrefsApplication)])
+		if (delegate && [delegate conformsToProtocol: @protocol(PrefsApplication)]) {
 			[(id <PrefsApplication>) delegate moduleLoaded: bundle];
+		}
 		[loadedBundles setObject: bundle forKey: [[bundle infoDictionary] objectForKey: @"NSExecutable"]];
 		return YES;
 	}

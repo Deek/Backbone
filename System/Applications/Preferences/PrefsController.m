@@ -33,13 +33,14 @@ static const char rcsid[] =
 # include "Config.h"
 #endif
 
+#import <Foundation/NSDebug.h>
+
 #import <AppKit/NSApplication.h>
 #import <AppKit/NSNibLoading.h>
 
 #import <PrefsModule/PrefsModule.h>
 
 #import "PrefsController.h"
-#import "PrefsWindow.h"
 
 @implementation PrefsController
 
@@ -49,44 +50,47 @@ static id <PrefsModule>	currentModule = nil;
 
 + (PrefsController *) sharedPrefsController
 {
-	return (sharedInstance ? sharedInstance : [[self alloc] initWithWindowNibName: @"PrefsWindow"]);
+	return (sharedInstance ? sharedInstance : [[self alloc] init]);
 }
 
-- (id) initWithWindowNibName: (NSString *) windowNibName
+- (id) init
 {
-	PrefsWindow	*theWindow = nil;
-
 	if (sharedInstance) {
 		[self dealloc];
 	} else {
-		if (![NSBundle loadNibNamed: windowNibName owner: self]) {
-			NSDebugLog (@"PrefsController: Could not load nib \"%@\", using compiled-in version", windowNibName);
-			theWindow = [[PrefsWindow alloc]
-						initWithContentRect: NSMakeRect (250, 250, 400, 302)
-						styleMask: NSTitledWindowMask
-						backing: NSBackingStoreBuffered
-						defer: YES
-					  ];
-			self = [super initWithWindow: theWindow];
-			[theWindow initUI];
-
-			// connect our outlets
-			window = theWindow;
-			prefsViewBox = [theWindow prefsViewBox];
-
-			[theWindow setMinSize: [theWindow frame].size];
-			[theWindow setDelegate: self];
-
-			[theWindow release];
-		} else {
-			self = [super initWithWindow: window];
-		}
-		[window setTitle: _(@"GNUstep Preferences")];
-
+		self = [super init];
 		prefsViews = [[[NSMutableArray alloc] initWithCapacity: 5] retain];
 	}
 	sharedInstance = self;
 	return sharedInstance;	
+}
+
+/*
+	awakeFromNib
+
+	Initialize stuff that can't be set in the nib/gorm file.
+*/
+- (void) awakeFromNib
+{
+	// Let the systen keep track of where it belongs
+	[window setFrameAutosaveName: @"Preferences"];
+	[window setFrameUsingName: @"Preferences"];
+
+	// keep the window out of the menu until it's seen
+	[window setExcludedFromWindowsMenu: YES];
+
+	if (iconList)	// stop processing if we already have an icon list
+		return;
+
+	/* What is the matrix? :) */
+	iconList = [[NSMatrix alloc] initWithFrame: NSMakeRect (0, 0, 64*30, 64)];
+	[iconList setCellClass: [NSButtonCell class]];
+	[iconList setCellSize: NSMakeSize (64, 64)];
+	[iconList setMode: NSRadioModeMatrix];
+
+	[iconScrollView setDocumentView: iconList];
+	[iconScrollView setHasHorizontalScroller: YES];
+	[iconScrollView setHasVerticalScroller: NO];
 }
 
 - (void) dealloc
@@ -103,17 +107,28 @@ static id <PrefsModule>	currentModule = nil;
 
 - (BOOL) registerPrefsModule: (id <PrefsModule>) aPrefsModule;
 {
-	PrefsWindow		*prefsWindow = (PrefsWindow *) [self window];
+	NSButtonCell	*button = [[NSButtonCell alloc] init];
 
 	if (!aPrefsModule)
 		return NO;
 
 	if (! [prefsViews containsObject: aPrefsModule]) {
 		[prefsViews addObject: aPrefsModule];
-		[aPrefsModule autorelease];
 	}
 
-	[prefsWindow addPrefsViewButton: aPrefsModule];
+	[button setTitle: [aPrefsModule buttonCaption]];
+	[button setFont: [NSFont systemFontOfSize: 9]];
+	[button setImage: [aPrefsModule buttonImage]];
+	[button setImagePosition: NSImageOnly];
+	[button setHighlightsBy: NSChangeBackgroundCellMask];
+	[button setShowsStateBy: NSChangeBackgroundCellMask];
+	[button setTarget: aPrefsModule];
+	[button setAction: [aPrefsModule buttonAction]];
+
+	[iconList addColumnWithCells: [NSArray arrayWithObject: button]];
+	[iconList sizeToCells];
+
+	[aPrefsModule autorelease];
 	return YES;
 }
 
@@ -126,6 +141,11 @@ static id <PrefsModule>	currentModule = nil;
 	[prefsViewBox setContentView: [currentModule view]];
 	[window setTitle: [currentModule buttonCaption]];
 	return YES;
+}
+
+- (id) window;
+{
+	return window;
 }
 
 - (id) currentModule;

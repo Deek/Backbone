@@ -34,6 +34,10 @@ static const char rcsid[] =
 # include "Config.h"
 #endif
 
+#import <Foundation/NSDebug.h>
+#import <Foundation/NSUserDefaults.h>
+#import <Foundation/NSValue.h>
+
 #import <AppKit/NSButton.h>
 #import <AppKit/NSNibLoading.h>
 #import <AppKit/NSOpenPanel.h>
@@ -78,12 +82,30 @@ static BOOL
 getBoolDefault (NSMutableDictionary *dict, NSString *name)
 {
 	NSString	*str = [[NSUserDefaults standardUserDefaults] stringForKey: name];
-	NSNumber	*num;
+	NSNumber	*num = nil;
 
-	if (!str)
-		str = [[defaultValues() objectForKey: name] stringValue];
+	if (!str) {	// not in the database, get it from our internals
+		num = [defaultValues() objectForKey: name];
+	} else {
+		NSArray			*trues = [[NSArray alloc] initWithObjects:
+							@"YES", @"Yes", @"Y", @"yes",	// things that eval to YES
+							@"TRUE", @"True", @"true",
+							@"1", nil];
+		NSEnumerator	*list;
+		id				temp;
 
-	num = [NSNumber numberWithBool: [str hasPrefix: @"Y"]];
+		list = [trues objectEnumerator];
+		while ((temp = [list nextObject])) {
+			if ([str isEqualToString: temp]) {
+				num = [NSNumber numberWithBool: YES];
+				break;
+			}
+		}
+
+		if (!num)
+			num = [NSNumber numberWithBool: NO];
+	}
+
 	[dict setObject: num forKey: name];
 
 	return [num boolValue];

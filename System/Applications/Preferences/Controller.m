@@ -1,5 +1,5 @@
 /*
-	Controller.h
+	Controller.m
 
 	Application controller class
 
@@ -33,6 +33,9 @@ static const char rcsid[] =
 # include "Config.h"
 #endif
 
+#import <Foundation/NSDebug.h>
+#import <Foundation/NSPathUtilities.h>
+
 #import <AppKit/NSApplication.h>
 #import <AppKit/NSMenu.h>
 #import <AppKit/NSOpenPanel.h>
@@ -65,11 +68,6 @@ static const char rcsid[] =
 /*
 	Action methods
 */
-- (void) infoPanel: (id) sender;
-{
-	[NSApp orderFrontStandardAboutPanel: self];
-}
-
 - (void) open: (id) sender;
 {
 	BundleController	*bundler = [BundleController sharedBundleController];
@@ -100,8 +98,6 @@ static const char rcsid[] =
 */
 - (void) applicationDidFinishLaunching: (NSNotification *) not;
 {
-	NSDebugLog (@"Showing window...");
-	[[PrefsController sharedPrefsController] showWindow: self];
 }
 
 /*
@@ -112,77 +108,20 @@ static const char rcsid[] =
 - (void) applicationWillFinishLaunching: (NSNotification *) not;
 {
 	NSMenu		*menu = [NSApp mainMenu];
-	NSMenu		*infoMenu;
-	NSMenu		*editMenu;
-	NSMenu		*windowsMenu;
-
-	[menu addItemWithTitle: _(@"Info")		action: NULL	keyEquivalent: @""];
-	[menu addItemWithTitle: _(@"Edit")		action: NULL	keyEquivalent: @""];
-	[menu addItemWithTitle: _(@"Windows")	action: NULL	keyEquivalent: @""];
-
-	[menu addItemWithTitle: _(@"Hide")		action: @selector(hide:)	keyEquivalent: @"h"];
-	[menu addItemWithTitle: _(@"Quit")		action: @selector(terminate:)	keyEquivalent: @"q"];
-
-	/*
-		Info
-	*/
-	NSDebugLog (@"Info");
-	infoMenu = [[[NSMenu alloc] init] autorelease];
-	[menu setSubmenu: infoMenu	forItem: [menu itemWithTitle: _(@"Info")]];
-
-	[infoMenu addItemWithTitle: _(@"Info Panel...")
-						action: @selector (orderFrontStandardAboutPanel:)
-				 keyEquivalent: @""];
-	[infoMenu addItemWithTitle: _(@"Help")
-						action: @selector (orderFrontHelpPanel:)
-				 keyEquivalent: @"?"];
-
-	/*
-		Prefs
-	*/
-	NSDebugLog (@"Edit");
-	editMenu = [[[NSMenu alloc] init] autorelease];
-	[menu setSubmenu: editMenu	forItem: [menu itemWithTitle: _(@"Edit")]];
-
-	[editMenu addItemWithTitle: _(@"Cut")
-						 action: @selector (cut:)
-				  keyEquivalent: @"x"];
-	[editMenu addItemWithTitle: _(@"Copy")
-						 action: @selector (copy:)
-				  keyEquivalent: @"c"];
-	[editMenu addItemWithTitle: _(@"Paste")
-						 action: @selector (paste:)
-				  keyEquivalent: @"v"];
-	[editMenu addItemWithTitle: _(@"Select All")
-						 action: @selector (selectAll:)
-				  keyEquivalent: @"a"];
 
 	/*
 		Windows
 	*/
 	NSDebugLog (@"Windows");
-	windowsMenu = [[[NSMenu alloc] init] autorelease];
-	[menu setSubmenu: windowsMenu forItem: [menu itemWithTitle: _(@"Windows")]];
+	[NSApp setWindowsMenu: [[menu itemWithTitle: _(@"Windows")] submenu]];
 
-	[windowsMenu addItemWithTitle: _(@"Close window")
-						   action: @selector (performClose:)
-					keyEquivalent: @"w"];
-	[windowsMenu addItemWithTitle: _(@"Miniaturize window")
-						   action: @selector (performMiniaturize:)
-					keyEquivalent: @"m"];
-	[windowsMenu addItemWithTitle: _(@"Arrange in front")
-						   action: @selector (arrangeInFront:)
-					keyEquivalent: @""];
+	/*
+		Services
+	*/
+	NSDebugLog (@"Services");
+	[NSApp setServicesMenu: [[menu itemWithTitle: _(@"Services")] submenu]];
 
-	[NSApp setWindowsMenu: windowsMenu];
-
-	[PrefsController sharedPrefsController];
-	{	// yeah, yeah, shaddap
-		id	controller = [BundleController sharedBundleController];
-
-		[controller setDelegate: self];
-		[controller loadBundles];
-	}
+	[bundleController loadBundles];
 }
 
 /*
@@ -202,15 +141,21 @@ static const char rcsid[] =
 {
 	NSDictionary		*info = nil;
 
+	/*
+		Let's get paranoid about stuff we load... :)
+	*/
 	if (!aBundle) {
-		NSLog (@"Controller -bundleController: sent nil bundle");
+		NSLog (@"Controller moduleLoaded: sent nil bundle");
 		return;
 	}
 
-	info = [aBundle infoDictionary];
+	if (!(info = [aBundle infoDictionary])) {
+		NSLog (@"Bundle %@ has no info dictionary!", aBundle);
+		return;
+	}
 
-	if (!(info || [info objectForKey: @"NSExecutable"])) {
-		NSLog (@"%@ has no principal class and no info dictionary", aBundle);
+	if (![info objectForKey: @"NSExecutable"]) {
+		NSLog (@"Bundle %@ has no executable!", aBundle);
 		return;
 	}
 
@@ -218,15 +163,17 @@ static const char rcsid[] =
 		NSLog (@"Bundle `%@' has no principal class!", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
 		return;
 	}
+
 	if (![[aBundle principalClass] conformsToProtocol: @protocol(PrefsModule)]) {
 		NSLog (@"Bundle %@'s principal class does not conform to the PrefsModule protocol.", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
 		return;
-	}	
+	}
+
 	[[(id <PrefsModule>) [aBundle principalClass] alloc] initWithOwner: self];
 }
 
 - (id <PrefsController>) prefsController
 {
-	return [PrefsController sharedPrefsController];
+	return prefsController;
 }
 @end

@@ -44,7 +44,7 @@ CVS_FLAGS=		-d:pserver:anonymous@cvs.quakeforge.net:/cvsroot/prefsapp
 #
 PACKAGE_NAME=		Preferences
 APP_NAME=		Preferences
-VERSION=		1.1.0
+VERSION=		1.2.0
 Preferences_PRINCIPAL_CLASS=	NSApplication
 Preferences_APPLICATION_ICON=	Preferences.tiff
 
@@ -69,10 +69,10 @@ Preferences_RESOURCE_FILES= \
 	PrefsIcon_Mouse.tiff \
 	PrefsIcon_Screen.tiff \
 	PrefsIcon_SelectSpooler.tiff \
-	Preferences.gorm \
 	PreferencesInfo.plist
 
 Preferences_LOCALIZED_RESOURCE_FILES= \
+	Preferences.gorm \
 	Localizable.strings
 
 # Languages we're localized for
@@ -86,8 +86,7 @@ Preferences_HEADERS= \
 	Config.h \
 	BundleController.h \
 	Controller.h \
-	PrefsController.h \
-	PrefsWindow.h
+	PrefsController.h
 
 #
 # Class files
@@ -96,7 +95,6 @@ Preferences_OBJC_FILES= \
 	BundleController.m \
 	Controller.m \
 	PrefsController.m \
-	PrefsWindow.m \
 	main.m
 
 #
