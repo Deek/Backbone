@@ -152,8 +152,13 @@ static	NSImage		*month = nil;
 		[dow release];
 		[dom1 release];
 		[dom2 release];
+		dom1 = nil;
+
 		dow = NEW_IMAGE (([NSString stringWithFormat: @"Day-%d", _dow]));
-		dom1 = NEW_IMAGE (([NSString stringWithFormat: @"Date-%d", _dom / 10]));
+
+		if (_dom / 10)
+			dom1 = NEW_IMAGE (([NSString stringWithFormat: @"Date-%d", _dom / 10]));
+
 		dom2 = NEW_IMAGE (([NSString stringWithFormat: @"Date-%d", _dom % 10]));
 	}
 
@@ -212,26 +217,26 @@ static	NSImage		*month = nil;
 
 - (void) drawRect: (NSRect) aRect
 {
-	NSRect	maskRect;
 	NSSize	maskSize;
 	NSPoint	maskLoc;
 	NSPoint	location;
 	NSRect	bottomInsideRect;
 	NSRect	topInsideRect;
-	int		timeWidth;
+	NSRect	tempRect;
+	int		width;
 
 	maskSize = [mask size];
-	maskRect = NSInsetRect(aRect, (aRect.size.width - maskSize.width) / 2,
+	tempRect = NSInsetRect(aRect, (aRect.size.width - maskSize.width) / 2,
 								 (aRect.size.height - maskSize.height) / 2);
-	maskLoc = NSMakePoint (maskRect.origin.x, maskRect.origin.y);
+	maskLoc = NSMakePoint (tempRect.origin.x, tempRect.origin.y);
 
 	// Rect defining the inside of the "date" area
-	bottomInsideRect = NSMakeRect (maskRect.origin.x,
-								   maskRect.origin.y, 54, 35);
+	bottomInsideRect = NSMakeRect (tempRect.origin.x + 1,
+								   tempRect.origin.y + 1, 54, 35);
 
 	// Rect defining the inside of the "time" area
-	topInsideRect = NSMakeRect (maskRect.origin.x,
-								maskRect.origin.y + 40, 54, 15);
+	topInsideRect = NSMakeRect (tempRect.origin.x + 1,
+								tempRect.origin.y + 39, 54, 15);
 
 	// draw the tile and mask
 	if (drawsTile && tileImage)
@@ -250,13 +255,22 @@ static	NSImage		*month = nil;
 	[month compositeToPoint: location operation: NSCompositeSourceOver];
 
 	// day of month
-	location.x = bottomInsideRect.origin.x +
-				(bottomInsideRect.size.width / 2 - 
-				(([dom1 size].width + [dom2 size].width)/2) + 1) + 2;
-	location.y = bottomInsideRect.origin.y;
-	[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
+	width = [dom2 size].width;
+	if (dom1) {
+		width += [dom1 size].width;
+	}
 
-	location.x += [dom1 size].width;
+	tempRect = NSInsetRect (bottomInsideRect,
+							(bottomInsideRect.size.width - width) / 2,
+							0);
+
+	location.x = tempRect.origin.x + 2;
+	
+	if (dom1) {
+		location.y = tempRect.origin.y;
+		[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
+		location.x += [dom1 size].width;
+	}
 	[dom2 compositeToPoint: location operation: NSCompositeSourceOver];
 
 	/*
@@ -271,47 +285,48 @@ static	NSImage		*month = nil;
 		[ampm compositeToPoint: location operation: NSCompositeSourceOver];
 	}
 
-	timeWidth = 1 + [hour2 size].width + 1
-				+ [colon size].width + 1
-				+ [min1 size].width + 1
-				+ [min2 size].width;
-	if (hour1)
-		timeWidth += [hour1 size].width + 1;
+	width = 1 + [hour2 size].width + 1
+			+ [colon size].width + 1
+			+ [min1 size].width + 1
+			+ [min2 size].width;
 
-	topInsideRect = NSInsetRect (topInsideRect,
-								(topInsideRect.size.width - timeWidth) / 2,
-								0);
-	
-	location.x = topInsideRect.origin.x;
+	if (hour1)
+		width += [hour1 size].width + 1;
+
+	tempRect = NSInsetRect (topInsideRect,
+							(topInsideRect.size.width - width) / 2,
+							1);
+
+	location.x = tempRect.origin.x;
 
 	if (hour1) {
-		location.y = topInsideRect.origin.y +
-					(topInsideRect.size.height / 2 - 
+		location.y = tempRect.origin.y +
+					(tempRect.size.height / 2 - 
 					([hour1 size].height / 2)) + 1;
 		[hour1 compositeToPoint: location operation: NSCompositeSourceOver];
 		location.x += [hour1 size].width + 1;
 	}
 
-	location.y = topInsideRect.origin.y +
-				(topInsideRect.size.height / 2 - 
+	location.y = tempRect.origin.y +
+				(tempRect.size.height / 2 - 
 				([hour2 size].height / 2)) + 1;
 	[hour2 compositeToPoint: location operation: NSCompositeSourceOver];
 	location.x += [hour2 size].width + 1;
 
-	location.y = topInsideRect.origin.y +
-				(topInsideRect.size.height / 2 - 
+	location.y = tempRect.origin.y +
+				(tempRect.size.height / 2 - 
 				([colon size].height / 2));
 	[colon compositeToPoint: location operation: NSCompositeSourceOver];
 	location.x += [colon size].width + 1;
 
-	location.y = topInsideRect.origin.y +
-				(topInsideRect.size.height / 2 - 
+	location.y = tempRect.origin.y +
+				(tempRect.size.height / 2 - 
 				([min1 size].height / 2)) + 1;
 	[min1 compositeToPoint: location operation: NSCompositeSourceOver];
 	location.x += [min1 size].width + 1;
 
-	location.y = topInsideRect.origin.y +
-				(topInsideRect.size.height / 2 - 
+	location.y = tempRect.origin.y +
+				(tempRect.size.height / 2 - 
 				([min2 size].height / 2)) + 1;
 	[min2 compositeToPoint: location operation: NSCompositeSourceOver];
 }
