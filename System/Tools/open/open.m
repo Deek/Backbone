@@ -200,7 +200,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 				NSString	*newAppName = [args objectAtIndex: 0];
 
 				if (![opener openApp: newAppName]) {
-					printf ("Could not contact application \"%s\"", [appName cString]);
+					printf ("%s: could not contact application: %s", [name cString], [appName cString]);
 					exit (1);
 				}
 
@@ -214,7 +214,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 
 			if ([args count] < 2) {
 				doHelp = YES;
-				printf ("%s error: not enough arguments\n", [name cString]);
+				printf ("%s: not enough arguments\n", [name cString]);
 			} else {
 				openAs = YES;
 				openAsType = [args objectAtIndex: 0];
@@ -223,11 +223,19 @@ checkArgs (NSString *name, NSMutableArray *args)
 		} else if ([name hasSuffix: @".client"]) {
 			progMode = PM_APP;
 			appName = [name stringByDeletingPathExtension];
+			if (![opener openApp: appName]) {
+				printf ("%s: could not contact application: %s", [name cString], [appName cString]);
+				exit (1);
+			}
 			appNameForced = YES;
 			waitForFileChanged = YES;
 		} else {
 			progMode = PM_APP;
 			appName = name;
+			if (![opener openApp: appName]) {
+				printf ("%s: could not contact application: %s", [name cString], [appName cString]);
+				exit (1);
+			}
 			appNameForced = YES;
 		}
 	}
@@ -236,7 +244,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 	if (doHelp
 			|| [args indexOfObject: @"-h"] != NSNotFound
 			|| [args indexOfObject: @"--help"] != NSNotFound) {
-			usage (name, desc);
+		usage (name, desc);
 	}
 
 	return progMode;
@@ -263,7 +271,7 @@ main (int argc, char** argv, char **env)
 	programMode = checkArgs (processName, args);
 
 	if (!redirectStdError ("/dev/null")) {
-		printf ("Error redirecting standard error output: %s\n", strerror (errno));
+		printf ("%s: error redirecting stderr: %s\n", [processName cString], strerror (errno));
 		return 1;
 	}
 	
@@ -300,7 +308,7 @@ main (int argc, char** argv, char **env)
 #if 0
 		if ([arg isEqualToString: @"--unhide"]) {
 			if (!(app = [opener openApp: arg])) {
-				printf ("Could not contact application \"%s\"", [appName cString]);
+				printf ("%s: could not contact application: %s", [processName cString], [appName cString]);
 				break;
 			}
 
@@ -318,7 +326,7 @@ main (int argc, char** argv, char **env)
 			id		newAppName = [argEnumerator nextObject]; // eat the next arg
 
 			if (!newAppName) {
-				printf ("No app name given for -a argument\n");
+				printf ("%s: no appname given for -a\n", [processName cString]);
 				break;
 			}
 
@@ -327,7 +335,7 @@ main (int argc, char** argv, char **env)
 			appName = [newAppName retain];
 
 			if (![opener openApp: newAppName]) {
-				printf ("Could not contact application \"%s\"", [appName cString]);
+				printf ("%s: could not contact application: %s", [processName cString], [appName cString]);
 				break;
 			}
 
@@ -338,7 +346,7 @@ main (int argc, char** argv, char **env)
 			id		newAppName = [argEnumerator nextObject]; // eat the next arg
 
 			if (!newAppName) {
-				printf ("No app name given for -A argument\n");
+				printf ("%s: no appname given for -A\n", [processName cString]);
 				break;
 			}
 
@@ -359,7 +367,7 @@ NS_DURING
 //		printf ("Filename: %s\n", [arg cString]);
 
 		if (!(exists = [fm fileExistsAtPath: arg isDirectory: &isDir])) {
-			printf ("%s: File \"%s\" not found.\n", [processName cString], [arg cString]);
+			printf ("%s: file not found: %s\n", [processName cString], [arg cString]);
 			continue;
 		}
 
@@ -367,7 +375,7 @@ NS_DURING
 			|| [ext isEqualToString: @"debug"]
 			|| [ext isEqualToString: @"profile"]) {	// 
 			if (![opener openApp: arg]) {
-				printf ("%s: Unable to launch: %s\n", [processName cString], [arg cString]);
+				printf ("%s: unable to launch: %s\n", [processName cString], [arg cString]);
 			}
 			continue;
 		}
@@ -380,7 +388,7 @@ NS_DURING
 		}
 
 		if (![opener openFile: arg]) {	// use default application(s)
-			printf ("%s: Could not open \"%s\".", [processName cString], [arg cString]);
+			printf ("%s: unable to open: %s", [processName cString], [arg cString]);
 			break;
 		}
 
