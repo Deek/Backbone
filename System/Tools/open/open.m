@@ -162,7 +162,7 @@ usage (NSString *name, NSString *desc)
 "	-a APP		Specify an application to use for opening the file(s)\n"
 "			(APP will be launched if it is not running)\n"
 "	-A APP		Like -a, only APP won't be launched unless a file is opened\n"
-"	-S		If an app is launched, it will be run as if on startup\n"
+"	-s		If an app is launched, it will be run as if on startup\n"
 "			(Some apps do different things if \"Autolaunched\")\n"
 "	-o		Cause following files to be opened (this is the default).\n"
 "	-p		Cause following files to be printed instead of opened.\n"
@@ -345,7 +345,7 @@ NS_DURING
 				|| [ext isEqualToString: @"debug"]
 				|| [ext isEqualToString: @"profile"]) {
 			if (![opener openApp: arg]) {
-				printf ("%s: Unable to launch: %s", [processName cString], [arg cString]);
+				printf ("%s: Unable to launch: %s\n", [processName cString], [arg cString]);
 			}
 			continue;
 		}

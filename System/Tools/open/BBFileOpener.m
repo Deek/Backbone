@@ -209,6 +209,8 @@ static BBFileOpener		*sharedInstance = nil;
 	if (!appName)
 		return nil;
 
+	appName = [appName stringByDeletingPathExtension];
+
 NS_DURING
 	app = [NSConnection rootProxyForConnectionWithRegisteredName: appName
 															host: host];
@@ -259,7 +261,7 @@ NS_ENDHANDLER
 	fileCString = [file cString];
 
 	if (!(app = [self connectToApp: appName])) {
-		printf ("Could not contact application \"%s\"", appCString);
+		printf ("Could not contact application \"%s\"\n", appCString);
 		return NO;
 	}
 
