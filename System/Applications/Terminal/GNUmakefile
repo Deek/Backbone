@@ -47,7 +47,7 @@ Terminal_OBJC_FILES = \
 Terminal_LDFLAGS = -lutil
 
 Terminal_LOCALIZED_RESOURCE_FILES = Localizable.strings
-Terminal_LANGUAGES = English Swedish German French Spanish
+Terminal_LANGUAGES = English Swedish German French Spanish Hungarian
 
 Terminal_APPLICATION_ICON = Terminal.tiff
 Terminal_RESOURCE_FILES = \
