@@ -46,6 +46,10 @@ static const char rcsid[] =
 #import "Time.h"
 #import "ClockView.h"
 
+static Time						*sharedInstance = nil;
+static id <PrefsApplication>	owner = nil;
+static id <PrefsController>		controller = nil;
+
 @interface Time (Private)
 
 - (void) initUI;
@@ -57,7 +61,6 @@ static const char rcsid[] =
 
 static NSBundle				*bundle = nil;
 static NSUserDefaults		*defaults = nil;
-static id <PrefsController>	controller = nil;
 static NSWindow				*iconWin = nil;
 static ClockView			*iconClock = nil;
 
@@ -100,9 +103,6 @@ static ClockView			*iconClock = nil;
 @end	// Time (Private)
 
 @implementation Time
-
-static Time						*sharedInstance = nil;
-static id <PrefsApplication>	owner = nil;
 
 - (id) initWithOwner: (id <PrefsApplication>) anOwner
 {

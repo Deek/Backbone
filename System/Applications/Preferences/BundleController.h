@@ -36,7 +36,6 @@
 #import <Foundation/NSBundle.h>
 #import <Foundation/NSObject.h>
 
-//#import "PrefsView.h"
 #import <PrefsModule/PrefsModule.h>
 
 /*
@@ -53,9 +52,6 @@
 }
 
 + (BundleController *) sharedBundleController;
-
-- (id) init;
-- (void) dealloc;
 
 - (id) delegate;
 - (void) setDelegate: (id) aDelegate;

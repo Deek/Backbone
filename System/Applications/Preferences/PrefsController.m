@@ -63,8 +63,7 @@ static id <PrefsModule>	currentModule = nil;
 		self = [super init];
 		prefsViews = [[[NSMutableArray alloc] initWithCapacity: 5] retain];
 	}
-	sharedInstance = self;
-	return sharedInstance;	
+	return sharedInstance = self;	
 }
 
 /*
@@ -74,7 +73,7 @@ static id <PrefsModule>	currentModule = nil;
 */
 - (void) awakeFromNib
 {
-	// Let the systen keep track of where it belongs
+	// Let the system keep track of where it belongs
 	[window setFrameAutosaveName: @"PreferencesMainWindow"];
 	[window setFrameUsingName: @"PreferencesMainWindow"];
 
@@ -93,12 +92,17 @@ static id <PrefsModule>	currentModule = nil;
 	[iconScrollView setHasVerticalScroller: NO];
 }
 
+- (oneway void) release
+{
+	return;
+}
+
 - (void) dealloc
 {
-	NSDebugLog (@"PrefsController -dealloc");
-
-	[prefsViews release];
-	[super dealloc];
+	if (sharedInstance && self != sharedInstance) {
+		[super dealloc];
+	}
+	return;
 }
 
 - (void) windowWillClose: (NSNotification *) aNotification
@@ -112,8 +116,8 @@ static id <PrefsModule>	currentModule = nil;
 	if (!aPrefsModule)
 		return NO;
 
-	if (! [prefsViews containsObject: aPrefsModule]) {
-		[prefsViews addObject: aPrefsModule];
+	if (![prefsViews containsObject: aPrefsModule]) {
+		[prefsViews addObject: [aPrefsModule autorelease]];
 	}
 
 	[button setTitle: [aPrefsModule buttonCaption]];
@@ -122,13 +126,13 @@ static id <PrefsModule>	currentModule = nil;
 	[button setImagePosition: NSImageOnly];
 	[button setHighlightsBy: NSChangeBackgroundCellMask];
 	[button setShowsStateBy: NSChangeBackgroundCellMask];
+	[button setRefusesFirstResponder: YES];
 	[button setTarget: aPrefsModule];
 	[button setAction: [aPrefsModule buttonAction]];
 
 	[iconList addColumnWithCells: [NSArray arrayWithObject: button]];
 	[iconList sizeToCells];
 
-	[aPrefsModule autorelease];
 	return YES;
 }
 
@@ -149,7 +153,7 @@ static id <PrefsModule>	currentModule = nil;
 	return window;
 }
 
-- (id) currentModule;
+- (id <PrefsModule>) currentModule;
 {
 	return currentModule;
 }
@@ -175,10 +179,7 @@ static id <PrefsModule>	currentModule = nil;
 	if ((sig = [[self class] instanceMethodSignatureForSelector: aSelector]))
 		return sig;
 
-	if (!currentModule)
-		return nil;
-
-	if ([currentModule respondsToSelector: aSelector])
+	if (currentModule && [currentModule respondsToSelector: aSelector])
 		return [(NSObject *)currentModule methodSignatureForSelector: aSelector];
 
 	return nil;

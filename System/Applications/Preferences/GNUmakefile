@@ -32,6 +32,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 SUBPROJECTS=	\
 	PrefsModule \
+	Modules/Defaults \
 	Modules/Font \
 	Modules/Keyboard \
 	Modules/Time
@@ -63,6 +64,7 @@ Preferences_RESOURCE_FILES= \
 	Preferences.tiff \
 	PrefsModule.tiff \
 	PrefsIcon_Appearances.tiff \
+	PrefsIcon_Defaults.tiff \
 	PrefsIcon_Font.tiff \
 	PrefsIcon_Keyboard.tiff \
 	PrefsIcon_Localisation.tiff \

@@ -50,8 +50,6 @@
 }
 
 + (PrefsController *) sharedPrefsController;
-- (id) init;
-- (void) dealloc;
 
 /*
 	Notification methods

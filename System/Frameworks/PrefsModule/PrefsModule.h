@@ -39,12 +39,17 @@
 // size of a Prefs view
 #define PrefsRect NSMakeRect (0, 0, 400, 196)
 
+// forward-declare our protocols
+@protocol PrefsApplication;
+@protocol PrefsController;
+@protocol PrefsModule;
+
 @protocol PrefsController <NSObject>
 
-- (BOOL) registerPrefsModule: (id) aPrefsModule;
+- (BOOL) registerPrefsModule: (id <PrefsModule>) aPrefsModule;
 
 - (id) currentModule;
-- (BOOL) setCurrentModule: (id) aPrefsModule;
+- (BOOL) setCurrentModule: (id <PrefsModule>) aPrefsModule;
 
 @end
 
@@ -60,7 +65,7 @@
 /*
 	Call [[owner prefsController] registerPrefsModule: self] here
 */
-- (id) initWithOwner: (id <PrefsApplication>) anOwner;
+- (id <PrefsModule>) initWithOwner: (id <PrefsApplication>) anOwner;
 
 - (NSString *) buttonCaption;
 - (NSImage *) buttonImage;

@@ -175,7 +175,7 @@ static const char rcsid[] =
 		return;
 	}
 
-	[[(id <PrefsModule>) [aBundle principalClass] alloc] initWithOwner: self];
+	[[(id <NSObject,PrefsModule>) [aBundle principalClass] alloc] initWithOwner: self];
 }
 
 - (id <PrefsController>) prefsController
