@@ -6,7 +6,7 @@ T = Needs testing
 W = waiting on other work
 X = Done
 
-? Do something neat with the appicon, like NeXT's clock (wmCalClock?)
+X Do something neat with the appicon, like NeXT's clock (wmCalClock?)
 ? UNIX module, to set things in Workspace
 * Colors module
 * Date/Time module
