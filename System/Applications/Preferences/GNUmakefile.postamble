@@ -1,5 +1,3 @@
-.PHONY: changelog
-
 # Things to do before compiling
 # before-all::
 
@@ -35,38 +33,3 @@
 
 # Things to do after checking
 # after-check::
-
-distdir = $(APP_NAME)-$(VERSION)
-here = $(shell pwd)
-
-distfiles := $(shell find . -type f -print | grep -v -e CVS -e '\.cvsignore' -e '^\.$$' -e changelog-stamp -e '\.tar\.gz' -e '\.tar\.bz2' -e MiscFiles -e CVS -e $(distdir))
-distdirs := $(shell find . -type d -print | grep -v -e CVS -e '^\.$$' -e MiscFiles -e $(distdir))
-
-changelog: changelog-stamp
-changelog-stamp:
-	cvs2cl --stdout -b --utc -U MiscFiles/LOGNAMES > ChangeLog
-	touch $@
-
-distdir: distclean changelog
-	-rm -rf $(distdir)
-	mkdir $(distdir)
-	-chmod 777 $(distdir)
-	cd $(distdir)
-	for dir in $(distdirs); do \
-	  mkdir $(distdir)/$$dir; \
-	done
-	for file in $(distfiles); do \
-	  if test -d $(here)/$$file; then \
-	    cp -pr $(here)/$$file $(distdir)/$$file; \
-	  else \
-	    test -f $(distdir)/$$file \
-	    || ln $(here)/$$file $(distdir)/$$file 2> /dev/null \
-	    || cp -p $(here)/$$file $(distdir)/$$file || :; \
-	  fi; \
-	done
-
-mydist: distdir
-	-chmod -R a+r $(distdir)
-	tar -cho $(distdir) | gzip -9 > $(distdir).tar.gz
-	tar -cho $(distdir) | bzip2 -9 > $(distdir).tar.bz2
-	-rm -rf $(distdir)
