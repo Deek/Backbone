@@ -49,7 +49,7 @@ RCSID("$Id$");
 @implementation Controller
 
 static NSUserDefaults *defaults = nil;
-#if 1
+#if 0
 static BOOL doneLaunching = NO;
 #endif
 
@@ -116,7 +116,6 @@ static BOOL doneLaunching = NO;
 {
 	if ([defaults boolForKey: @"autolaunch"]) {
 #if 1
-		doneLaunching = YES;
 		[NSApp hide: self];
 #endif
 	} else {
@@ -168,7 +167,7 @@ static BOOL doneLaunching = NO;
 */
 - (void) applicationDidUnhide: (NSNotification *) not;
 {
-#if 1
+#if 0
 	if (doneLaunching && ![[prefsController window] isVisible])
 #else
 	if (![[prefsController window] isVisible])
