@@ -233,9 +233,15 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 		return;
 	}
 
-	view = [window contentView];
-	[view removeFromSuperview];
+	if (!view) {
+		view = [[window contentView] retain];
+		[view removeFromSuperview];
+		[window setContentView: NULL];
+	}
+	[window release];
+	window = nil;
 
+	// set up the popup
 	[fontCategoryPopUp removeAllItems];
 	[fontCategoryPopUp addItemsWithTitles: fontCategories()];
 	[fontCategoryPopUp selectItemAtIndex: 0];
@@ -262,11 +268,6 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 		[fontExampleScrollView setDocumentView: fontExampleTextView];
 	}
 
-	[window setContentView: NULL];
-	[window dealloc];
-	window = nil;
-
-	[view retain];
 	[self updateUI];
 }
 

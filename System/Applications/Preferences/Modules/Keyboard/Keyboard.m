@@ -169,10 +169,12 @@ getStringDefault (NSMutableDictionary *dict, NSString *name)
 		return;
 	}
 
-	view = [[window contentView] retain];
-	[view removeFromSuperview];
-	[window setContentView: NULL];
-	[window dealloc];
+	if (!view) {
+		view = [[window contentView] retain];
+		[view removeFromSuperview];
+		[window setContentView: NULL];
+	}
+	[window release];
 	window = nil;
 
 	popups = [NSArray arrayWithObjects: firstAlternatePopUp,
