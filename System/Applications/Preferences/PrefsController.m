@@ -188,33 +188,29 @@ static id				currentModule = nil;
 	if (!aSelector)
 		return NO;
 
-	if ([[self class] instancesRespondToSelector: aSelector])
+	if ([super respondsToSelector: aSelector])
 		return YES;
 
-	if (currentModule && [currentModule respondsToSelector: aSelector])
-		return YES;
+	if (currentModule)
+		return [currentModule respondsToSelector: aSelector];
 
 	return NO;
 }
 
 - (NSMethodSignature *) methodSignatureForSelector: (SEL) aSelector
 {
-	NSMethodSignature	*sig = nil;
+	NSMethodSignature	*sig = [super methodSignatureForSelector: aSelector];
 
-	if ((sig = [[self class] instanceMethodSignatureForSelector: aSelector]))
-		return sig;
+	if (!sig && currentModule) {
+		sig = [(NSObject *)currentModule methodSignatureForSelector: aSelector];
+	}
 
-	if (currentModule && [currentModule respondsToSelector: aSelector])
-		return [(NSObject *)currentModule methodSignatureForSelector: aSelector];
-
-	return nil;
+	return sig;
 }
 
 - (void) forwardInvocation: (NSInvocation *)invocation
 {
-	if (currentModule && [currentModule respondsToSelector: [invocation selector]])
-		[invocation invokeWithTarget: currentModule];
-	else
-		[self doesNotRecognizeSelector: [invocation selector]];
+	[invocation invokeWithTarget: currentModule];
 }
+
 @end
