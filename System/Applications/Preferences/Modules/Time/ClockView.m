@@ -1,7 +1,7 @@
 /*
 	ClockView.m
 
-	A digital clock view
+	A digital/analog clock view
 
 	Copyright (C) 2002 Dusk to Dawn Computing, Inc.
 	Additional copyrights here
@@ -322,7 +322,7 @@ static	NSBundle	*this_bundle = nil;
 								(bottomInsideRect.size.width - width) / 2,
 								0);
 
-		location.x = tempRect.origin.x;
+		location.x = tempRect.origin.x + 1; // width of small drop shadow
 		// find the top and subtract the height of the day name
 		location.y = tempRect.origin.y
 					+ tempRect.size.height
@@ -343,7 +343,7 @@ static	NSBundle	*this_bundle = nil;
 								(bottomInsideRect.size.width - width) / 2,
 								0);
 
-		location.x = tempRect.origin.x + 2;
+		location.x = tempRect.origin.x + 2; // width of big drop shadow
 
 		location.y = tempRect.origin.y;
 		if (dom1) {
