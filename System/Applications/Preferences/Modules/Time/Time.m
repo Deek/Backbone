@@ -52,6 +52,7 @@ static const char rcsid[] =
 
 @implementation Time (Private)
 
+static NSBundle				*bundle = nil;
 static NSUserDefaults		*defaults = nil;
 static id <PrefsController>	controller = nil;
 static NSWindow				*iconWin = nil;
@@ -86,6 +87,7 @@ static id <PrefsApplication>	owner = nil;
 
 		self = [super init];
 		owner = anOwner;
+		bundle = [NSBundle bundleForClass: [self class]];
 		controller = [owner prefsController];
 		defaults = [NSUserDefaults standardUserDefaults];
 		dict = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -99,7 +101,6 @@ static id <PrefsApplication>	owner = nil;
 			[self dealloc];
 			return nil;
 		}
-
 		[defaults registerDefaults: dict];
 		[controller registerPrefsModule: self];
 		// window can be any size, as long as it's 486x228 :)
@@ -114,6 +115,10 @@ static id <PrefsApplication>	owner = nil;
 
 		[iconWin setContentView: iconClock];
 
+		NSLog (@"%@", [bundle pathForImageResource: @"WorldMap"]);
+		[map setImage: [[NSImage alloc]
+						initWithContentsOfFile: [bundle
+							pathForImageResource: @"WorldMap"]]];
 		[view retain];
 
 		[self updateUI];

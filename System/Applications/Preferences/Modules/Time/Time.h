@@ -45,7 +45,7 @@
 
 	IBOutlet id		window;
 	IBOutlet id		view;
-	IBOutlet id		clock;
+	IBOutlet id		map;
 }
 
 - (IBAction) clockIsAnalogChanged: (id) sender;

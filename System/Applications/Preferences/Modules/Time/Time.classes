@@ -22,7 +22,8 @@
 	    clockUses24HoursButton,
 	    localTimeZoneField,
 	    view,
-	    window
+	    window,
+	    map
 	);
 	Super = NSObject;
     };
