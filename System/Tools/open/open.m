@@ -9,7 +9,7 @@
 	Author:	Jeff Teunissen <deek@d2dc.net>
 	Created: November 2001
 
-	Based on "gopen", written by Gregory Casamento <greg_casamento@yahoo.com>
+	Originally based on "gopen", by Gregory Casamento <greg_casamento@yahoo.com>
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License as
@@ -197,9 +197,37 @@ checkArgs (NSString *name, NSMutableArray *args)
 				printf ("%s error: not enough arguments\n", [name cString]);
 			} else {
 				NSString	*newAppName = [args objectAtIndex: 0];
+				NSString	*tmp = newAppName;
+				NSString	*ext = [newAppName pathExtension];
+				BOOL		exists, isDir;
 
-				if (![opener openApp: newAppName]) {
-					printf ("%s: could not contact application: %s", [name cString], [appName cString]);
+				/*
+					First, check for absolute path.
+					Second, check for app in current directory.
+					Finally, try passing it off to the opener.
+				*/
+				// standardize the path
+				if (![newAppName isAbsolutePath]) {
+					tmp = [[[fm currentDirectoryPath]
+							stringByAppendingPathComponent: newAppName]
+							stringByStandardizingPath];
+				}
+
+				exists = [fm fileExistsAtPath: tmp isDirectory: &isDir];
+				if (exists && isDir
+						&& ([ext isEqualToString: @"app"]
+							|| [ext isEqualToString: @"debug"]
+							|| [ext isEqualToString: @"profile"])) {	// got it
+				}
+
+				if ([ext isEqualToString: @"app"]	// is it an app?
+						|| [ext isEqualToString: @"debug"]
+						|| [ext isEqualToString: @"profile"]) {
+				}
+
+				if (![opener openApp: newAppName]) {	// look for it ourselves
+
+					printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
 					exit (1);
 				}
 
@@ -223,7 +251,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 			progMode = PM_APP;
 			appName = [name stringByDeletingPathExtension];
 			if (![opener openApp: appName]) {
-				printf ("%s: could not contact application: %s", [name cString], [appName cString]);
+				printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
 				exit (1);
 			}
 			appNameForced = YES;
@@ -232,7 +260,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 			progMode = PM_APP;
 			appName = name;
 			if (![opener openApp: appName]) {
-				printf ("%s: could not contact application: %s", [name cString], [appName cString]);
+				printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
 				exit (1);
 			}
 			appNameForced = YES;
@@ -307,7 +335,7 @@ main (int argc, char** argv, char **env)
 #if 0
 		if ([arg isEqualToString: @"--unhide"]) {
 			if (!(app = [opener openApp: arg])) {
-				printf ("%s: could not contact application: %s", [processName cString], [appName cString]);
+				printf ("%s: could not contact application: %s\n", [processName cString], [appName cString]);
 				break;
 			}
 
@@ -334,7 +362,7 @@ main (int argc, char** argv, char **env)
 			appName = [newAppName retain];
 
 			if (![opener openApp: newAppName]) {
-				printf ("%s: could not contact application: %s", [processName cString], [appName cString]);
+				printf ("%s: could not contact application: %s\n", [processName cString], [appName cString]);
 				break;
 			}
 
@@ -386,7 +414,7 @@ main (int argc, char** argv, char **env)
 		}
 
 		if (![opener openFile: arg]) {	// use default application(s)
-			printf ("%s: unable to open: %s", [processName cString], [arg cString]);
+			printf ("%s: unable to open: %s\n", [processName cString], [arg cString]);
 			break;
 		}
 
