@@ -1,7 +1,7 @@
 #
 #	GNUmakefile
 #
-#	Main makefile for Preferences.app
+#	Main makefile for Preferences
 #
 #	Copyright (C) 2002 Jeff Teunissen <deek@d2dc.net>
 #
@@ -31,7 +31,6 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Subprojects
 #
 SUBPROJECTS=	\
-	PrefsModule \
 	Modules/Defaults \
 	Modules/Font \
 	Modules/Keyboard \
@@ -39,8 +38,9 @@ SUBPROJECTS=	\
 #
 # Distribution information
 #
-CVS_MODULE_NAME=	Preferences
-CVS_FLAGS=		-d:pserver:anonymous@cvs.quakeforge.net:/cvsroot/prefsapp
+#CVS_MODULE_NAME=	System/Applications/Preferences
+#CVS_FLAGS=		-d:pserver:anonymous@subversions.gnu.org:/cvsroot/backbone
+
 #
 # Main application
 #
@@ -49,11 +49,6 @@ APP_NAME=		Preferences
 VERSION=		1.2.99beta
 Preferences_PRINCIPAL_CLASS=	NSApplication
 Preferences_APPLICATION_ICON=	Preferences.tiff
-
-#
-# Additional libraries
-#
-ADDITIONAL_GUI_LIBS += -LPrefsModule/PrefsModule.framework/Versions/Current/$(GNUSTEP_TARGET_LDIR) -lPrefsModule
 
 #
 # Resource files
