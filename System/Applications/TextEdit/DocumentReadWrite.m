@@ -113,10 +113,14 @@ static float defaultPadding(void) {
             const unsigned char *bytes = [fileContentsAsData bytes];
             static const unsigned char bigUnicodeHeader[] = {0xff, 0xfe};
             static const unsigned char littleUnicodeHeader[] = {0xfe, 0xff};
+            static const unsigned char utf8Header[] = {0xef, 0xbb, 0xbf};
             static const unsigned char rtfHeader[] = {'{', '\\', 'r', 't', 'f'};
+
             /* Unicode plain text files start with the Unicode BOM char; check for that first... */
             if (((len & 1) == 0) && (len >= 2) && (!memcmp(bytes, bigUnicodeHeader, 2) || !memcmp(bytes, littleUnicodeHeader, 2))) {
                 encoding = NSUnicodeStringEncoding;
+            } else if ((len > 2) && (!memcmp(bytes, utf8Header, 3))) {
+                encoding = NSUTF8StringEncoding;
             } else if (((len >= 6) && !memcmp(bytes, rtfHeader, 5)) && !IgnoreRichText) {
                 encoding = RichTextStringEncoding;
             }
