@@ -345,7 +345,7 @@ static id <PrefsController>		controller = nil;
  	keyName = [[defaultsBrowser selectedCellInColumn: 1] stringValue];
 	domain = [[[defs persistentDomainForName: domainName] mutableCopy] autorelease];
 
-	[domain setObject: [editTextView string] forKey: keyName];
+	[domain setObject: [[[editTextView string] copy] autorelease] forKey: keyName];
 	[defs setPersistentDomain: domain forName: domainName];
 	[defs synchronize];
 }
