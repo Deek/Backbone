@@ -147,7 +147,8 @@
 	    "secondCommandChanged:",
 	    "firstControlChanged:",
 	    "firstCommandChanged:",
-	    "frstAlternateChanged:"
+	    "frstAlternateChanged:",
+	    "secondAlternateChanged:"
 	);
 	Outlets = (
 	    window,
