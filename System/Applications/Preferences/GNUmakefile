@@ -31,6 +31,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 # Subprojects
 #
 SUBPROJECTS=	\
+	Modules/Colors \
 	Modules/Defaults \
 	Modules/Font \
 	Modules/Keyboard \
