@@ -39,7 +39,8 @@
 distdir = $(APP_NAME)-$(VERSION)
 here = $(shell pwd)
 
-distfiles := $(shell find . -print | grep -v -e CVS -e '^\.$$' -e changelog-stamp -e '\.tar\.gz' -e '\.tar\.bz2' -e MiscFiles -e $(distdir))
+distfiles := $(shell find . -type f -print | grep -v -e CVS -e '\.cvsignore' -e '^\.$$' -e changelog-stamp -e '\.tar\.gz' -e '\.tar\.bz2' -e MiscFiles -e CVS -e $(distdir))
+distdirs := $(shell find . -type d -print | grep -v -e CVS -e '^\.$$' -e MiscFiles -e $(distdir))
 
 changelog: changelog-stamp
 changelog-stamp:
@@ -51,6 +52,9 @@ distdir: distclean changelog
 	mkdir $(distdir)
 	-chmod 777 $(distdir)
 	cd $(distdir)
+	for dir in $(distdirs); do \
+	  mkdir $(distdir)/$$dir; \
+	done
 	for file in $(distfiles); do \
 	  if test -d $(here)/$$file; then \
 	    cp -pr $(here)/$$file $(distdir)/$$file; \
