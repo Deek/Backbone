@@ -85,8 +85,10 @@ commonMenu (void) {
         arr = [[NSArray alloc] initWithObjects:
 				@"Left Alt",
 				@"Right Alt",
-				@"Left Meta/Windows",
-				@"Right Meta/Windows",
+				@"Left Meta",
+				@"Right Meta",
+				@"Left Super (Windows)",
+				@"Right Super (Windows)",
 				@"Left Control",
 				@"Right Control",
 				@"Mode Switch",
@@ -106,8 +108,11 @@ menuItemNames (void) {
 				@"Alt_R", @"Right Alt",
 				@"Control_L", @"Left Control",
 				@"Control_R", @"Right Control",
-				@"Meta_L", @"Left Meta/Windows",
-				@"Meta_R", @"Right Meta/Windows",
+				@"Meta_L", @"Left Meta",
+				@"Meta_R", @"Right Meta",
+				@"Super_L", @"Left Super (Windows)",
+				@"Super_R", @"Right Super (Windows)",
+				@"Multi_key", @"Multi-Key (Compose)",
 				@"Mode_switch", @"Mode Switch",
 				@"No Symbol", @"None",
 				nil];
@@ -169,7 +174,7 @@ getStringDefault (NSMutableDictionary *dict, NSString *name)
 
 - (void) initUI
 {
-	NSMutableArray	*popups = [NSMutableArray arrayWithCapacity: 6];
+	NSArray	*popups;
 
 	if (![NSBundle loadNibNamed: @"Keyboard" owner: self]) {
 		NSLog (@"Keyboard: Could not load nib \"Keyboard\", using compiled-in version");
@@ -191,21 +196,18 @@ getStringDefault (NSMutableDictionary *dict, NSString *name)
 	}
 	[view retain];
 
-	[popups addObject: firstAlternatePopUp];
-	[popups addObject: firstCommandPopUp];
-	[popups addObject: firstControlPopUp];
-	[popups addObject: secondAlternatePopUp];
-	[popups addObject: secondCommandPopUp];
-	[popups addObject: secondControlPopUp];
-	{
-		id	myEnum = [popups objectEnumerator];
-		id	obj;
+	popups = [NSArray arrayWithObjects: firstAlternatePopUp,
+										firstCommandPopUp,
+										firstControlPopUp,
+										secondAlternatePopUp,
+										secondCommandPopUp,
+										secondControlPopUp,
+										nil];
 
-		while ((obj = [myEnum nextObject])) {
-			[obj removeAllItems];
-			[obj addItemsWithTitles: commonMenu()];
-		}
-	}
+	[popups makeObjectsPerformSelector: @selector(removeAllItems)];
+	[popups makeObjectsPerformSelector: @selector(addItemsWithTitles:)
+							withObject: commonMenu ()];
+
 	[self updateUI];
 }
 @end	// Keyboard (Private)

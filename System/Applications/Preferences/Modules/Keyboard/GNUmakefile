@@ -5,7 +5,10 @@ BUNDLE_EXTENSION=	.prefs
 
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 
-Keyboard_RESOURCE_FILES= \
+Keyboard_LANGUAGES= \
+	English
+
+Keyboard_LOCALIZED_RESOURCE_FILES= \
 	Keyboard.gorm
 
 Keyboard_OBJC_FILES=	\
