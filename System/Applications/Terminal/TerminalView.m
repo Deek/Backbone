@@ -536,7 +536,7 @@ static void set_foreground(NSGraphicsContext *gc,
 			DPSrectfill(cur,x,y,fx,fy*0.1);
 			break;
 		case CURSOR_BLOCK_STROKE:
-			DPSrectstroke(cur,x,y,fx,fy);
+			DPSrectstroke(cur,x+0.5,y+0.5,fx-1.0,fy-1.0);
 			break;
 		case CURSOR_BLOCK_FILL:
 			DPSrectfill(cur,x,y,fx,fy);
