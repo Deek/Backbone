@@ -79,7 +79,7 @@ static id <PrefsModule>	currentModule = nil;
 	if (iconList)	// stop processing if we already have an icon list
 		return;
 
-	[prefsViewBox setContentViewMargins: NSMakeSize (0, 0)];
+	[prefsViewBox setContentViewMargins: NSMakeSize (0, 0)];	// FIXME
 	NSLog (@"Content frame: %@", NSStringFromSize([[prefsViewBox contentView] bounds].size));
 
 	/* What is the matrix? :) */
@@ -87,6 +87,7 @@ static id <PrefsModule>	currentModule = nil;
 	[iconList setCellClass: [NSButtonCell class]];
 	[iconList setCellSize: NSMakeSize (64, 64)];
 	[iconList setMode: NSRadioModeMatrix];
+	[iconList setAllowsEmptySelection: YES];
 
 	[iconScrollView setDocumentView: iconList];
 	[iconScrollView setHasHorizontalScroller: YES];
