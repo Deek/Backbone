@@ -269,7 +269,7 @@ NS_ENDHANDLER
 	if (print) {
 		if (![app respondsToSelector: @selector(application:printFile:)]
 			|| ![app application: nil printFile: file]) {
-			printf ("Application \"%s\" could not print file \"%s\"",
+			printf ("Application \"%s\" could not print file \"%s\"\n",
 					appCString,
 					fileCString);
 			return NO;
@@ -279,7 +279,7 @@ NS_ENDHANDLER
 		if (temp) {
 			if (![app respondsToSelector: @selector(application:openTempFile:)]
 				|| ![app application: nil openTempFile: file]) {
-				printf ("Application \"%s\" could not open temporary file \"%s\"",
+				printf ("Application \"%s\" could not open temporary file \"%s\"\n",
 						appCString,
 						fileCString);
 				return NO;
@@ -288,7 +288,7 @@ NS_ENDHANDLER
 		} else {
 			if (![app respondsToSelector: @selector(application:openFile:)]
 				|| ![app application: nil openFile: file]) {
-				printf ("Application \"%s\" could not open file \"%s\"",
+				printf ("Application \"%s\" could not open file \"%s\"\n",
 						appCString,
 						fileCString);
 				return NO;
