@@ -551,12 +551,25 @@ static void set_foreground(NSGraphicsContext *gc,
 
 	NSDebugLLog(@"draw",@"total_draw=%i",total_draw);
 
-	draw_all=NO;
+	draw_all=1;
 }
 
 -(BOOL) isOpaque
 {
 	return YES;
+}
+
+-(void) setNeedsDisplayInRect: (NSRect)r
+{
+	draw_all=2;
+	[super setNeedsDisplayInRect: r];
+}
+
+-(void) setNeedsLazyDisplayInRect: (NSRect)r
+{
+	if (draw_all==1)
+		draw_all=0;
+	[super setNeedsDisplayInRect: r];
 }
 
 
@@ -569,7 +582,7 @@ static void set_foreground(NSGraphicsContext *gc,
 	total_draw=0;
 	for (i=0;i<100;i++)
 	{
-		draw_all=YES;
+		draw_all=2;
 		[self lockFocus];
 		[self drawRect: r];
 		[self unlockFocusNeedsFlush: NO];
@@ -880,7 +893,6 @@ static void set_foreground(NSGraphicsContext *gc,
 -(void) viewPrefsDidChange: (NSNotification *)n
 {
 	/* TODO: handle font changes? */
-	draw_all=YES;
 	[self setNeedsDisplay: YES];
 }
 
@@ -923,7 +935,6 @@ Scrolling
 		[self _updateScroller];
 	}
 
-	draw_all=YES;
 	[self setNeedsDisplay: YES];
 }
 
@@ -1196,7 +1207,7 @@ Selection, copy/paste/services
 	}
 
 	selection=s;
-	[self setNeedsDisplay: YES];
+	[self setNeedsLazyDisplayInRect: [self bounds]];
 }
 
 -(void) _clearSelection
@@ -1573,12 +1584,11 @@ Handle master_fd
 //		NSLog(@"-> dirty=(%g %g)+(%g %g)\n",dirty.origin.x,dirty.origin.y,dirty.size.width,dirty.size.height);
 		dr.origin.x+=border_x;
 		dr.origin.y+=border_y;
-		[self setNeedsDisplayInRect: dr];
+		[self setNeedsLazyDisplayInRect: dr];
 
 		if (current_scroll!=0)
 		{ /* TODO */
 			current_scroll=0;
-			draw_all=YES;
 			[self setNeedsDisplay: YES];
 		}
 
@@ -1844,7 +1854,7 @@ misc. stuff
 		/* Do a complete redraw anyway. Even though we don't really need it,
 		the resize might have caused other things to overwrite our part of the
 		window. */
-		draw_all=YES;
+		draw_all=2;
 		return;
 	}
 
@@ -1915,7 +1925,6 @@ improve? */
 		ioctl(master_fd,TIOCSWINSZ,&ws);
 	}
 
-	draw_all=YES;
 	[self setNeedsDisplay: YES];
 }
 
@@ -1970,7 +1979,7 @@ improve? */
 
 	screen=malloc(sizeof(screen_char_t)*sx*sy);
 	memset(screen,0,sizeof(screen_char_t)*sx*sy);
-	draw_all=YES;
+	draw_all=2;
 
 	max_scrollback=[TerminalViewDisplayPrefs scrollBackLines];
 	sbuf=malloc(sizeof(screen_char_t)*sx*max_scrollback);

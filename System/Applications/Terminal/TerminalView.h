@@ -64,7 +64,8 @@ struct selection_range
 
 	NSObject<TerminalParser> *tp;
 
-	BOOL draw_all,draw_cursor;
+	int draw_all; /* 0=only lazy, 1=don't know, do all, 2=do all */
+	BOOL draw_cursor;
 
 	struct selection_range selection;
 
