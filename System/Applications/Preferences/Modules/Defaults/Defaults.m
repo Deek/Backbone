@@ -29,8 +29,7 @@
 # include "Config.h"
 #endif
 
-static const char rcsid[] = 
-	"$Id$";
+RCSID("$Id$");
 
 #import <Foundation/Foundation.h>
 

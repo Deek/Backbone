@@ -27,12 +27,11 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
-static const char rcsid[] = 
-	"$Id$";
-
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
+
+RCSID("$Id$");
 
 #import <AppKit/NSButton.h>
 #import <AppKit/NSNibLoading.h>
