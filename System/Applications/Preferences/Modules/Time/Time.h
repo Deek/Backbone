@@ -32,7 +32,11 @@
 # include "Config.h"
 #endif
 
+#import <Foundation/NSObject.h>
+
 #import <AppKit/NSNibDeclarations.h>
+#import <AppKit/NSButton.h>
+#import <AppKit/NSTextField.h>
 
 #import <PrefsModule/PrefsModule.h>
 
