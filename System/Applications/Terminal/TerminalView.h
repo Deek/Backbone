@@ -50,6 +50,9 @@ struct selection_range
 
 	int master_fd;
 
+	unsigned char *write_buf;
+	int write_buf_len,write_buf_size;
+
 	int max_scrollback;
 	int sb_length,current_scroll;
 	screen_char_t *sbuf;

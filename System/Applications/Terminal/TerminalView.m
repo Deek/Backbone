@@ -35,6 +35,7 @@ stupid but fast character cell display view.
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <fcntl.h>
 #ifndef freebsd
 #ifndef __NetBSD__
 #  include <pty.h>
@@ -860,16 +861,57 @@ static void set_foreground(NSGraphicsContext *gc,
 	return SCREEN(x,y);
 }
 
+
+-(void) addDataToWriteBuffer: (const char *)data
+	length: (int)len
+{
+	if (!len)
+		return;
+
+	if (!write_buf_len)
+	{
+		[[NSRunLoop currentRunLoop]
+			addEvent: (void *)master_fd
+			type: ET_WDESC
+			watcher: self
+			forMode: NSDefaultRunLoopMode];
+	}
+
+	if (write_buf_len+len>write_buf_size)
+	{
+		/* Round up to nearest multiple of 512 bytes. */
+		write_buf_size=(write_buf_len+len+511)&~511;
+		write_buf=realloc(write_buf,write_buf_size);
+	}
+	memcpy(&write_buf[write_buf_len],data,len);
+	write_buf_len+=len;
+}
+
 -(void) ts_sendCString: (const char *)msg
 {
-	int len=strlen(msg);
-	if (master_fd!=-1)
-		write(master_fd,msg,len);
+	[self ts_sendCString: msg  length: strlen(msg)];
 }
 -(void) ts_sendCString: (const char *)msg  length: (int)len
 {
-	if (master_fd!=-1)
-		write(master_fd,msg,len);
+	int l;
+	if (master_fd==-1)
+		return;
+
+	if (write_buf_len)
+	{
+		[self addDataToWriteBuffer: msg  length: len];
+		return;
+	}
+
+	l=write(master_fd,msg,len);
+	if (l!=len)
+	{
+		if (errno!=EAGAIN)
+			NSLog(_(@"Unexpected error while writing: %m."));
+		if (l<0)
+			l=0;
+		[self addDataToWriteBuffer: &msg[l]  length: len-l];
+	}
 }
 
 
@@ -1468,17 +1510,13 @@ Handle master_fd
 	return nil;
 }
 
--(void) receivedEvent: (void *)data
-	type: (RunLoopEventType)t
-	extra: (void *)extra
-	forMode: (NSString *)mode
+-(void) readData
 {
-	char buf[8];
-	int size,total;
+	char buf[256];
+	int size,total,i;
 
 //	get_zombies();
 
-//	printf("got event %i %i\n",(int)data,t);
 	total=0;
 	num_scrolls=0;
 	dirty.x0=-1;
@@ -1492,17 +1530,9 @@ Handle master_fd
 
 	while (1)
 	{
-		{
-			fd_set s;
-			struct timeval tv;
-			FD_ZERO(&s);
-			FD_SET(master_fd,&s);
-			tv.tv_sec=0;
-			tv.tv_usec=0;
-			if (!select(master_fd+1,&s,NULL,NULL,&tv)) break;
-		}
-
-		size=read(master_fd,buf,1);
+		size=read(master_fd,buf,sizeof(buf));
+		if (size<0 && errno==EAGAIN)
+			break;
 		if (size<=0)
 		{
 			NSString *msg;
@@ -1543,9 +1573,10 @@ Handle master_fd
 		}
 
 
-		[tp processByte: buf[0]];
+		for (i=0;i<size;i++)
+			[tp processByte: buf[i]];
 
-		total++;
+		total+=size;
 		/*
 		Don't get stuck processing input forever; give other terminal windows
 		and the user a chance to do things. The numbers affect latency versus
@@ -1596,6 +1627,51 @@ Handle master_fd
 	}
 }
 
+-(void) writePendingData
+{
+	int l,new_size;
+	printf("%i bytes pending\n",write_buf_len);
+	l=write(master_fd,write_buf,write_buf_len);
+	if (l<0)
+	{
+		if (errno!=EAGAIN)
+			NSLog(_(@"Unexpected error while writing: %m."));
+		return;
+	}
+	memmove(write_buf,&write_buf[l],write_buf_len-l);
+	write_buf_len-=l;
+
+	/* If less than half the buffer is empty, reallocate it, but never free
+	it completely. */
+	new_size=(write_buf_len+511)&~511;
+	if (!new_size)
+		new_size=512;
+	if (new_size<=write_buf_size/2)
+	{
+		write_buf_size=new_size;
+		write_buf=realloc(write_buf,write_buf_size);
+	}
+
+	if (!write_buf_len)
+	{
+		[[NSRunLoop currentRunLoop] removeEvent: (void *)master_fd
+			type: ET_WDESC
+			forMode: NSDefaultRunLoopMode
+			all: YES];
+	}
+}
+
+-(void) receivedEvent: (void *)data
+	type: (RunLoopEventType)type
+	extra: (void *)extra
+	forMode: (NSString *)mode
+{
+	if (type==ET_WDESC)
+		[self writePendingData];
+	else if (type==ET_RDESC)
+		[self readData];
+}
+
 
 -(void) closeProgram
 {
@@ -1606,6 +1682,13 @@ Handle master_fd
 		type: ET_RDESC
 		forMode: NSDefaultRunLoopMode
 		all: YES];
+	[[NSRunLoop currentRunLoop] removeEvent: (void *)master_fd
+		type: ET_WDESC
+		forMode: NSDefaultRunLoopMode
+		all: YES];
+	write_buf_len=write_buf_size=0;
+	free(write_buf);
+	write_buf=NULL;
 	close(master_fd);
 	master_fd=-1;
 }
@@ -1624,8 +1707,8 @@ Handle master_fd
 	const char *cargs[[args count]+2];
 	const char *cdirectory;
 	int i;
-
 	int pipefd[2];
+	int flags;
 
 	NSDebugLLog(@"pty",@"-runProgram: %@ withArguments: %@ initialInput: %@",
 		path,args,d);
@@ -1682,6 +1765,18 @@ Handle master_fd
 	}
 
 	NSDebugLLog(@"pty",@"forked child %i, fd %i",ret,master_fd);
+
+	/* Set non-blocking mode for the descriptor. */
+	flags=fcntl(master_fd,F_GETFL,0);
+	if (flags==-1)
+	{
+		NSLog(_(@"Unable to set non-blocking mode: %m."));
+	}
+	else
+	{
+		flags|=O_NONBLOCK;
+		fcntl(master_fd,F_SETFL,flags);
+	}
 
 	rl=[NSRunLoop currentRunLoop];
 	[rl addEvent: (void *)master_fd
