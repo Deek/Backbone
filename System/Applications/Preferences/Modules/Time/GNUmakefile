@@ -4,8 +4,14 @@ BUNDLE_NAME=		Time
 BUNDLE_EXTENSION=	.prefs
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 
-Time_RESOURCE_FILES= \
+Time_LANGUAGES= \
+	English
+
+Time_LOCALIZED_RESOURCE_FILES= \
 	Time.gorm \
+	Localizable.strings
+
+Time_RESOURCE_FILES= \
 	Date-0.tiff Date-1.tiff Date-2.tiff Date-3.tiff Date-4.tiff Date-5.tiff \
 		Date-6.tiff Date-7.tiff Date-8.tiff Date-9.tiff \
 	Day-0.tiff Day-1.tiff Day-2.tiff Day-3.tiff Day-4.tiff Day-5.tiff \

@@ -141,7 +141,7 @@ static id <PrefsApplication>	owner = nil;
 
 - (NSString *) buttonCaption
 {
-	return @"Time & Date Preferences";
+	return _(@"Time & Date Preferences");
 }
 
 - (NSImage *) buttonImage
