@@ -40,14 +40,11 @@
 #include <Foundation/NSDictionary.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSProcessInfo.h>
-#include <Foundation/NSTask.h>
 #include <Foundation/NSAutoreleasePool.h>
-#include <Foundation/NSException.h>
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSFileHandle.h>
 #include <Foundation/NSPathUtilities.h>
 #include <Foundation/NSValue.h>
-#include <Foundation/NSUserDefaults.h>
 
 #include <AppKit/NSApplication.h>
 
@@ -356,7 +353,6 @@ main (int argc, char** argv, char **env)
 			continue;
 		}
 
-NS_DURING
 		// standardize the path
 		if (![arg isAbsolutePath]) {
 			arg = [[[fm currentDirectoryPath]
@@ -393,15 +389,7 @@ NS_DURING
 		}
 
 		break;	// should never reach here
-
-NS_HANDLER
-		NSLog (@"Exception while attempting open file %@ - %@: %@",
-				arg, [localException name], [localException reason]);
-		return 1;
-NS_ENDHANDLER
 	}
-
 	[pool release];
-
 	return 0;
 }
