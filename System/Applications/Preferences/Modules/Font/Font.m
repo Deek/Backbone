@@ -259,9 +259,12 @@ static id bundle = nil;
 		[fontNameTextField setBackgroundColor: [NSColor controlColor]];
 		[fontNameTextField setDrawsBackground: YES];
 
+		[fontExampleScrollView setHasHorizontalScroller: NO];
+		[fontExampleScrollView setHasVerticalScroller: YES];
+
 		if (!fontExampleTextView) {
 			NSRect frame;
-		
+
 			frame.origin.x = frame.origin.y = 0;
 			frame.size = [fontExampleScrollView contentSize];
 
@@ -272,8 +275,6 @@ static id bundle = nil;
 			[fontExampleTextView setText: NSLocalizedStringFromTableInBundle (@"Example Text", @"Localizable", bundle, @"")];
 
 			[fontExampleScrollView setDocumentView: fontExampleTextView];
-			[fontExampleScrollView setHasHorizontalScroller: NO];
-			[fontExampleScrollView setHasVerticalScroller: YES];
 		}
 
 		[window setContentView: NULL];
