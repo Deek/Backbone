@@ -3,7 +3,7 @@
 
 	Controller class for this bundle
 
-	Copyright (C) 2001 Dusk to Dawn Computing, Inc.
+	Copyright (C) 2002 Dusk to Dawn Computing, Inc.
 	Additional copyrights here
 
 	Author: Jeff Teunissen <deek@d2dc.net>
