@@ -342,8 +342,8 @@ static	NSBundle	*this_bundle = nil;
 
 		location.x = tempRect.origin.x + 2;
 
+		location.y = tempRect.origin.y;
 		if (dom1) {
-			location.y = tempRect.origin.y;
 			[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
 			location.x += [dom1 size].width;
 		}
