@@ -210,6 +210,20 @@ static float defaultPadding(void) {
 	    success = data && [data writeToFile:actualFileNameToSave atomically:YES];
             break;
         }
+
+        case NSUTF8StringEncoding: {
+            static const unsigned char BOM[] = {0xef, 0xbb, 0xbf};
+            NSMutableData *bom = [NSMutableData dataWithBytes: &BOM length: 3];
+            NSData *data = [[textStorage string] dataUsingEncoding: encoding];
+
+            if (!data)
+                break;
+
+            [bom appendData: data];
+            success = [bom writeToFile: actualFileNameToSave atomically: YES];
+            break;
+        }
+
         default: {
             NSData *data = [[textStorage string] dataUsingEncoding:encoding];
 	    success = data && [data writeToFile:actualFileNameToSave atomically:YES];
