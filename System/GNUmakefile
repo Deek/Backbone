@@ -7,6 +7,8 @@ include Backbone.make
 SUBPROJECTS = \
 	Frameworks/PrefsModule \
 	\
-	Applications/Preferences
+	Applications/Preferences \
+	\
+	Tools/open
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
