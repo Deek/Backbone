@@ -9,8 +9,7 @@ BUNDLE_INSTALL_DIR=	$(GNUSTEP_SYSTEM_ROOT)/Apps/Preferences.app/Resources
 PrefsApp_FRAMEWORKS=	-lPrefsModule
 
 PrefsApp_RESOURCE_FILES= \
-	PrefsApp.gorm \
-	PrefsModule.tiff
+	PrefsApp.gorm
 
 PrefsApp_OBJC_FILES=	\
 	PrefsAppView.m \
