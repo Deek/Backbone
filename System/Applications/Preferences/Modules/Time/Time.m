@@ -85,10 +85,13 @@ static ClockView			*iconClock = nil;
 	}
 
 	// Set up our view, and destroy our window.
-	view = [window contentView];
-	[view removeFromSuperview];
-	[window setContentView: NULL];
-	[window dealloc];
+	if (!view) {
+		view = [[window contentView] retain];
+
+		[view removeFromSuperview];
+		[window setContentView: NULL];
+	}
+	[window release];
 	window = nil;
 
 	[map setImage: [[NSImage alloc]
