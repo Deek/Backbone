@@ -33,7 +33,6 @@ static const char rcsid[] =
 # include "Config.h"
 #endif
 
-#import <AppKit/NSBezierPath.h>
 #import <AppKit/NSButton.h>
 #import <AppKit/NSTextField.h>
 #import <AppKit/NSColor.h>
@@ -43,52 +42,48 @@ static const char rcsid[] =
 
 @implementation PrefsAppView
 /*
-	This class sucks, and shouldn't be necessary. With working "nibs", it isn't.
+	This class shouldn't be necessary. With working "nibs", it isn't.
 */
 - (id) initWithOwner: (id) anOwner andFrame: (NSRect) frameRect
 {
-	id		label = nil;
+	id		temp = nil;
 
 	owner = anOwner;
 
 	if ((self = [super initWithFrame: frameRect])) {
-		label = [[NSTextField alloc] initWithFrame: NSMakeRect (3, 104, 130, 20)];
-		[label setEditable: NO];
-		[label setSelectable: NO];
-		[label setAllowsEditingTextAttributes: NO];
-		[label setImportsGraphics: NO];
-		[label setTextColor: [NSColor blackColor]];
-		[label setBackgroundColor: [NSColor controlColor]];
-		[label setBezeled: NO];
-		[label setStringValue: @"Load bundles from:"];
-		[self addSubview: [label autorelease]];
+		temp = [[NSBox alloc] initWithFrame: NSMakeRect (0, 81, 189, 104)];
+		[temp setTitlePosition: NSAtTop];
+		[temp setBorderType: NSGrooveBorder];
+		[temp setTitle: @"Load modules from"];
+		
+		[self addSubview: [temp autorelease]];
 
-		bundlesFromUserButton = [[NSButton alloc] initWithFrame: NSMakeRect (160, 138, 150, 20)];
-		[bundlesFromUserButton setTitle: @"Personal Library path"];
+		bundlesFromUserButton = [[NSButton alloc] initWithFrame: NSMakeRect (20, 149, 150, 16)];
+		[bundlesFromUserButton setTitle: @"Personal library path"];
 		[bundlesFromUserButton setButtonType: NSSwitchButton];
 		[bundlesFromUserButton setImagePosition: NSImageRight];
 		[bundlesFromUserButton setTarget: owner];
 		[bundlesFromUserButton setAction: @selector(bundlesFromUserButtonChanged:)];
 		[self addSubview: [bundlesFromUserButton autorelease]];
 
-		bundlesFromLocalButton = [[NSButton alloc] initWithFrame: NSMakeRect (160, 115, 150, 20)];
-		[bundlesFromLocalButton setTitle: @"Local Library path"];
+		bundlesFromLocalButton = [[NSButton alloc] initWithFrame: NSMakeRect (20, 129, 150, 16)];
+		[bundlesFromLocalButton setTitle: @"Local library path"];
 		[bundlesFromLocalButton setButtonType: NSSwitchButton];
 		[bundlesFromLocalButton setImagePosition: NSImageRight];
 		[bundlesFromLocalButton setTarget: owner];
 		[bundlesFromLocalButton setAction: @selector(bundlesFromLocalButtonChanged:)];
 		[self addSubview: [bundlesFromLocalButton autorelease]];
 
-		bundlesFromNetworkButton = [[NSButton alloc] initWithFrame: NSMakeRect (160, 92, 150, 20)];
-		[bundlesFromNetworkButton setTitle: @"Networked Library path"];
+		bundlesFromNetworkButton = [[NSButton alloc] initWithFrame: NSMakeRect (20, 109, 150, 16)];
+		[bundlesFromNetworkButton setTitle: @"Network library path"];
 		[bundlesFromNetworkButton setButtonType: NSSwitchButton];
 		[bundlesFromNetworkButton setImagePosition: NSImageRight];
 		[bundlesFromNetworkButton setTarget: owner];
 		[bundlesFromNetworkButton setAction: @selector(bundlesFromNetworkButtonChanged:)];
 		[self addSubview: [bundlesFromNetworkButton autorelease]];
 
-		bundlesFromSystemButton = [[NSButton alloc] initWithFrame: NSMakeRect (160, 69, 150, 20)];
-		[bundlesFromSystemButton setTitle: @"System Library path"];
+		bundlesFromSystemButton = [[NSButton alloc] initWithFrame: NSMakeRect (20, 89, 150, 16)];
+		[bundlesFromSystemButton setTitle: @"System library path"];
 		[bundlesFromSystemButton setButtonType: NSSwitchButton];
 		[bundlesFromSystemButton setImagePosition: NSImageRight];
 		[bundlesFromSystemButton setTarget: owner];

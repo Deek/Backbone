@@ -48,7 +48,6 @@ static const char rcsid[] =
 
 - (void) initUI
 {
-	NSButton		*save, *saveAll, *close, *defaults;
 	NSButtonCell	*prototype;
 	NSScrollView	*iconScrollView;
 
@@ -57,75 +56,41 @@ static const char rcsid[] =
 /*
 	Window dimensions:
 
+	content view size: (400, 300)
+
 	8-pixel space on all sides
-	Box is 242 pixels high, 500 wide
+	Box content view is is 265 pixels high, 500 wide
 	Scroll area is 86 pixels tall, 500 wide
-	content view size: (520, 414)
 */
-
-	prefsViewBox = [[NSBox alloc] initWithFrame: NSMakeRect (8, 40, 500, 242)];
-	[prefsViewBox setTitlePosition: NSNoTitle];
-	[prefsViewBox setBorderType: NSGrooveBorder];
-	NSDebugLog (@"prefsViewBox bounds: %@", NSStringFromRect ([[prefsViewBox contentView] bounds]));
-
-	[[self contentView] addSubview: prefsViewBox];
-
-	/* Prototype button for the matrix */
+	/* We're going top to bottom here... */
+	// Prototype button for the matrix
 	prototype = [[[NSButtonCell alloc] init] autorelease];
-	[prototype setButtonType: NSPushOnPushOffButton];
+	[prototype setButtonType: NSOnOffButton];
 	[prototype setImagePosition: NSImageOverlaps];
 
-	/* The matrix itself -- horizontal */
-	prefsViewList = [[NSMatrix alloc] initWithFrame: NSMakeRect (8, 290, 500, 73)];
-	[prefsViewList setCellSize: NSMakeSize (64, 73)];
+	// The matrix itself -- horizontal
+	prefsViewList = [[NSMatrix alloc] initWithFrame: NSMakeRect (0, 0, 560, 70)];
+	[prefsViewList setAllowsEmptySelection: YES];
+	[prefsViewList setCellSize: NSMakeSize (70, 70)];
 	[prefsViewList setMode: NSRadioModeMatrix];
 	[prefsViewList setPrototype: prototype];
-	[prefsViewList setTarget: [self windowController]];
-	[prefsViewList setAction: @selector(cellWasClicked:)];
 
-	iconScrollView = [[NSScrollView alloc] initWithFrame: NSMakeRect (8, 290, 500, 95)];
+	[prefsViewList setAction: @selector(cellWasClicked:)];
+	[prefsViewList setTarget: [self windowController]];
+
+	iconScrollView = [[NSScrollView alloc] initWithFrame: NSMakeRect (8, 202, 384, 92)];
 	[iconScrollView autorelease];
 	[iconScrollView setHasHorizontalScroller: YES];
 	[iconScrollView setHasVerticalScroller: NO];
 	[iconScrollView setDocumentView: prefsViewList];
 	[[self contentView] addSubview: iconScrollView];
 
-	/* Create the buttons */
-	// Save
-	save = [[NSButton alloc] initWithFrame: NSMakeRect (244, 8, 60, 24)];
-	[save autorelease];
-
-	[save setTitle: _(@"Save")];
-	[save setTarget: [self windowController]];
-	[save setAction: @selector(save:)];
-	[[self contentView] addSubview: save];
-
-	// SaveAll
-	saveAll = [[NSButton alloc] initWithFrame: NSMakeRect (312, 8, 60, 24)];
-	[saveAll autorelease];
-
-	[saveAll setTitle: _(@"Save All")];
-	[saveAll setTarget: [self windowController]];
-	[saveAll setAction: @selector(saveAll:)];
-	[[self contentView] addSubview: saveAll];
-
-	// Defaults
-	defaults = [[NSButton alloc] initWithFrame: NSMakeRect (380, 8, 60, 24)];
-	[defaults autorelease];
-
-	[defaults setTitle: _(@"Default")];
-	[defaults setTarget: [self windowController]];
-	[defaults setAction: @selector(reset:)];
-	[[self contentView] addSubview: defaults];
-
-	// Close
-	close = [[NSButton alloc] initWithFrame: NSMakeRect (448, 8, 60, 24)];
-	[close autorelease];
-
-	[close setTitle: _(@"Close")];
-	[close setTarget: self];
-	[close setAction: @selector(close)];
-	[[self contentView] addSubview: close];
+	prefsViewBox = [[NSBox alloc] initWithFrame: NSMakeRect (-2, -2, 404, 196)];
+	[prefsViewBox setTitlePosition: NSNoTitle];
+	[prefsViewBox setBorderType: NSGrooveBorder];
+	[prefsViewBox setContentViewMargins: NSMakeSize (8, 8)];
+	NSLog (@"prefsViewBox bounds: %@", NSStringFromRect ([[prefsViewBox contentView] bounds]));
+	[[self contentView] addSubview: prefsViewBox];
 }
 
 - (void) dealloc
@@ -141,10 +106,9 @@ static const char rcsid[] =
 	NSButtonCell	*button = [[NSButtonCell alloc] init];
 
 	[button setTag: _topTag++];
-	[button setTitle: [aController buttonCaption]];
-	[button setFont: [NSFont systemFontOfSize: 9]];
+	[button setButtonType: NSOnOffButton];
 	[button setImage: [aController buttonImage]];
-	[button setImagePosition: NSImageAbove];
+	[button setImagePosition: NSImageOnly];
 	[button setTarget: aController];
 	[button setAction: [aController buttonAction]];
 	[prefsViewList addColumnWithCells: [NSArray arrayWithObject: button]];

@@ -231,7 +231,7 @@ static id <PrefsApplication>	owner = nil;
 
 - (NSString *) buttonCaption
 {
-	return @"Application";
+	return @"Preferences.app Preferences";
 }
 
 - (NSImage *) buttonImage

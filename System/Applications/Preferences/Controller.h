@@ -56,7 +56,5 @@
 // Action methods
 - (IBAction) infoPanel: (id) sender;
 - (IBAction) open: (id) sender;
-- (IBAction) saveCurrent: (id) sender;
-- (IBAction) saveAll: (id) sender;
 
 @end

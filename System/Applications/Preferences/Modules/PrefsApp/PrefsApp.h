@@ -52,4 +52,8 @@
 - (IBAction) bundlesFromSystemButtonChanged: (id) sender;
 - (IBAction) bundlesFromUserButtonChanged: (id) sender;
 
+- (IBAction) savePrefs: (id) sender;
+- (IBAction) loadPrefs: (id) sender;
+- (IBAction) resetPrefsToDefault: (id) sender;
+
 @end

@@ -62,10 +62,8 @@ static id <PrefsModule>	currentModule = nil;
 		if (![NSBundle loadNibNamed: windowNibName owner: self]) {
 			NSLog (@"PrefsController: Could not load nib \"%@\", using compiled-in version", windowNibName);
 			theWindow = [[PrefsWindow alloc]
-						initWithContentRect: NSMakeRect (250, 250, 516, 394)
+						initWithContentRect: NSMakeRect (250, 250, 400, 302)
 						styleMask: NSTitledWindowMask
-								 | NSMiniaturizableWindowMask
-								 | NSClosableWindowMask
 						backing: NSBackingStoreBuffered
 						defer: YES
 					  ];
@@ -75,7 +73,7 @@ static id <PrefsModule>	currentModule = nil;
 			// connect our outlets
 			window = theWindow;
 			prefsViewBox = [theWindow prefsViewBox];
-			
+
 			[theWindow setMinSize: [theWindow frame].size];
 			[theWindow setDelegate: self];
 
@@ -83,7 +81,7 @@ static id <PrefsModule>	currentModule = nil;
 		} else {
 			self = [super initWithWindow: window];
 		}
-		[window setTitle: _(@"System Preferences")];
+		[window setTitle: _(@"GNUstep Preferences")];
 
 		prefsViews = [[[NSMutableArray alloc] initWithCapacity: 5] retain];
 	}
@@ -101,50 +99,6 @@ static id <PrefsModule>	currentModule = nil;
 
 - (void) windowWillClose: (NSNotification *) aNotification
 {
-}
-
-- (void) save: (id) sender
-{
-	NSLog (@"Saving current preferences...");
-
-	[currentModule savePrefs: self];
-	
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void) saveAll: (id) sender
-{
-	NSEnumerator		*enumerator = [prefsViews objectEnumerator];
-	id <PrefsModule>	current;
-
-	NSLog (@"Saving all preferences...");
-	while ((current = [enumerator nextObject])) {
-		[current savePrefs: self];
-	}
-
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void) loadPreferences: (id) sender
-{
-	NSEnumerator		*enumerator = [prefsViews objectEnumerator];
-	id <PrefsModule>	current;
-
-	NSLog (@"Loading all preferences from database...");
-	while ((current = [enumerator nextObject])) {
-		[current loadPrefs: self];
-	}
-
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-- (void) reset: (id) sender
-{
-	NSLog (@"Setting preferences to defaults for current page");
-
-	[currentModule resetPrefsToDefault: self];
-
-	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL) registerPrefsModule: (id <PrefsModule>) aPrefsModule;
@@ -170,6 +124,7 @@ static id <PrefsModule>	currentModule = nil;
 
 	currentModule = aPrefsModule;
 	[prefsViewBox setContentView: [currentModule view]];
+	[window setTitle: [currentModule buttonCaption]];
 	return YES;
 }
 

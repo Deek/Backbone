@@ -90,16 +90,6 @@ static const char rcsid[] =
 	}
 }
 
-- (void) saveCurrent: (id) sender;
-{
-	NSLog (@"This _will_ save the settings for the current module, but it doesn't yet.");
-}
-
-- (void) saveAll: (id) sender;
-{
-	NSLog (@"This _will_ save the settings for all modules, but it doesn't yet.");
-}
-
 /*
 	Notifications
 */
@@ -125,12 +115,12 @@ static const char rcsid[] =
 
 	NSMenu		*menu = [NSApp mainMenu];
 	NSMenu		*infoMenu;
-	NSMenu		*prefsMenu;
+	NSMenu		*editMenu;
 	NSMenu		*windowsMenu;
 	NSMenu		*servicesMenu;
 
 	[menu addItemWithTitle: _(@"Info")		action: NULL	keyEquivalent: @""];
-	[menu addItemWithTitle: _(@"Prefs")		action: NULL	keyEquivalent: @""];
+	[menu addItemWithTitle: _(@"Edit")		action: NULL	keyEquivalent: @""];
 	[menu addItemWithTitle: _(@"Windows")	action: NULL	keyEquivalent: @""];
 	[menu addItemWithTitle: _(@"Services")	action: NULL	keyEquivalent: @""];
 
@@ -154,22 +144,22 @@ static const char rcsid[] =
 	/*
 		Prefs
 	*/
-	NSDebugLog (@"Prefs");
-	prefsMenu = [[[NSMenu alloc] init] autorelease];
-	[menu setSubmenu: prefsMenu	forItem: [menu itemWithTitle: _(@"Prefs")]];
+	NSDebugLog (@"Edit");
+	editMenu = [[[NSMenu alloc] init] autorelease];
+	[menu setSubmenu: editMenu	forItem: [menu itemWithTitle: _(@"Edit")]];
 
-	[prefsMenu addItemWithTitle: _(@"Open module...")
-						 action: @selector (open:)
-				  keyEquivalent: @"o"];
-	[prefsMenu addItemWithTitle: _(@"Save this page")
-						 action: @selector (save:)
-				  keyEquivalent: @"s"];
-	[prefsMenu addItemWithTitle: _(@"Save all pages")
-						 action: @selector (saveAll:)
-				  keyEquivalent: @"S"];
-	[prefsMenu addItemWithTitle: _(@"Reset page to default")
-						 action: @selector (reset:)
-				  keyEquivalent: @"r"];
+	[editMenu addItemWithTitle: _(@"Cut")
+						 action: @selector (cut:)
+				  keyEquivalent: @"x"];
+	[editMenu addItemWithTitle: _(@"Copy")
+						 action: @selector (copy:)
+				  keyEquivalent: @"c"];
+	[editMenu addItemWithTitle: _(@"Paste")
+						 action: @selector (paste:)
+				  keyEquivalent: @"v"];
+	[editMenu addItemWithTitle: _(@"Select All")
+						 action: @selector (selectAll:)
+				  keyEquivalent: @"a"];
 
 	/*
 		Windows

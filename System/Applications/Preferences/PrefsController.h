@@ -55,10 +55,4 @@
 ***/
 - (id) initWithWindowNibName: (NSString *) windowNibName;
 
-- (void) save: (id) sender;
-- (void) saveAll: (id) sender;
-
-- (void) loadPreferences: (id) sender;
-- (void) reset: (id) sender;
-
 @end

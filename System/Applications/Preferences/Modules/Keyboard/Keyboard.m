@@ -43,21 +43,20 @@ static const char rcsid[] =
 
 @interface Keyboard (Private)
 
-- (NSDictionary *) preferencesFromDefaults;
-- (void) savePreferencesToDefaults: (NSDictionary *) dict;
-
-- (void) commitDisplayedValues;
-- (void) discardDisplayedValues;
-
 - (void) updateUI;
 
 @end
 
 @implementation Keyboard (Private)
 
-static NSDictionary			*currentValues = nil;
-static NSMutableDictionary	*displayedValues = nil;
 static id <PrefsController>	controller;
+static NSUserDefaults		*defaults = nil;
+static NSMutableDictionary	*domain = nil;
+
+#define setStringDefault(string,name) \
+	[domain setObject: (string) forKey: (name)]; \
+	[defaults setPersistentDomain: domain forName: NSGlobalDomain]; \
+	[defaults synchronize];
 
 static NSMutableDictionary *
 defaultValues (void) {
@@ -65,12 +64,12 @@ defaultValues (void) {
 
     if (!dict) {
         dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-				@"Meta_L", @"GSFirstCommandKey",
-				@"Meta_R", @"GSSecondCommandKey",
+				@"Alt_L", @"GSFirstCommandKey",
+				@"No Symbol", @"GSSecondCommandKey",
 				@"Control_L", @"GSFirstControlKey",
-				@"Control_L", @"GSSecondControlKey",
-				@"Alt_L", @"GSFirstAlternateKey",
-				@"Alt_L", @"GSSecondAlternateKey",
+				@"Control_R", @"GSSecondControlKey",
+				@"Alt_R", @"GSFirstAlternateKey",
+				@"No Symbol", @"GSSecondAlternateKey",
 				nil];
     }
     return dict;
@@ -89,6 +88,7 @@ commonMenu (void) {
 				@"Left Control",
 				@"Right Control",
 				@"Mode Switch",
+				@"None",
 				nil];
     }
     return arr;
@@ -107,6 +107,7 @@ menuItemNames (void) {
 				@"Meta_L", @"Left Meta/Windows",
 				@"Meta_R", @"Right Meta/Windows",
 				@"Mode_switch", @"Mode Switch",
+				@"No Symbol", @"None",
 				nil];
     }
     return dict;
@@ -132,7 +133,7 @@ getBoolDefault (NSMutableDictionary *dict, NSString *name)
 static NSString *
 getStringDefault (NSMutableDictionary *dict, NSString *name)
 {
-	NSString	*str = [[NSUserDefaults standardUserDefaults] stringForKey: name];
+	NSString	*str = [domain objectForKey: name];
 
 	if (!str)
 		str = [defaultValues() objectForKey: name];
@@ -142,64 +143,25 @@ getStringDefault (NSMutableDictionary *dict, NSString *name)
 	return str;
 }
 
-- (NSDictionary *) preferencesFromDefaults
+- (void) preferencesFromDefaults
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity: 5];
-
-	getStringDefault (dict, @"GSFirstAlternateKey");
-	getStringDefault (dict, @"GSFirstCommandKey");
-	getStringDefault (dict, @"GSFirstControlKey");
-	getStringDefault (dict, @"GSSecondAlternateKey");
-	getStringDefault (dict, @"GSSecondCommandKey");
-	getStringDefault (dict, @"GSSecondControlKey");
-	return dict;
-}
-
-- (void) savePreferencesToDefaults: (NSDictionary *) dict
-{
-	NSUserDefaults		*defaults = [NSUserDefaults standardUserDefaults];
-	NSMutableDictionary	*domain = [[defaults persistentDomainForName: NSGlobalDomain] mutableCopy];
-
-#define setStringDefault(name) \
-	[domain setObject: [dict objectForKey: (name)] forKey: (name)]
-#define setBoolDefault(name) \
-	[domain setBool: [[dict objectForKey: (name)] boolValue] forKey: (name)]
-
-	NSDebugLog (@"Updating Main Preferences...");
-	setStringDefault (@"GSFirstAlternateKey");
-	setStringDefault (@"GSFirstCommandKey");
-	setStringDefault (@"GSFirstControlKey");
-	setStringDefault (@"GSSecondAlternateKey");
-	setStringDefault (@"GSSecondCommandKey");
-	setStringDefault (@"GSSecondControlKey");
-
-	[defaults setPersistentDomain: domain forName: NSGlobalDomain];
-	[defaults synchronize];
-}
-
-- (void) commitDisplayedValues
-{
-	[currentValues release];
-	currentValues = [[displayedValues copy] retain];
-	[self savePreferencesToDefaults: currentValues];
-	[self updateUI];
-}
-
-- (void) discardDisplayedValues
-{
-	[displayedValues release];
-	displayedValues = [[currentValues mutableCopy] retain];
-	[self updateUI];
+	getStringDefault (domain, @"GSFirstAlternateKey");
+	getStringDefault (domain, @"GSFirstCommandKey");
+	getStringDefault (domain, @"GSFirstControlKey");
+	getStringDefault (domain, @"GSSecondAlternateKey");
+	getStringDefault (domain, @"GSSecondCommandKey");
+	getStringDefault (domain, @"GSSecondControlKey");
+	return;
 }
 
 - (void) updateUI
 {
-	[firstAlternatePopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [displayedValues objectForKey: @"GSFirstAlternateKey"]] objectAtIndex: 0]];
-	[firstCommandPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [displayedValues objectForKey: @"GSFirstCommandKey"]] objectAtIndex: 0]];
-	[firstControlPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [displayedValues objectForKey: @"GSFirstControlKey"]] objectAtIndex: 0]];
-	[secondAlternatePopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [displayedValues objectForKey: @"GSSecondAlternateKey"]] objectAtIndex: 0]];
-	[secondCommandPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [displayedValues objectForKey: @"GSSecondCommandKey"]] objectAtIndex: 0]];
-	[secondControlPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [displayedValues objectForKey: @"GSSecondControlKey"]] objectAtIndex: 0]];
+	[firstAlternatePopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [domain objectForKey: @"GSFirstAlternateKey"]] objectAtIndex: 0]];
+	[firstCommandPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [domain objectForKey: @"GSFirstCommandKey"]] objectAtIndex: 0]];
+	[firstControlPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [domain objectForKey: @"GSFirstControlKey"]] objectAtIndex: 0]];
+	[secondAlternatePopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [domain objectForKey: @"GSSecondAlternateKey"]] objectAtIndex: 0]];
+	[secondCommandPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [domain objectForKey: @"GSSecondCommandKey"]] objectAtIndex: 0]];
+	[secondControlPopUp selectItemWithTitle: [[menuItemNames() allKeysForObject: [domain objectForKey: @"GSSecondControlKey"]] objectAtIndex: 0]];
 	[view setNeedsDisplay: YES];
 }
 
@@ -220,6 +182,9 @@ static id <PrefsApplication>	owner = nil;
 		self = [super init];
 		owner = anOwner;
 		controller = [owner prefsController];
+		defaults = [NSUserDefaults standardUserDefaults];
+		domain = [[defaults persistentDomainForName: NSGlobalDomain] mutableCopy];
+
 		[controller registerPrefsModule: self];
 		if (![NSBundle loadNibNamed: @"Keyboard" owner: self]) {
 			NSLog (@"Keyboard: Could not load nib \"Keyboard\", using compiled-in version");
@@ -253,36 +218,11 @@ static id <PrefsApplication>	owner = nil;
 				[obj addItemsWithTitles: commonMenu()];
 			}
 		}
-
-		[self loadPrefs: self];
+		[self updateUI];
 
 		sharedInstance = self;
 	}
 	return sharedInstance;
-}
-
-- (void) loadPrefs: (id) sender
-{
-	if (currentValues)
-		[currentValues release];
-
-	currentValues = [[[self preferencesFromDefaults] copyWithZone: [self zone]] retain];
-	[self discardDisplayedValues];
-}
-
-- (void) savePrefs: (id) sender
-{
-	[self commitDisplayedValues];
-}
-
-- (void) resetPrefsToDefault: (id) sender
-{
-	if (currentValues)
-		[currentValues release];
-
-	currentValues = [[defaultValues () copyWithZone: [self zone]] retain];
-
-	[self discardDisplayedValues];
 }
 
 - (void) showView: (id) sender;
@@ -298,7 +238,7 @@ static id <PrefsApplication>	owner = nil;
 
 - (NSString *) buttonCaption
 {
-	return @"Keyboard";
+	return @"Modifier Key Preferences";
 }
 
 - (NSImage *) buttonImage
@@ -316,38 +256,32 @@ static id <PrefsApplication>	owner = nil;
 */
 - (IBAction) firstAlternateChanged: (id) sender
 {
-	[displayedValues setObject: [menuItemNames() objectForKey: [firstAlternatePopUp titleOfSelectedItem]] forKey: @"GSFirstAlternateKey"];
-	[self updateUI];
+	setStringDefault ([menuItemNames() objectForKey: [firstAlternatePopUp titleOfSelectedItem]], @"GSFirstAlternateKey");
 }
 
 - (IBAction) firstCommandChanged: (id) sender
 {
-	[displayedValues setObject: [menuItemNames() objectForKey: [firstCommandPopUp titleOfSelectedItem]] forKey: @"GSFirstCommandKey"];
-	[self updateUI];
+	setStringDefault ([menuItemNames() objectForKey: [firstCommandPopUp titleOfSelectedItem]], @"GSFirstCommandKey");
 }
 
 - (IBAction) firstControlChanged: (id) sender
 {
-	[displayedValues setObject: [menuItemNames() objectForKey: [firstControlPopUp titleOfSelectedItem]] forKey: @"GSFirstControlKey"];
-	[self updateUI];
+	setStringDefault ([menuItemNames() objectForKey: [firstControlPopUp titleOfSelectedItem]], @"GSFirstControlKey");
 }
 
 - (IBAction) secondAlternateChanged: (id) sender
 {
-	[displayedValues setObject: [menuItemNames() objectForKey: [secondAlternatePopUp titleOfSelectedItem]] forKey: @"GSSecondAlternateKey"];
-	[self updateUI];
+	setStringDefault ([menuItemNames() objectForKey: [secondAlternatePopUp titleOfSelectedItem]], @"GSSecondAlternateKey");
 }
 
 - (IBAction) secondCommandChanged: (id) sender
 {
-	[displayedValues setObject: [menuItemNames() objectForKey: [secondCommandPopUp titleOfSelectedItem]] forKey: @"GSSecondCommandKey"];
-	[self updateUI];
+	setStringDefault ([menuItemNames() objectForKey: [secondCommandPopUp titleOfSelectedItem]], @"GSSecondCommandKey");
 }
 
 - (IBAction) secondControlChanged: (id) sender
 {
-	[displayedValues setObject: [menuItemNames() objectForKey: [secondControlPopUp titleOfSelectedItem]] forKey: @"GSSecondControlKey"];
-	[self updateUI];
+	setStringDefault ([menuItemNames() objectForKey: [secondControlPopUp titleOfSelectedItem]], @"GSSecondControlKey");
 }
 
 @end	// Keyboard

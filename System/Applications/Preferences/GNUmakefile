@@ -32,8 +32,8 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 SUBPROJECTS=	\
 	PrefsModule \
-	Modules/Keyboard \
-	Modules/PrefsApp
+	Modules/PrefsApp \
+	Modules/Keyboard
 
 #
 # Main application
@@ -54,6 +54,7 @@ Preferences_FRAMEWORKS=		-lPrefsModule
 #
 Preferences_MAIN_MODEL_FILE=	Preferences.gorm
 Preferences_RESOURCE_FILES= \
+	Modules/PrefsApp/PrefsApp.prefs \
 	Preferences.tiff \
 	PrefsModule.tiff \
 	PrefsIcon_Appearances.tiff \

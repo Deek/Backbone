@@ -5,11 +5,12 @@ BUNDLE_EXTENSION=	.prefs
 #
 # We don't install this bundle, it goes inside the app.
 #
-BUNDLE_INSTALL_DIR=	$(GNUSTEP_SYSTEM_ROOT)/Library/Preferences
+BUNDLE_INSTALL_DIR=	$(GNUSTEP_SYSTEM_ROOT)/Apps/Preferences.app/Resources
 PrefsApp_FRAMEWORKS=	-lPrefsModule
 
 PrefsApp_RESOURCE_FILES= \
-	PrefsApp.gorm
+	PrefsApp.gorm \
+	PrefsModule.tiff
 
 PrefsApp_OBJC_FILES=	\
 	PrefsAppView.m \
