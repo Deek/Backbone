@@ -55,13 +55,18 @@ static const char rcsid[] =
 static NSUserDefaults		*defaults = nil;
 static id <PrefsController>	controller = nil;
 static NSWindow				*iconWin = nil;
-static ClockView			*clock = nil;
+static ClockView			*iconClock = nil;
 
 - (void) updateUI
 {
 	[clockUses24HoursButton setIntValue: [defaults boolForKey: @"ClockUses24Hours"]];
+	[clockIsAnalogButton setIntValue: [defaults boolForKey: @"ClockIsAnalog"]];
+	[clockSecondHandButton setIntValue: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
 	[localTimeZoneField setStringValue: [defaults stringForKey: @"Local Time Zone"]];
-	[clock setUses24Hours: [defaults boolForKey: @"ClockUses24Hours"]];
+
+	[iconClock setUses24Hours: [defaults boolForKey: @"ClockUses24Hours"]];
+	[iconClock setAnalog: [defaults boolForKey: @"ClockIsAnalog"]];
+	[iconClock setAnalogSecondHand: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
 	[view setNeedsDisplay: YES];
 }
 
@@ -85,6 +90,8 @@ static id <PrefsApplication>	owner = nil;
 		defaults = [NSUserDefaults standardUserDefaults];
 		dict = [[NSDictionary alloc] initWithObjectsAndKeys:
 				[NSNumber numberWithBool: NO], @"ClockUses24Hours",
+				[NSNumber numberWithBool: NO], @"ClockIsAnalog",
+				[NSNumber numberWithBool: NO], @"AnalogClockHasSecondHand",
 				nil];
 
 		if (![NSBundle loadNibNamed: @"Time" owner: self]) {
@@ -100,11 +107,12 @@ static id <PrefsApplication>	owner = nil;
 
 		// Let's be mean to the app, taking its icon away
 		iconWin = [NSApp iconWindow];
-		clock = [[ClockView alloc] init];
-		[clock setUses24Hours: [defaults boolForKey: @"ClockUses24Hours"]];
-		
-		[iconWin setContentView: clock];
-		[clock awakeFromNib];
+		iconClock = [[ClockView alloc] initWithFrame: [iconWin frame]];
+		[iconClock setUses24Hours: [defaults boolForKey: @"ClockUses24Hours"]];
+		[iconClock setAnalog: [defaults boolForKey: @"ClockIsAnalog"]];
+		[iconClock setAnalogSecondHand: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
+
+		[iconWin setContentView: iconClock];
 
 		[view retain];
 
@@ -144,6 +152,20 @@ static id <PrefsApplication>	owner = nil;
 /*
 	Action methods
 */
+- (IBAction) clockIsAnalogChanged: (id) sender
+{
+	[defaults setBool: [sender intValue] forKey: @"ClockIsAnalog"];
+	[defaults synchronize];
+	[self updateUI];
+}
+
+- (IBAction) clockSecondHandChanged: (id) sender
+{
+	[defaults setBool: [sender intValue] forKey: @"AnalogClockHasSecondHand"];
+	[defaults synchronize];
+	[self updateUI];
+}
+
 - (IBAction) clockUses24HoursChanged: (id) sender
 {
 	[defaults setBool: [sender intValue] forKey: @"ClockUses24Hours"];

@@ -12,13 +12,17 @@
     Time = {
 	Actions = (
 	    "clockUses24HoursChanged:",
-	    "localTimeFieldChanged:"
+	    "localTimeFieldChanged:",
+	    "clockSecondHandChanged:",
+	    "clockIsAnalogChanged:"
 	);
 	Outlets = (
+	    clockIsAnalogButton,
+	    clockSecondHandButton,
 	    clockUses24HoursButton,
+	    localTimeZoneField,
 	    view,
-	    window,
-	    localTimeZoneField
+	    window
 	);
 	Super = NSObject;
     };

@@ -38,8 +38,10 @@ static const char rcsid[] =
 #import <Foundation/NSTimer.h>
 
 #import <AppKit/NSApplication.h>
+#import <AppKit/NSColor.h>
 #import <AppKit/NSEvent.h>
 #import <AppKit/NSImage.h>
+#import <AppKit/PSOperators.h>
 
 #import "ClockView.h"
 
@@ -48,23 +50,11 @@ static const char rcsid[] =
 
 static	NSBundle	*this_bundle = nil;
 
-// unchanging images
-static	NSImage		*mask = nil;
-static	NSImage		*colon = nil;
-
-// changing images
-static	NSImage		*min1 = nil, *min2 = nil;
-static	NSImage		*hour1 = nil, *hour2 = nil, *ampm = nil;
-static	NSImage		*dow = nil,	*dom1 = nil, *dom2 = nil;
-static	NSImage		*month = nil;
-
 @implementation ClockView (Private)
 
 + (void) initialize
 {
 	this_bundle = [NSBundle bundleForClass: self];
-	mask = NEW_IMAGE (@"Mask");
-	colon = NEW_IMAGE (@"Time-Colon");
 }
 
 - (BOOL) acceptsFirstMouse: (NSEvent *) anEvent
@@ -76,17 +66,6 @@ static	NSImage		*month = nil;
 {
 	if ([event clickCount] >= 2)
 		[NSApp unhide: self];
-}
-
-- (void) awakeFromNib
-{
-	[self setDrawsTile: YES];
-	[self setDate: [NSCalendarDate calendarDate]];
-	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
-											 target: self
-										   selector: @selector(update:)
-										   userInfo: nil
-											repeats: YES];
 }
 
 - (void) displayIfNeeded
@@ -106,44 +85,98 @@ static	NSImage		*month = nil;
 
 @implementation ClockView
 
-- (id) init
+- (id) initWithFrame: (NSRect) frameRect
 {
-	if (!(self = [super init]))
+	if (!(self = [super initWithFrame: frameRect]))
 		return nil;
+
+	lastdom = lastmonth = lasthour = lastmin = lastsec = -1;
+	last24 = NO;
+
+	mask = NEW_IMAGE (@"Mask");
+	colon = NEW_IMAGE (@"Time-Colon");
+
+	[self setDrawsTile: YES];
+	[self setDate: [NSCalendarDate calendarDate]];
+	timer = [NSTimer scheduledTimerWithTimeInterval: 0.5
+											 target: self
+										   selector: @selector(update:)
+										   userInfo: nil
+											repeats: YES];
 
 	return self;
 }
+
 - (void) dealloc
 {
 	[timer invalidate];
 	[timer release];
 
-	[mask release];
-	[hour1 release];
-	[hour2 release];
-	[colon release];
-	[min1 release];
-	[min2 release];
-	[dow release];
-	[dom1 release];
-	[dom2 release];
-	[month release];
-	[tileImage release];
+	DESTROY (tileImage);
+	DESTROY (mask);
+	DESTROY (colon);
+	DESTROY (min1);
+	DESTROY (min2);
+	DESTROY (hour1);
+	DESTROY (hour2);
+	DESTROY (dow);
+	DESTROY (dom1);
+	DESTROY (dom2);
+	DESTROY (month);
+
 	[super dealloc];
 }
 
 - (void) setDate: (NSCalendarDate *) aDate
 {
-	static int	lastdom = -1, lastmonth = -1, lasthour = -1, lastmin = -1;
-	static BOOL	last24 = NO;
-
-	int		_hour = [aDate hourOfDay];
-	int		_min = [aDate minuteOfHour];
-	int		_dow = [aDate dayOfWeek];
-	int		_dom = [aDate dayOfMonth];
-	int		_month = [aDate monthOfYear];
-
 	BOOL	dateChanged = NO;
+
+	_sec = [aDate secondOfMinute];
+	_min = [aDate minuteOfHour];
+	_hour = [aDate hourOfDay];
+	_dow = [aDate dayOfWeek];
+	_dom = [aDate dayOfMonth];
+	_month = [aDate monthOfYear];
+
+	if (isAnalog) {	// Analog stuff is trivial
+		DESTROY (min1);
+		DESTROY (min2);
+		DESTROY (hour1);
+		DESTROY (hour2);
+		DESTROY (colon);
+		DESTROY (dow);
+		DESTROY (dom1);
+		DESTROY (dom2);
+		DESTROY (month);
+
+		lastdom = lastmonth = -1;
+
+		if (lasthour != _hour || last24 != use24Hours) {
+			lasthour = _hour;
+			last24 = use24Hours;
+
+			dateChanged = YES;
+		}
+
+		if (lastmin != _min) {
+			lastmin = _min;
+			dateChanged = YES;
+		}
+
+		if (lastSecHand != hasSecondHand) {
+			lastSecHand = hasSecondHand;
+			dateChanged = YES;
+		}
+
+		if (hasSecondHand && lastsec != _sec) {
+			lastsec = _sec;
+			dateChanged = YES;
+		}
+
+		if (dateChanged)
+			[self setNeedsDisplay: YES];
+		return;
+	}
 
 	if (lastdom != _dom) {
 		lastdom = _dom;
@@ -230,6 +263,52 @@ static	NSImage		*month = nil;
 							(aRect.size.height - maskSize.height) / 2);
 	maskLoc = NSMakePoint (tempRect.origin.x, tempRect.origin.y);
 
+	// draw the tile and mask
+	if (drawsTile && tileImage)
+		[tileImage compositeToPoint: NSZeroPoint operation: NSCompositeSourceOver];
+	[mask compositeToPoint: maskLoc operation: NSCompositeSourceOver];
+
+	if (isAnalog) {
+		int		centerX = maskLoc.x + (maskSize.width/2);
+		int		centerY = maskLoc.y + (maskSize.height/2);
+		int		secLength = maskSize.height/2 - 4;
+		int		minLength = maskSize.height/2 - 8;
+		int		hourLength = maskSize.height/4;
+		float	hourAdvancement;
+
+		PStranslate (centerX, centerY);	// set the center as the origin
+
+		hourAdvancement = 360 / ((use24Hours) ? 24 : 12);
+
+		if (hasSecondHand) {
+			[[NSColor darkGrayColor] set];
+
+			PSgsave ();
+			PSrotate (0 - (_sec * 6.0));
+			PSmoveto (0, 0);
+			PSlineto (0, secLength);
+			PSstroke ();
+			PSgrestore ();
+		}
+
+		[[NSColor blackColor] set];
+
+		PSgsave ();
+		PSrotate (0 - ((_hour * hourAdvancement) + (hourAdvancement * _min * (1.0 / 60.0))));
+		PSmoveto (0, 0);
+		PSlineto (0, hourLength);
+		PSstroke ();
+		PSgrestore ();
+
+		PSgsave ();
+		PSrotate (0 - (_min * 6.0));
+		PSmoveto (0, 0);
+		PSlineto (0, minLength);
+		PSstroke ();
+		PSgrestore ();
+
+		return;
+	}
 	// Rect defining the inside of the "date" area
 	bottomInsideRect = NSMakeRect (tempRect.origin.x + 1,
 								   tempRect.origin.y + 1, 54, 35);
@@ -238,18 +317,13 @@ static	NSImage		*month = nil;
 	topInsideRect = NSMakeRect (tempRect.origin.x + 1,
 								tempRect.origin.y + 39, 54, 15);
 
-	// draw the tile and mask
-	if (drawsTile && tileImage)
-		[tileImage compositeToPoint: NSZeroPoint operation: NSCompositeSourceOver];
-	[mask compositeToPoint: maskLoc operation: NSCompositeSourceOver];
-
 	// day of week
 	width = [dow size].width + [month size].width;
 	tempRect = NSInsetRect (bottomInsideRect,
 							(bottomInsideRect.size.width - width) / 2,
 							0);
 
-	location.x = tempRect.origin.x + 2;
+	location.x = tempRect.origin.x;
 	location.y = tempRect.origin.y + [dom2 size].height - 4;
 	[dow compositeToPoint: location operation: NSCompositeSourceOver];
 	location.x += [dow size].width;
@@ -354,9 +428,40 @@ static	NSImage		*month = nil;
 		DESTROY (tileImage);
 }
 
+- (BOOL) isAnalog
+{
+	return isAnalog;
+}
+
+- (BOOL) hasAnalogSecondHand
+{
+	return hasSecondHand;
+}
+
 - (BOOL) uses24Hours
 {
 	return use24Hours;
+}
+
+- (void) setAnalog: (BOOL) flag
+{
+	if (flag && !isAnalog) {
+		[mask release];
+		mask = NEW_IMAGE (@"AnalogMask");
+	}
+
+	if (!flag && isAnalog) {
+		[mask release];
+		mask = NEW_IMAGE (@"Mask");
+		colon = NEW_IMAGE (@"Time-Colon");
+	}
+	lastdom = lastmonth = lasthour = lastmin = lastsec = -1;
+	isAnalog = flag;
+}
+
+- (void) setAnalogSecondHand: (BOOL) flag
+{
+	hasSecondHand = flag;
 }
 
 - (void) setUses24Hours: (BOOL) flag

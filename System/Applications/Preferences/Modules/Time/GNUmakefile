@@ -10,7 +10,7 @@ Time_RESOURCE_FILES= \
 		Date-6.tiff Date-7.tiff Date-8.tiff Date-9.tiff \
 	Day-0.tiff Day-1.tiff Day-2.tiff Day-3.tiff Day-4.tiff Day-5.tiff \
 		Day-6.tiff \
-	Mask.tiff \
+	AnalogMask.tiff Mask.tiff \
 	Month-01.tiff Month-02.tiff Month-03.tiff Month-04.tiff Month-05.tiff \
 		Month-06.tiff Month-07.tiff Month-08.tiff Month-09.tiff \
 		Month-10.tiff Month-11.tiff Month-12.tiff \

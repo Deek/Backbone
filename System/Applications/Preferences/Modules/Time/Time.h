@@ -39,12 +39,17 @@
 @interface Time: NSObject <PrefsModule>
 {
 	IBOutlet NSButton		*clockUses24HoursButton;
+	IBOutlet NSButton		*clockIsAnalogButton;
+	IBOutlet NSButton		*clockSecondHandButton;
 	IBOutlet NSTextField	*localTimeZoneField;
 
 	IBOutlet id		window;
 	IBOutlet id		view;
+	IBOutlet id		clock;
 }
 
+- (IBAction) clockIsAnalogChanged: (id) sender;
+- (IBAction) clockSecondHandChanged: (id) sender;
 - (IBAction) clockUses24HoursChanged: (id) sender;
 - (IBAction) localTimeFieldChanged: (id) sender;
 
