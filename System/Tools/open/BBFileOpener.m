@@ -44,7 +44,7 @@ static NSFileManager	*fm = nil;
 static BBFileOpener		*sharedInstance = nil;
 
 @interface BBFileOpener (Private)
-- (id) connectToApp: (NSString *)appName;
+- (id) connectToApp: (NSString *)fileName;
 - (BOOL) openFile: (NSString *)file : (NSString *)app : (BOOL)print : (BOOL)temp;
 - (NSString *) bestAppForFile: (NSString *)file;
 @end
@@ -193,7 +193,7 @@ static BBFileOpener		*sharedInstance = nil;
 
 @implementation BBFileOpener (Private)
 /*
-	connectToApp (appname, hostname)
+	connectToApp:
 
 	Attempt to connect to a running application. If it is not running, it will
 	be launched, using NSWorkspace -launchApplication:showIcon:autolaunch:.
@@ -201,15 +201,16 @@ static BBFileOpener		*sharedInstance = nil;
 	This function keeps trying to connect to the application for up to 10
 	seconds.
 */
-- (id) connectToApp: (NSString *)appName
+- (id) connectToApp: (NSString *)fileName
 {
 	id				app = nil;
 	NSDate			*expiry = [NSDate dateWithTimeIntervalSinceNow: timeout];
+	NSString		*appName = nil;
 
-	if (!appName)
+	if (!fileName)
 		return nil;
 
-	appName = [appName stringByDeletingPathExtension];
+	appName = [[fileName lastPathComponent] stringByDeletingPathExtension];
 
 NS_DURING
 	app = [NSConnection rootProxyForConnectionWithRegisteredName: appName
@@ -220,7 +221,7 @@ NS_ENDHANDLER
 	if (app)
 		return app;
 
-	if (![workspace launchApplication: appName showIcon: YES autolaunch: autolaunch])
+	if (![workspace launchApplication: fileName showIcon: YES autolaunch: autolaunch])
 		return nil;	// don't bother, workspace couldn't exec it
 
 NS_DURING

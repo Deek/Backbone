@@ -197,7 +197,14 @@ checkArgs (NSString *name, NSMutableArray *args)
 				doHelp = YES;
 				printf ("%s error: not enough arguments\n", [name cString]);
 			} else {
-				appName = [args objectAtIndex: 0];
+				NSString	*newAppName = [args objectAtIndex: 0];
+
+				if (![opener openApp: newAppName]) {
+					printf ("Could not contact application \"%s\"", [appName cString]);
+					exit (1);
+				}
+
+				appName = [newAppName retain];
 				appNameForced = YES;
 				[args removeObjectAtIndex: 0];
 			}
@@ -316,7 +323,8 @@ main (int argc, char** argv, char **env)
 			}
 
 			appNameForced = YES;
-			appName = newAppName;
+			[appName release];
+			appName = [newAppName retain];
 
 			if (![opener openApp: newAppName]) {
 				printf ("Could not contact application \"%s\"", [appName cString]);
@@ -341,25 +349,26 @@ main (int argc, char** argv, char **env)
 		}
 
 NS_DURING
-		if ([ext isEqualToString: @"app"]	// is it an app?
-				|| [ext isEqualToString: @"debug"]
-				|| [ext isEqualToString: @"profile"]) {
-			if (![opener openApp: arg]) {
-				printf ("%s: Unable to launch: %s\n", [processName cString], [arg cString]);
-			}
-			continue;
-		}
-
 		// standardize the path
-		if (![arg isAbsolutePath])
+		if (![arg isAbsolutePath]) {
 			arg = [[[fm currentDirectoryPath]
 					stringByAppendingPathComponent: arg]
 					stringByStandardizingPath];
+		}
 
-		printf ("Filename: %s\n", [arg cString]);
+//		printf ("Filename: %s\n", [arg cString]);
 
 		if (!(exists = [fm fileExistsAtPath: arg isDirectory: &isDir])) {
 			printf ("%s: File \"%s\" not found.\n", [processName cString], [arg cString]);
+			continue;
+		}
+
+		if ([ext isEqualToString: @"app"]	// is it an app?
+			|| [ext isEqualToString: @"debug"]
+			|| [ext isEqualToString: @"profile"]) {	// 
+			if (![opener openApp: arg]) {
+				printf ("%s: Unable to launch: %s\n", [processName cString], [arg cString]);
+			}
 			continue;
 		}
 
