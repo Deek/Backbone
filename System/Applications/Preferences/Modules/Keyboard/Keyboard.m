@@ -81,16 +81,20 @@ commonMenu (void) {
 
     if (!arr) {
         arr = [[NSArray alloc] initWithObjects:
-				@"Left Alt",
-				@"Right Alt",
-				@"Left Meta",
-				@"Right Meta",
-				@"Left Super (Windows)",
-				@"Right Super (Windows)",
-				@"Left Control",
-				@"Right Control",
-				@"Mode Switch",
 				@"None",
+				@"AltGr (XFree86 4.3+)",
+				@"Left Alt",
+				@"Left Control",
+				@"Left Hyper",
+				@"Left Meta",
+				@"Left Super",
+				@"Right Alt",
+				@"Right Control",
+				@"Right Hyper",
+				@"Right Meta",
+				@"Right Super",
+				@"Mode Switch",
+				@"Multi-Key",
 				nil];
     }
     return arr;
@@ -102,17 +106,20 @@ menuItemNames (void) {
 
     if (!dict) {
         dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-				@"Alt_L", @"Left Alt",
-				@"Alt_R", @"Right Alt",
-				@"Control_L", @"Left Control",
-				@"Control_R", @"Right Control",
-				@"Meta_L", @"Left Meta",
-				@"Meta_R", @"Right Meta",
-				@"Super_L", @"Left Super (Windows)",
-				@"Super_R", @"Right Super (Windows)",
-				@"Multi_key", @"Multi-Key (Compose)",
-				@"Mode_switch", @"Mode Switch",
 				@"No Symbol", @"None",
+				@"ISO_Level3_Shift", @"AltGr (XFree86 4.3+)",
+				@"Alt_L", @"Left Alt",
+				@"Control_L", @"Left Control",
+				@"Hyper_L", @"Left Hyper",
+				@"Meta_L", @"Left Meta",
+				@"Super_L", @"Left Super",
+				@"Alt_R", @"Right Alt",
+				@"Control_R", @"Right Control",
+				@"Hyper_R", @"Right Hyper",
+				@"Meta_R", @"Right Meta",
+				@"Super_R", @"Right Super",
+				@"Mode_switch", @"Mode Switch",
+				@"Multi_key", @"Multi-Key",
 				nil];
     }
     return dict;

@@ -147,7 +147,7 @@
 	    "secondCommandChanged:",
 	    "firstControlChanged:",
 	    "firstCommandChanged:",
-	    "frstAlternateChanged:",
+	    "firstAlternateChanged:",
 	    "secondAlternateChanged:"
 	);
 	Outlets = (
