@@ -92,11 +92,26 @@ static id				currentModule = nil;
 	[iconScrollView setBorderType: NSBezelBorder];
 }
 
+/*
+	Since we manage a single instance of the class, we override the -retain
+	and -release methods to do nothing.
+*/
+- (id) retain
+{
+	return self;
+}
+
 - (oneway void) release
 {
 	return;
 }
 
+/*
+	dealloc
+
+	Do some special handling so that instances created with +alloc can be
+	deleted, while still not allowing the shared instance to be deallocated.
+*/
 - (void) dealloc
 {
 	if (sharedInstance && self != sharedInstance) {
@@ -105,9 +120,17 @@ static id				currentModule = nil;
 	return;
 }
 
+/*
+	windowWillClose:
+
+	TODO: Tell the loaded modules about this so that they can clean up after
+	themselves
+*/
+#if 0
 - (void) windowWillClose: (NSNotification *) aNotification
 {
 }
+#endif
 
 - (BOOL) registerPrefsModule: (id) aPrefsModule;
 {

@@ -57,7 +57,9 @@
 /*
 	Notification methods
 */
+#if 0
 - (void) windowWillClose: (NSNotification *) aNotification;
+#endif
 
 @end
 
