@@ -2,7 +2,7 @@
 ADDITIONAL_CPPFLAGS +=
 
 # Additional flags to pass to the Objective-C compiler
-ADDITIONAL_OBJCFLAGS += -Wall -Wprotocols -Wprotocol -DHAVE_CONFIG_H
+ADDITIONAL_OBJCFLAGS += -Wall -DHAVE_CONFIG_H
 
 # Additional flags to pass to the C compiler
 ADDITIONAL_CFLAGS += -Wall -DHAVE_CONFIG_H
@@ -10,6 +10,13 @@ ifeq ($(shell test -d CVS && echo -n 1), 1)
 ADDITIONAL_OBJCFLAGS += -Werror
 ADDITIONAL_CFLAGS += -Werror
 endif
+
+ifeq ($(shell gcc -v 2>&1 | grep -e '^gcc' | cut -f3 -d' ' | cut -d. -f1,2), 3.3)
+ADDITIONAL_OBJCFLAGS += -fno-strict-aliasing
+endif
+
+export ADDITIONAL_OBJCFLAGS
+export ADDITIONAL_CFLAGS
 
 # Additional include directories the compiler should search
 ADDITIONAL_INCLUDE_DIRS +=
