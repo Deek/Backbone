@@ -1219,8 +1219,10 @@ Translates '\n' to '\r' when sending.
 	
 		for (i=0;i<l;i++)
 		{
-			ucs=htonl([s characterAtIndex: i]);
-			if (ucs=='\n') ucs='\r';
+			ucs=[s characterAtIndex: i];
+			if (ucs=='\n')
+				ucs='\r';
+			ucs=htonl(ucs);
 
 			inp=&ucs;
 			insize=4;
