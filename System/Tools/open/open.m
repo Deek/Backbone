@@ -418,7 +418,7 @@ main (int argc, char** argv, char **env)
 			break;
 		}
 
-		break;	// should never reach here
+		continue;
 	}
 	[pool release];
 	return 0;

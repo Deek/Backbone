@@ -302,13 +302,14 @@ NS_ENDHANDLER
 {
 	NSString	*app = nil;
 	NSString	*type = nil;
-	NSString	*defaultApp = nil;
+	NSString	*tmp;
+	NSString	*defaultApp = @"TextEdit";
 
 	if (![workspace getInfoForFile: file application: &app type: &type])
 		return nil;	// file does not exist
 
-	if (!(defaultApp = [defaults stringForKey: @"GSDefaultEditor"]))
-		defaultApp = @"TextEdit";
+	if ((tmp = [defaults stringForKey: @"GSDefaultEditor"]))
+		defaultApp = tmp;
 	
 	if ([type isEqualToString: NSShellCommandFileType]) {	// is executable
 		id temp = [defaults stringForKey: @"GSDefaultTerminal"];
