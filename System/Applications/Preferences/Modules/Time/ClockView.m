@@ -252,11 +252,11 @@ static	NSImage		*month = nil;
 	// day of month
 	location.x = bottomInsideRect.origin.x +
 				(bottomInsideRect.size.width / 2 - 
-				(([dom1 size].width + [dom2 size].width)/2) + 1) + 1;
+				(([dom1 size].width + [dom2 size].width)/2) + 1) + 2;
 	location.y = bottomInsideRect.origin.y;
 	[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
 
-	location.x += [dom1 size].width + 1;
+	location.x += [dom1 size].width;
 	[dom2 compositeToPoint: location operation: NSCompositeSourceOver];
 
 	/*
