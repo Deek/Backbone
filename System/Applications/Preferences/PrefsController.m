@@ -76,9 +76,6 @@ static id <PrefsModule>	currentModule = nil;
 	[window setFrameAutosaveName: @"Preferences"];
 	[window setFrameUsingName: @"Preferences"];
 
-	// keep the window out of the menu until it's seen
-	[window setExcludedFromWindowsMenu: YES];
-
 	if (iconList)	// stop processing if we already have an icon list
 		return;
 
