@@ -15,6 +15,7 @@ copyright 2002, 2003 Alexander Malmberg <alexander@malmberg.org>
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <Foundation/NSAutoreleasePool.h>
 #include <Foundation/NSBundle.h>
 #include <Foundation/NSDebug.h>
 #include <Foundation/NSNotification.h>
@@ -36,9 +37,10 @@ copyright 2002, 2003 Alexander Malmberg <alexander@malmberg.org>
 #include "Label.h"
 
 
-#include "TerminalWindow.h"
-#include "TerminalView.h"
 #include "PreferencesWindowController.h"
+#include "Services.h"
+#include "TerminalView.h"
+#include "TerminalWindow.h"
 
 
 @interface NSMenu (helpers)
@@ -221,8 +223,6 @@ copyright 2002, 2003 Alexander Malmberg <alexander@malmberg.org>
 	[[twc terminalView] runShell];
 }
 
-
-@class TerminalServices;
 
 -(void) applicationDidFinishLaunching: (NSNotification *)n
 {
