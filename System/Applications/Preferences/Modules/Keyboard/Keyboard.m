@@ -202,6 +202,10 @@ static id <PrefsApplication>	owner = nil;
 		} else {
 			// window can be any size, as long as it's 486x228 :)
 			view = [window contentView];
+			[view removeFromSuperview];
+			[window setContentView: NULL];
+			[window dealloc];
+			window = nil;
 		}
 		[view retain];
 

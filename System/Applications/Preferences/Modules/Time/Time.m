@@ -101,10 +101,15 @@ static id <PrefsApplication>	owner = nil;
 			[self dealloc];
 			return nil;
 		}
+		// Set up our view, and destroy our window.
+		view = [window contentView];
+		[view removeFromSuperview];
+		[window setContentView: NULL];
+		[window dealloc];
+		window = nil;
+
 		[defaults registerDefaults: dict];
 		[controller registerPrefsModule: self];
-		// window can be any size, as long as it's 486x228 :)
-		view = [window contentView];
 
 		// Let's be mean to the app, taking its icon away
 		iconWin = [NSApp iconWindow];

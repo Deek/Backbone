@@ -34,6 +34,8 @@ static const char rcsid[] =
 #endif
 
 #import <Foundation/NSDebug.h>
+#import <Foundation/NSInvocation.h>
+#import <Foundation/NSObjCRuntime.h>
 
 #import <AppKit/NSApplication.h>
 #import <AppKit/NSNibLoading.h>
@@ -73,14 +75,11 @@ static id <PrefsModule>	currentModule = nil;
 - (void) awakeFromNib
 {
 	// Let the systen keep track of where it belongs
-	[window setFrameAutosaveName: @"Preferences"];
-	[window setFrameUsingName: @"Preferences"];
+	[window setFrameAutosaveName: @"PreferencesMainWindow"];
+	[window setFrameUsingName: @"PreferencesMainWindow"];
 
 	if (iconList)	// stop processing if we already have an icon list
 		return;
-
-	[prefsViewBox setContentViewMargins: NSMakeSize (0, 0)];	// FIXME
-	NSLog (@"Content frame: %@", NSStringFromSize([[prefsViewBox contentView] bounds].size));
 
 	/* What is the matrix? :) */
 	iconList = [[NSMatrix alloc] initWithFrame: NSMakeRect (0, 0, 64*30, 64)];
@@ -153,5 +152,50 @@ static id <PrefsModule>	currentModule = nil;
 - (id) currentModule;
 {
 	return currentModule;
+}
+
+/*
+	Note: This is ugly.
+*/
+#ifndef NeXT_RUNTIME
+extern BOOL __objc_responds_to (id, SEL);
+#endif
+
+- (BOOL) respondsToSelector: (SEL) aSelector
+{
+	if (!aSelector)
+		return NO;
+
+	if (__objc_responds_to (self, aSelector))
+		return YES;
+
+	if ([self methodSignatureForSelector: aSelector])
+		return YES;
+
+	return NO;
+}
+
+- (NSMethodSignature *) methodSignatureForSelector: (SEL) aSelector
+{
+	NSMethodSignature	*sig = nil;
+
+	if ((sig = [[self class] instanceMethodSignatureForSelector: aSelector]))
+		return sig;
+
+	if (!currentModule)
+		return nil;
+
+	if ([currentModule respondsToSelector: aSelector])
+		return [(id)currentModule methodSignatureForSelector: aSelector];
+
+	return nil;
+}
+
+- (void) forwardInvocation: (NSInvocation *)invocation
+{
+	if (currentModule && [currentModule respondsToSelector: [invocation selector]])
+		[invocation invokeWithTarget: currentModule];
+	else
+		[self doesNotRecognizeSelector: [invocation selector]];
 }
 @end
