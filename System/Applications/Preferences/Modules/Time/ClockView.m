@@ -323,7 +323,10 @@ static	NSBundle	*this_bundle = nil;
 								0);
 
 		location.x = tempRect.origin.x;
-		location.y = tempRect.origin.y + [dom2 size].height - 4;
+		// find the top and subtract the height of the day name
+		location.y = tempRect.origin.y
+					+ tempRect.size.height
+					- ([dow size].height + 1);
 		[dow compositeToPoint: location operation: NSCompositeSourceOver];
 		location.x += [dow size].width;
 
