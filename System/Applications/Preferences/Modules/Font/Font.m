@@ -204,6 +204,13 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 	NSFont		*font;
 
 	fontKey = [fontCategoryNames() objectForKey: [fontCategoryPopUp titleOfSelectedItem]];
+	if (!fontKey) { // no selected item, bail out
+		[fontNameTextField setStringValue: @"No font (?!?!?)"];
+		[fontExampleTextView setFont: [NSFont systemFontOfSize: 12.0]];
+		[view setNeedsDisplay: YES];
+		return;
+	}
+
 	fontSizeKey = [NSString stringWithFormat: @"%@Size", [fontCategoryNames() objectForKey: [fontCategoryPopUp titleOfSelectedItem]]];
 
 	[fontNameTextField setStringValue: [NSString stringWithFormat: @"%@ %g point",
@@ -231,6 +238,7 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 
 	[fontCategoryPopUp removeAllItems];
 	[fontCategoryPopUp addItemsWithTitles: fontCategories()];
+	[fontCategoryPopUp selectItemAtIndex: 0];
 
 	[fontNameTextField setBackgroundColor: [NSColor controlColor]];
 	[fontNameTextField setDrawsBackground: YES];
@@ -350,7 +358,7 @@ static id <PrefsApplication>	owner = nil;
 }
 
 /*
-	Class methotds
+	Class methods
 */
 - (void) changeFont: (id)sender
 {
