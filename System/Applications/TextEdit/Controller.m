@@ -164,7 +164,7 @@
 
 - (void) setVersionField: (id)versionField
 {
-	extern char TextEdit_VERS_NUM[];
+	const char *TextEdit_VERS_NUM = "40";
 
 	if (strlen (TextEdit_VERS_NUM) > 0) {
 		NSString *versionString = [NSString stringWithFormat: NSLocalizedString (@"Release 4 (v%s)", @"Version string.  %s is replaced by the version number."), TextEdit_VERS_NUM];
