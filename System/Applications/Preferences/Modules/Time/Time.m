@@ -47,7 +47,10 @@ static const char rcsid[] =
 #import "ClockView.h"
 
 @interface Time (Private)
+
+- (void) initUI;
 - (void) updateUI;
+
 @end
 
 @implementation Time (Private)
@@ -69,6 +72,29 @@ static ClockView			*iconClock = nil;
 	[iconClock setAnalog: [defaults boolForKey: @"ClockIsAnalog"]];
 	[iconClock setAnalogSecondHand: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
 	[view setNeedsDisplay: YES];
+}
+
+- (void) initUI
+{
+	if (![NSBundle loadNibNamed: @"Time" owner: self]) {
+		NSLog (@"Time: Could not load nib \"Time\", aborting.");
+		[self dealloc];
+		return;
+	}
+
+	// Set up our view, and destroy our window.
+	view = [window contentView];
+	[view removeFromSuperview];
+	[window setContentView: NULL];
+	[window dealloc];
+	window = nil;
+
+	[map setImage: [[NSImage alloc]
+					initWithContentsOfFile: [bundle pathForImageResource: @"WorldMap"]]];
+
+	[view retain];
+
+	[self updateUI];
 }
 
 @end	// Time (Private)
@@ -96,18 +122,6 @@ static id <PrefsApplication>	owner = nil;
 				[NSNumber numberWithBool: NO], @"AnalogClockHasSecondHand",
 				nil];
 
-		if (![NSBundle loadNibNamed: @"Time" owner: self]) {
-			NSLog (@"Time: Could not load nib \"Time\", aborting.");
-			[self dealloc];
-			return nil;
-		}
-		// Set up our view, and destroy our window.
-		view = [window contentView];
-		[view removeFromSuperview];
-		[window setContentView: NULL];
-		[window dealloc];
-		window = nil;
-
 		[defaults registerDefaults: dict];
 		[controller registerPrefsModule: self];
 
@@ -120,14 +134,6 @@ static id <PrefsApplication>	owner = nil;
 
 		[iconWin setContentView: iconClock];
 
-		NSLog (@"%@", [bundle pathForImageResource: @"WorldMap"]);
-		[map setImage: [[NSImage alloc]
-						initWithContentsOfFile: [bundle
-							pathForImageResource: @"WorldMap"]]];
-		[view retain];
-
-		[self updateUI];
-
 		sharedInstance = self;
 	}
 	return sharedInstance;
@@ -135,6 +141,9 @@ static id <PrefsApplication>	owner = nil;
 
 - (void) showView: (id) sender;
 {
+	if (!view)
+		[self initUI];
+
 	[controller setCurrentModule: self];
 	[view setNeedsDisplay: YES];
 }

@@ -46,14 +46,15 @@ static const char rcsid[] =
 
 @interface Font (Private)
 
+- (void) initUI;
 - (void) updateUI;
-- (void) preferencesFromDefaults;
 
 @end
 
 @implementation Font (Private)
 
 static id <PrefsController>	controller;
+static NSBundle				*bundle = nil;
 static NSUserDefaults		*defaults = nil;
 static NSMutableDictionary	*domain = nil;
 
@@ -116,9 +117,9 @@ fontCategories (void) {
 
     if (!arr) {
         arr = [[NSArray alloc] initWithObjects:
-				@"System Font",
-				@"Small System Font",
-				@"Bold System Font",
+				@"Application Font",
+				@"Small Application Font",
+				@"Bold Application Font",
 				@"Label Font",
 				@"Menu Font",
 				@"Message Font",
@@ -139,9 +140,9 @@ fontCategoryNames (void) {
 
     if (!dict) {
         dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-				@"NSFont",					@"System Font",
-				@"NSSmallFont",				@"Small System Font",
-				@"NSBoldFont",				@"Bold System Font",
+				@"NSFont",					@"Application Font",
+				@"NSSmallFont",				@"Small Application Font",
+				@"NSBoldFont",				@"Bold Application Font",
 				@"NSLabelFont",				@"Label Font",
 				@"NSMenuFont",				@"Menu Font",
 				@"NSMessageFont",			@"Message Font",
@@ -197,11 +198,6 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 	return [sNum floatValue];
 }
 
-- (void) preferencesFromDefaults
-{
-	return;
-}
-
 - (void) updateUI
 {
 	NSString	*fontKey;
@@ -223,13 +219,55 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 	[view setNeedsDisplay: YES];
 }
 
+- (void) initUI
+{
+	if (![NSBundle loadNibNamed: @"Font" owner: self]) {
+		NSLog (NSLocalizedStringFromTableInBundle(@"Font: Could not load nib \"Font\", aborting.", @"Localizable", bundle, @""));
+		[self dealloc];
+		return;
+	}
+
+	view = [window contentView];
+	[view removeFromSuperview];
+
+	[fontCategoryPopUp removeAllItems];
+	[fontCategoryPopUp addItemsWithTitles: fontCategories()];
+
+	[fontNameTextField setBackgroundColor: [NSColor controlColor]];
+	[fontNameTextField setDrawsBackground: YES];
+
+	[fontExampleScrollView setHasHorizontalScroller: NO];
+	[fontExampleScrollView setHasVerticalScroller: YES];
+
+	if (!fontExampleTextView) {
+		NSRect frame;
+
+		frame.origin.x = frame.origin.y = 0;
+		frame.size = [fontExampleScrollView contentSize];
+
+		fontExampleTextView = [[NSTextView alloc] initWithFrame: frame];
+		[fontExampleTextView setBackgroundColor: [NSColor controlColor]];
+		[fontExampleTextView setEditable: NO];
+		[fontExampleTextView setSelectable: NO];
+		[fontExampleTextView setText: NSLocalizedStringFromTableInBundle (@"Example Text", @"Localizable", bundle, @"")];
+
+		[fontExampleScrollView setDocumentView: fontExampleTextView];
+	}
+
+	[window setContentView: NULL];
+	[window dealloc];
+	window = nil;
+
+	[view retain];
+	[self updateUI];
+}
+
 @end	// Font (Private)
 
 @implementation Font
 
 static Font			*sharedInstance = nil;
 static id <PrefsApplication>	owner = nil;
-static id bundle = nil;
 
 - (id) initWithOwner: (id <PrefsApplication>) anOwner
 {
@@ -243,46 +281,7 @@ static id bundle = nil;
 		domain = [[defaults persistentDomainForName: NSGlobalDomain] mutableCopy];
 		bundle = [NSBundle bundleForClass: [self class]];
 
-		if (![NSBundle loadNibNamed: @"Font" owner: self]) {
-			NSLog (NSLocalizedStringFromTableInBundle(@"Font: Could not load nib \"Font\", aborting.", @"Localizable", bundle, @""));
-			[self dealloc];
-			return nil;
-		}
-		view = [window contentView];
-		[view removeFromSuperview];
-
 		[controller registerPrefsModule: self];
-
-		[fontCategoryPopUp removeAllItems];
-		[fontCategoryPopUp addItemsWithTitles: fontCategories()];
-
-		[fontNameTextField setBackgroundColor: [NSColor controlColor]];
-		[fontNameTextField setDrawsBackground: YES];
-
-		[fontExampleScrollView setHasHorizontalScroller: NO];
-		[fontExampleScrollView setHasVerticalScroller: YES];
-
-		if (!fontExampleTextView) {
-			NSRect frame;
-
-			frame.origin.x = frame.origin.y = 0;
-			frame.size = [fontExampleScrollView contentSize];
-
-			fontExampleTextView = [[NSTextView alloc] initWithFrame: frame];
-			[fontExampleTextView setBackgroundColor: [NSColor controlColor]];
-			[fontExampleTextView setEditable: NO];
-			[fontExampleTextView setSelectable: NO];
-			[fontExampleTextView setText: NSLocalizedStringFromTableInBundle (@"Example Text", @"Localizable", bundle, @"")];
-
-			[fontExampleScrollView setDocumentView: fontExampleTextView];
-		}
-
-		[window setContentView: NULL];
-		[window dealloc];
-		window = nil;
-
-		[view retain];
-		[self updateUI];
 
 		sharedInstance = self;
 	}
@@ -291,6 +290,9 @@ static id bundle = nil;
 
 - (void) showView: (id) sender;
 {
+	if (!view)
+		[self initUI];
+
 	[controller setCurrentModule: self];
 	[view setNeedsDisplay: YES];
 }

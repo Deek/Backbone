@@ -43,6 +43,7 @@ static const char rcsid[] =
 
 @interface Keyboard (Private)
 
+- (void) initUI;
 - (void) updateUI;
 - (void) preferencesFromDefaults;
 
@@ -166,6 +167,47 @@ getStringDefault (NSMutableDictionary *dict, NSString *name)
 	[view setNeedsDisplay: YES];
 }
 
+- (void) initUI
+{
+	NSMutableArray	*popups = [NSMutableArray arrayWithCapacity: 6];
+
+	if (![NSBundle loadNibNamed: @"Keyboard" owner: self]) {
+		NSLog (@"Keyboard: Could not load nib \"Keyboard\", using compiled-in version");
+		view = [[KeyboardView alloc] initWithOwner: self andFrame: PrefsRect];
+
+		// hook up to our outlet(s)
+		firstAlternatePopUp = [view firstAlternatePopUp];
+		firstCommandPopUp = [view firstCommandPopUp];
+		firstControlPopUp = [view firstControlPopUp];
+		secondAlternatePopUp = [view secondAlternatePopUp];
+		secondCommandPopUp = [view secondCommandPopUp];
+		secondControlPopUp = [view secondControlPopUp];
+	} else {
+		view = [window contentView];
+		[view removeFromSuperview];
+		[window setContentView: NULL];
+		[window dealloc];
+		window = nil;
+	}
+	[view retain];
+
+	[popups addObject: firstAlternatePopUp];
+	[popups addObject: firstCommandPopUp];
+	[popups addObject: firstControlPopUp];
+	[popups addObject: secondAlternatePopUp];
+	[popups addObject: secondCommandPopUp];
+	[popups addObject: secondControlPopUp];
+	{
+		id	myEnum = [popups objectEnumerator];
+		id	obj;
+
+		while ((obj = [myEnum nextObject])) {
+			[obj removeAllItems];
+			[obj addItemsWithTitles: commonMenu()];
+		}
+	}
+	[self updateUI];
+}
 @end	// Keyboard (Private)
 
 @implementation Keyboard
@@ -175,8 +217,6 @@ static id <PrefsApplication>	owner = nil;
 
 - (id) initWithOwner: (id <PrefsApplication>) anOwner
 {
-	NSMutableArray	*popups = [NSMutableArray arrayWithCapacity: 6];
-
 	if (sharedInstance) {
 		[self dealloc];
 	} else {
@@ -188,44 +228,6 @@ static id <PrefsApplication>	owner = nil;
 		[self preferencesFromDefaults];
 
 		[controller registerPrefsModule: self];
-		if (![NSBundle loadNibNamed: @"Keyboard" owner: self]) {
-			NSLog (@"Keyboard: Could not load nib \"Keyboard\", using compiled-in version");
-			view = [[KeyboardView alloc] initWithOwner: self andFrame: PrefsRect];
-
-			// hook up to our outlet(s)
-			firstAlternatePopUp = [view firstAlternatePopUp];
-			firstCommandPopUp = [view firstCommandPopUp];
-			firstControlPopUp = [view firstControlPopUp];
-			secondAlternatePopUp = [view secondAlternatePopUp];
-			secondCommandPopUp = [view secondCommandPopUp];
-			secondControlPopUp = [view secondControlPopUp];
-		} else {
-			// window can be any size, as long as it's 486x228 :)
-			view = [window contentView];
-			[view removeFromSuperview];
-			[window setContentView: NULL];
-			[window dealloc];
-			window = nil;
-		}
-		[view retain];
-
-		[popups addObject: firstAlternatePopUp];
-		[popups addObject: firstCommandPopUp];
-		[popups addObject: firstControlPopUp];
-		[popups addObject: secondAlternatePopUp];
-		[popups addObject: secondCommandPopUp];
-		[popups addObject: secondControlPopUp];
-		{
-			id	myEnum = [popups objectEnumerator];
-			id	obj;
-		
-			while ((obj = [myEnum nextObject])) {
-				[obj removeAllItems];
-				[obj addItemsWithTitles: commonMenu()];
-			}
-		}
-//		[popups autorelease];
-		[self updateUI];
 
 		sharedInstance = self;
 	}
@@ -234,6 +236,9 @@ static id <PrefsApplication>	owner = nil;
 
 - (void) showView: (id) sender;
 {
+	if (!view)
+		[self initUI];
+
 	[controller setCurrentModule: self];
 	[view setNeedsDisplay: YES];
 }
