@@ -4,6 +4,9 @@ BUNDLE_NAME=		Defaults
 BUNDLE_EXTENSION=	.prefs
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 
+FRAMEWORKS= PrefsModule
+include $(TOP_SRCDIR)/Backbone.make
+
 Defaults_LANGUAGES= \
 	English
 

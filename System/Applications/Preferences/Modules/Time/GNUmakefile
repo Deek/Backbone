@@ -4,6 +4,9 @@ BUNDLE_NAME=		Time
 BUNDLE_EXTENSION=	.prefs
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 
+FRAMEWORKS= PrefsModule
+include $(TOP_SRCDIR)/Backbone.make
+
 Time_LANGUAGES= \
 	English
 

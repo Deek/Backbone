@@ -1,9 +1,8 @@
 include $(GNUSTEP_MAKEFILES)/common.make
 
-top_srcdir= $(shell pwd)
+export TOP_SRCDIR= $(CURDIR)
 
-BBFRAMEWORKS= $(top_srcdir)/Frameworks
-export BBFRAMEWORKS
+include Backbone.make
 
 SUBPROJECTS = \
 	Frameworks/PrefsModule \

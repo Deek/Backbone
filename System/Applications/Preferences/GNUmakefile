@@ -50,6 +50,12 @@ VERSION=		1.2.99beta
 Preferences_PRINCIPAL_CLASS=	NSApplication
 Preferences_APPLICATION_ICON=	Preferences.tiff
 
+ifeq ($(TOP_SRCDIR),)
+export TOP_SRCDIR :=	$(CURDIR)/../..
+endif
+FRAMEWORKS= PrefsModule
+include $(TOP_SRCDIR)/Backbone.make
+
 #
 # Resource files
 #

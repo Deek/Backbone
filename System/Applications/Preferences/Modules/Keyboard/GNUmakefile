@@ -5,6 +5,9 @@ BUNDLE_EXTENSION=	.prefs
 
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 
+FRAMEWORKS= PrefsModule
+include $(TOP_SRCDIR)/Backbone.make
+
 Keyboard_LANGUAGES= \
 	English
 

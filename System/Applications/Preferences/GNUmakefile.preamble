@@ -20,7 +20,7 @@ export ADDITIONAL_OBJCFLAGS
 export ADDITIONAL_CFLAGS
 
 # Additional include directories the compiler should search
-ADDITIONAL_INCLUDE_DIRS += -I$(BBFRAMEWORKS)
+ADDITIONAL_INCLUDE_DIRS +=
 
 # Additional LDFLAGS to pass to the linker
 ADDITIONAL_LDFLAGS += 
@@ -33,7 +33,7 @@ ADDITIONAL_LIB_DIRS +=
 # GNUstepWeb
 ADDITIONAL_GSW_LIBS +=
 # GUI apps
-ADDITIONAL_GUI_LIBS += -L$(BBFRAMEWORKS)/PrefsModule/PrefsModule.framework/Versions/Current/$(GNUSTEP_TARGET_LDIR) -lPrefsModule
+ADDITIONAL_GUI_LIBS +=
 # Libraries
 ADDITIONAL_LIBRARY_LIBS +=
 # ObjC stuff
