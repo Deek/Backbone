@@ -1,0 +1,36 @@
+/* App Name */
+"Preferences" = "Preferences";
+
+/* Controller.m Menus */
+"Info" = "Info";
+	"Info Panel..." = "Info Panel...";
+	"Help" = "Help";
+
+"Prefs" = "Prefs";
+	"Open module..." = "Open module...";
+	"Save..." = "Save...";
+	"Save All..." = "Save All...";
+
+"Windows" = "Windows";
+	"Close window" = "Close window";
+	"Miniaturize window" = "Miniaturize window";
+	"Arrange in front" = "Arrange in front";
+
+"Services" = "Services";
+
+"Hide" = "Hide";
+
+"Quit" = "Quit";
+
+/* Preferences window buttons */
+
+"System Preferences" = "System Preferences";
+"Save" = "Save";
+"Save All" = "Save All";
+"Default" = "Default";
+"Close" = "Close";
+
+/* Messages */
+
+"A module has already been loaded with this name!" = "A module has already been loaded with this name!";
+"Could not load module." = "Could not load module.";

@@ -1,0 +1,25 @@
+{
+    ApplicationDescription = "GNUstep Preferences Editor";
+    ApplicationIcon = Preferences;
+    ApplicationName = Preferences;
+    ApplicationRelease = "1.0.0";
+    ApplicationURL = "none";
+    Authors = (
+	"Jeff Teunissen <deek@d2dc.net>"
+    );
+    Copyright = "Copyright (C) 2002 Jeff Teunissen <deek@d2dc.net>";
+    CopyrightDescription = "Released under the GNU GPL. See COPYING for details.";
+    FullVersionID = "1.0.0";
+    NSTypes = (
+    	{
+	    NSName = "prefs";
+	    NSHumanReadableName = "Preferences module";
+	    NSUnixExtensions = ("prefs");
+	    NSDOSExtensions = ("prefs");
+	    NSMIMETypes = ("application/x-gnustep-prefsmodule");
+	    NSIcon = Preferences;
+	    NSRole = Viewer;
+	    NSDocumentClass = Document;
+	}
+    );
+}

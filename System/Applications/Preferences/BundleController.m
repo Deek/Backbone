@@ -1,0 +1,222 @@
+/*
+	BundleController.m
+
+	Bundle manager class
+
+	Copyright (C) 2001 Dusk to Dawn Computing, Inc.
+	Additional copyrights here
+
+	Author: Jeff Teunissen <deek@d2dc.net>
+	Date:	20 Nov 2001
+
+	This program is free software; you can redistribute it and/or
+	modify it under the terms of the GNU General Public License as
+	published by the Free Software Foundation; either version 2 of
+	the License, or (at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+	See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public
+	License along with this program; if not, write to:
+
+		Free Software Foundation, Inc.
+		59 Temple Place - Suite 330
+		Boston, MA  02111-1307, USA
+*/
+static const char rcsid[] = 
+	"$Id$";
+
+#ifdef HAVE_CONFIG_H
+# include "Config.h"
+#endif
+
+#import <Foundation/NSDebug.h>
+#import <Foundation/NSFileManager.h>
+#import <Foundation/NSPathUtilities.h>
+#import <AppKit/NSPanel.h>
+
+#import "BundleController.h"
+
+@interface BundleController (Private)
+
+- (NSArray *) bundlesWithExtension: (NSString *) extension inPath: (NSString *) path;
+
+@end
+
+@implementation BundleController (Private)
+
+- (NSArray *) bundlesWithExtension: (NSString *) extension inPath: (NSString *) path
+{
+	NSMutableArray	*bundleList = [[NSMutableArray alloc] initWithCapacity: 10];
+	NSEnumerator	*enumerator;
+	NSFileManager	*fm = [NSFileManager defaultManager];
+	NSString		*dir;
+	BOOL			isDir;
+
+	// ensure path exists, and is a directory
+	if (![fm fileExistsAtPath: path isDirectory: &isDir])
+		return nil;
+
+	if (!isDir)
+		return nil;
+
+	// scan for bundles matching the extension in the dir
+	enumerator = [[fm directoryContentsAtPath: path] objectEnumerator];
+	while ((dir = [enumerator nextObject])) {
+		if ([[dir pathExtension] isEqualToString: extension])
+			[bundleList addObject: [path stringByAppendingPathComponent: dir]];
+	}
+	return bundleList;
+}
+
+@end
+
+@implementation BundleController
+
+static BundleController *	sharedInstance = nil;
+
++ (BundleController *) sharedBundleController
+{
+	return (sharedInstance ? sharedInstance : [[self alloc] init]);
+}
+
+- (id) init
+{
+	if (sharedInstance) {
+		[self dealloc];
+	} else {
+		self = [super init];
+		loadedBundles = [[NSMutableArray alloc] init];
+		sharedInstance = self;
+	}
+	return sharedInstance;
+}
+
+- (void) dealloc
+{
+	[loadedBundles release];
+
+	[super dealloc];
+}
+
+- (id) delegate
+{
+	return delegate;
+}
+
+- (void) setDelegate: (id) aDelegate;
+{
+	delegate = aDelegate;
+}
+
+- (BOOL) loadBundleInPath: (NSString *) path
+{
+	NSBundle	*bundle;
+
+	if (!path) {
+		NSLog (@"%@ -loadBundleInPath: No path given!", [[self class] description]);
+		return NO;
+	}
+
+	NSDebugLog (@"Loading bundle %@...", path);
+
+	if ((bundle = [NSBundle bundleWithPath: path])) {
+		NSEnumerator	*enumerator = [loadedBundles objectEnumerator];
+		id				obj;
+
+		/*
+			Do some sanity checking to make sure we don't load a bundle twice
+		*/
+		while ((obj = [enumerator nextObject])) {
+			if ([[[bundle infoDictionary] objectForKey: @"NSExecutable"]
+						isEqualToString:
+					[[obj infoDictionary] objectForKey: @"NSExecutable"]]) {
+				NSRunCriticalAlertPanel ([[bundle bundlePath] lastPathComponent],
+										 _(@"A module has already been loaded with this name!"),
+										 _(@"OK"),
+										 nil,
+										 nil);
+				return NO;
+			}
+		}
+
+		NSDebugLog (@"Bundle %@ successfully loaded.", path);
+
+		/*
+			Fire off the notification if we have a delegate that adopts the
+			PrefsApplication protocol
+		*/
+		if (delegate && [delegate conformsToProtocol: @protocol(PrefsApplication)])
+			[(id <PrefsApplication>) delegate moduleLoaded: bundle];
+		[loadedBundles addObject: bundle];
+		return YES;
+	}
+
+	NSRunAlertPanel (path, _(@"Could not load bundle."), @"OK", nil, nil, path);
+	return NO;
+}
+
+- (void) loadBundles
+{
+	NSMutableArray		*dirList = [[NSMutableArray alloc] initWithCapacity: 10];
+	NSArray				*temp;
+	NSMutableArray		*modified = [[NSMutableArray alloc] initWithCapacity: 10];
+	NSEnumerator		*counter;
+	unsigned int		domainMask = 0;
+	NSUserDefaults		*defaults = [NSUserDefaults standardUserDefaults];
+	id					obj;
+
+	/*
+		First, load and init all bundles in the app resource path
+	*/
+	NSDebugLog (@"Loading local bundles...");
+	counter = [[self bundlesWithExtension: @"prefs" inPath: [[NSBundle mainBundle] resourcePath]] objectEnumerator];
+	while ((obj = [counter nextObject])) {
+		[self loadBundleInPath: obj];
+	}
+
+	/*
+		Then do the same for external bundles
+	*/
+	NSDebugLog (@"Loading foreign bundles...");
+	// build domain mask, to find out where user wants to load bundles from
+	if ([defaults boolForKey: @"BundlesFromUser"])
+		domainMask |= NSUserDomainMask;
+	if ([defaults boolForKey: @"BundlesFromLocal"])
+		domainMask |= NSLocalDomainMask;
+	if ([defaults boolForKey: @"BundlesFromNetwork"])
+		domainMask |= NSNetworkDomainMask;
+	if ([defaults boolForKey: @"BundlesFromSystem"])
+		domainMask |= NSSystemDomainMask;
+
+	// Get the library dirs and add our path to all of its entries
+	temp = NSSearchPathForDirectoriesInDomains (NSLibraryDirectory, NSAllDomainsMask, YES);
+
+	counter = [temp objectEnumerator];
+	while ((obj = [counter nextObject])) {
+		[modified addObject: [obj stringByAppendingPathComponent: @"Preferences"]];
+	}
+	[dirList addObjectsFromArray: modified];
+
+	// Okay, now go through dirList loading all of the bundles in each dir
+	counter = [dirList objectEnumerator];
+	while ((obj = [counter nextObject])) {
+		NSEnumerator	*enum2 = [[self bundlesWithExtension: @"prefs" inPath: obj] objectEnumerator];
+		NSString		*str;
+
+		while ((str = [enum2 nextObject])) {
+			[self loadBundleInPath: str];
+		}
+	}
+}
+
+- (NSArray *) loadedBundles
+{
+	return loadedBundles;
+}
+
+@end
