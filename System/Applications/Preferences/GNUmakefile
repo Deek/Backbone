@@ -32,7 +32,8 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 SUBPROJECTS=	\
 	PrefsModule \
-	Modules/Keyboard
+	Modules/Keyboard \
+	Modules/Time
 #
 # Distribution information
 #
@@ -67,6 +68,7 @@ Preferences_RESOURCE_FILES= \
 	PrefsIcon_Mouse.tiff \
 	PrefsIcon_Screen.tiff \
 	PrefsIcon_SelectSpooler.tiff \
+	PrefsIcon_Time.tiff \
 	PreferencesInfo.plist
 
 Preferences_LOCALIZED_RESOURCE_FILES= \

@@ -3,7 +3,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 BUNDLE_NAME=		Keyboard
 BUNDLE_EXTENSION=	.prefs
 
-BUNDLE_INSTALL_DIR=	$(GNUSTEP_SYSTEM_ROOT)/Library/Preferences
+BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 
 Keyboard_RESOURCE_FILES= \
 	Keyboard.gorm

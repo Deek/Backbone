@@ -1,0 +1,25 @@
+{
+    ClockView = {
+	Actions = (
+	    "update:"
+	);
+	Outlets = (
+	    drawsTile,
+	    tileImage
+	);
+	Super = NSView;
+    };
+    Time = {
+	Actions = (
+	    "clockUses24HoursChanged:",
+	    "localTimeFieldChanged:"
+	);
+	Outlets = (
+	    clockUses24HoursButton,
+	    view,
+	    window,
+	    localTimeZoneField
+	);
+	Super = NSObject;
+    };
+}
