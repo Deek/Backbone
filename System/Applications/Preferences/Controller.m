@@ -48,6 +48,22 @@ RCSID("$Id$");
 
 @implementation Controller
 
+static NSUserDefaults *defaults = nil;
+#if 1
+static BOOL doneLaunching = NO;
+#endif
+
+- (id) init
+{
+	if (!(self = [super init]))
+		return nil;
+
+	if (!defaults)
+		defaults = [NSUserDefaults standardUserDefaults];
+
+	return self;
+}
+
 - (BOOL) application: (NSApplication *) app openFile: (NSString *) filename
 {
 	BundleController	*bundler = [BundleController sharedBundleController];
@@ -98,15 +114,14 @@ RCSID("$Id$");
 */
 - (void) applicationDidFinishLaunching: (NSNotification *) not;
 {
-#ifdef GNUSTEP
-	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-
 	if ([defaults boolForKey: @"NXAutoLaunch"]) {
+#if 1
+		doneLaunching = YES;
 		[NSApp hide: self];
+#endif
 	} else {
 		[[prefsController window] makeKeyAndOrderFront: self];
 	}
-#endif
 }
 
 /*
@@ -117,9 +132,6 @@ RCSID("$Id$");
 - (void) applicationWillFinishLaunching: (NSNotification *) not;
 {
 	NSMenu			*menu = [NSApp mainMenu];
-#ifndef GNUSTEP
-	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-#endif
 
 //	[menu setTitle: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"ApplicationName"]];
 	/*
@@ -141,7 +153,7 @@ RCSID("$Id$");
 		unhides them between -applicationWillFinishLaunching: and
 		-applicationDidFinishLaunching:
 	*/
-#ifndef GNUSTEP
+#if 0
 	if ([defaults boolForKey: @"NXAutoLaunch"]) {
 		[NSApp hide: self];
 	}
@@ -156,8 +168,11 @@ RCSID("$Id$");
 */
 - (void) applicationDidUnhide: (NSNotification *) not;
 {
-	NSLog (@"unhiding");
+#if 1
+	if (doneLaunching && ![[prefsController window] isVisible])
+#else
 	if (![[prefsController window] isVisible])
+#endif
 		[[prefsController window] makeKeyAndOrderFront: self];
 }
 
