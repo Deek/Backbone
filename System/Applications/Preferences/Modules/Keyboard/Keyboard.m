@@ -38,7 +38,6 @@ RCSID("$Id$");
 #import <AppKit/NSOpenPanel.h>
 
 #import "Keyboard.h"
-#import "KeyboardView.h"
 
 @interface Keyboard (Private)
 
@@ -176,24 +175,15 @@ getStringDefault (NSMutableDictionary *dict, NSString *name)
 	NSArray	*popups;
 
 	if (![NSBundle loadNibNamed: @"Keyboard" owner: self]) {
-		NSLog (@"Keyboard: Could not load nib \"Keyboard\", using compiled-in version");
-		view = [[KeyboardView alloc] initWithOwner: self andFrame: PrefsRect];
-
-		// hook up to our outlet(s)
-		firstAlternatePopUp = [view firstAlternatePopUp];
-		firstCommandPopUp = [view firstCommandPopUp];
-		firstControlPopUp = [view firstControlPopUp];
-		secondAlternatePopUp = [view secondAlternatePopUp];
-		secondCommandPopUp = [view secondCommandPopUp];
-		secondControlPopUp = [view secondControlPopUp];
-	} else {
-		view = [window contentView];
-		[view removeFromSuperview];
-		[window setContentView: NULL];
-		[window dealloc];
-		window = nil;
+		NSLog (@"Keyboard: Could not load nib \"Keyboard\", aborting.");
+		return;
 	}
-	[view retain];
+
+	view = [[window contentView] retain];
+	[view removeFromSuperview];
+	[window setContentView: NULL];
+	[window dealloc];
+	window = nil;
 
 	popups = [NSArray arrayWithObjects: firstAlternatePopUp,
 										firstCommandPopUp,

@@ -12,11 +12,9 @@ Keyboard_LOCALIZED_RESOURCE_FILES= \
 	Keyboard.gorm
 
 Keyboard_OBJC_FILES=	\
-	KeyboardView.m \
 	Keyboard.m
 
 Keyboard_HEADERS= \
-	KeyboardView.h \
 	Keyboard.h
 
 Keyboard_PRINCIPAL_CLASS= \
