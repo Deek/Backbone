@@ -20,8 +20,8 @@
 # Things to do after installing
 after-install::
 	@-if [ -e $(GNUSTEP_TOOLS)/openapp -a ! -L $(GNUSTEP_TOOLS)/openapp ]; then \
-		echo "  Replacing the \"openapp\" script with a link to \"open\"..."; \
-		cp -a $(GNUSTEP_TOOLS)/openapp $(GNUSTEP_TOOLS)/openapp.gnustep; \
+		echo "  Replacing the \"openapp\" script with a symlink to \"open\"..."; \
+		ln -f $(GNUSTEP_TOOLS)/openapp $(GNUSTEP_TOOLS)/openapp.gnustep; \
 		ln -sf $(GNUSTEP_INSTALLATION_DIR)/Tools/open $(GNUSTEP_TOOLS)/openapp; \
 	fi
 
