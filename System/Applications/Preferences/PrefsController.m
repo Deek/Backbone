@@ -84,6 +84,7 @@ static id				currentModule = nil;
 	[iconList setCellClass: [NSButtonCell class]];
 	[iconList setCellSize: NSMakeSize (64, 64)];
 	[iconList setMode: NSRadioModeMatrix];
+	[iconList setIntercellSpacing: NSZeroSize];
 	[iconList setAllowsEmptySelection: YES];
 
 	[iconScrollView setDocumentView: iconList];
