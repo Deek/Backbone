@@ -156,12 +156,14 @@ usage (NSString *name, NSString *desc)
 	printf ("Usage: %s %s\n", [name cString], [desc cString]);
 	printf (
 "Options:\n"
-"	-a APP		Specify an application to use for opening the file(s)\n"
-"			(APP will be launched if it is not running)\n"
-"	-A APP		Like -a, only APP won't be launched unless a file is opened\n"
-"	-s		If an app is launched, it will be run as if on startup\n"
-"			(Some apps do different things if \"Autolaunched\")\n"
-"	-o		Cause following files to be opened (this is the default).\n"
+"	-a APP		Specify an application to use for opening the file(s).\n"
+"			(APP will be launched if it is not running.)\n"
+"	-A APP		Like -a, only APP won't be launched unless a file is\n"
+"			opened.\n"
+"	-s		If an app is launched, it will be run as if on startup.\n"
+"			(Some apps do different things if \"Autolaunched\".)\n"
+"	-o		Cause following files to be opened (this is the\n"
+"			default).\n"
 "	-p		Cause following files to be printed instead of opened.\n"
 "	-h, --help	Display this help and exit\n"
 	);

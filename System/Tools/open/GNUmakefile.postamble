@@ -18,10 +18,19 @@
 # before-install::
 
 # Things to do after installing
-# after-install::
+after-install::
+	@-if [ -e $(GNUSTEP_TOOLS)/openapp -a ! -L $(GNUSTEP_TOOLS)/openapp ]; then \
+		echo "  Replacing the \"openapp\" script with a link to \"open\"..."; \
+		cp -a $(GNUSTEP_TOOLS)/openapp $(GNUSTEP_TOOLS)/openapp.gnustep; \
+		ln -sf $(GNUSTEP_INSTALLATION_DIR)/Tools/open $(GNUSTEP_TOOLS)/openapp; \
+	fi
 
 # Things to do before uninstalling
-# before-uninstall::
+before-uninstall::
+	@-if [ -L $(GNUSTEP_TOOLS)/openapp ]; then \
+		echo "  Restoring original \"openapp\" script..."; \
+		mv $(GNUSTEP_TOOLS)/openapp.gnustep $(GNUSTEP_TOOLS)/openapp; \
+	fi
 
 # Things to do after uninstalling
 # after-uninstall::
