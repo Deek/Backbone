@@ -65,11 +65,11 @@ defaultValues (void) {
     if (!dict) {
         dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 				@"Alt_L", @"GSFirstCommandKey",
-				@"No Symbol", @"GSSecondCommandKey",
+				@"NoSymbol", @"GSSecondCommandKey",
 				@"Control_L", @"GSFirstControlKey",
 				@"Control_R", @"GSSecondControlKey",
 				@"Alt_R", @"GSFirstAlternateKey",
-				@"No Symbol", @"GSSecondAlternateKey",
+				@"NoSymbol", @"GSSecondAlternateKey",
 				nil];
     }
     return dict;
@@ -106,7 +106,7 @@ menuItemNames (void) {
 
     if (!dict) {
         dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-				@"No Symbol", @"None",
+				@"NoSymbol", @"None",
 				@"ISO_Level3_Shift", @"AltGr (XFree86 4.3+)",
 				@"Alt_L", @"Left Alt",
 				@"Control_L", @"Left Control",
@@ -124,23 +124,6 @@ menuItemNames (void) {
     }
     return dict;
 }
-
-#if 0
-static BOOL
-getBoolDefault (NSMutableDictionary *dict, NSString *name)
-{
-	NSString	*str = [[NSUserDefaults standardUserDefaults] stringForKey: name];
-	NSNumber	*num;
-
-	if (!str)
-		str = [[defaultValues() objectForKey: name] stringValue];
-
-	num = [NSNumber numberWithBool: [str hasPrefix: @"Y"]];
-	[dict setObject: num forKey: name];
-
-	return [num boolValue];
-}
-#endif
 
 static NSString *
 getStringDefault (NSMutableDictionary *dict, NSString *name)
