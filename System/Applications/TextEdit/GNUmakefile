@@ -29,7 +29,8 @@ TextEdit_LOCALIZED_RESOURCE_FILES= \
 
 TextEdit_LANGUAGES= \
 	English \
-	German
+	German \
+	Russian
 
 #
 # Source
