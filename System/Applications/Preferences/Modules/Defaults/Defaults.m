@@ -69,11 +69,13 @@ static id <PrefsController>		controller = nil;
 	}
 
 	// Set up our view, and destroy our window.
-	view = [[window contentView] retain];
+	if (!view) {
+		view = [[window contentView] retain];
 
-	[view removeFromSuperview];
-	[window setContentView: NULL];
-	[window dealloc];
+		[view removeFromSuperview];
+		[window setContentView: NULL];
+	}
+	[window release];
 	window = nil;
 
 	// do any initialization that can't be done in Gorm yet
