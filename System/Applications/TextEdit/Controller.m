@@ -11,6 +11,7 @@
 		Central controller object for Edit...
 */
 
+#import <Foundation/NSFileManager.h>
 #import <AppKit/AppKit.h>
 #import "Controller.h"
 #import "Document.h"
@@ -70,9 +71,25 @@
 	return [Document openDocumentWithPath: filename encoding: UnknownStringEncoding];
 }
 
-- (BOOL) application: (NSApplication *)sender openTempFile: (NSString *)filename  /* ??? Why? */
+/*
+	-application:openTempFile:
+
+	This is like -application:openFile:, except the method deletes the
+	file once it has been opened.
+*/
+- (BOOL) application: (NSApplication *)sender openTempFile: (NSString *)filename
 {
-	return [Document openDocumentWithPath: filename encoding: UnknownStringEncoding];
+	NSFileManager	*fm = [NSFileManager defaultManager];
+	Document		*document;
+	BOOL			tmp = [Document openDocumentWithPath: filename encoding: UnknownStringEncoding];
+
+	document = [Document documentForPath: filename];
+	if (document) {
+		[document setDocumentEdited: YES];
+		[document setDocumentName: nil];
+		[fm removeFileAtPath: filename handler: nil];
+	}
+	return tmp;
 }
 
 - (BOOL) applicationOpenUntitledFile: (NSApplication *) sender
