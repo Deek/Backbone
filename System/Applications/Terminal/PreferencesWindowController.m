@@ -28,6 +28,23 @@ of the License. See COPYING or main.m for more information.
 #include "PrefBox.h"
 
 
+/*
+Changing the font in TerminalViewPrefs won't work unless the panel can be
+the main window (the font panel gets confused about where to send the
+-changeFont:), hence this class. When per-window preferences are done, this
+won't be necessary.
+*/
+@interface PreferencesPanel : NSPanel
+@end
+
+@implementation PreferencesPanel
+-(BOOL) canBecomeMainWindow
+{
+	return YES;
+}
+@end
+
+
 @implementation PreferencesWindowController
 
 -(void) save: (id)sender
@@ -45,7 +62,7 @@ of the License. See COPYING or main.m for more information.
 {
 	NSWindow *win;
 
-	win=[[NSPanel alloc] initWithContentRect: NSMakeRect(100,100,290,400)
+	win=[[PreferencesPanel alloc] initWithContentRect: NSMakeRect(100,100,290,400)
 		styleMask: NSClosableWindowMask|NSTitledWindowMask|NSResizableWindowMask|NSMiniaturizableWindowMask
 		backing: NSBackingStoreRetained
 		defer: YES];
