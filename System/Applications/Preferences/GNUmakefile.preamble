@@ -11,7 +11,8 @@ ADDITIONAL_OBJCFLAGS += -Werror
 ADDITIONAL_CFLAGS += -Werror
 endif
 
-ifeq ($(shell gcc -v 2>&1 | grep -e '^gcc' | cut -f3 -d' ' | cut -d. -f1,2), 3.3)
+# work around gcc 3.3 strict-aliasing bug in selector handling
+ifeq ($(shell $(CC) -dumpversion | cut -d. -f1,2), 3.3)
 ADDITIONAL_OBJCFLAGS += -fno-strict-aliasing
 endif
 
