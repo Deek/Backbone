@@ -114,7 +114,7 @@ static BOOL doneLaunching = NO;
 */
 - (void) applicationDidFinishLaunching: (NSNotification *) not;
 {
-	if ([defaults boolForKey: @"NXAutoLaunch"]) {
+	if ([defaults boolForKey: @"autolaunch"]) {
 #if 1
 		doneLaunching = YES;
 		[NSApp hide: self];
@@ -154,7 +154,7 @@ static BOOL doneLaunching = NO;
 		-applicationDidFinishLaunching:
 	*/
 #if 0
-	if ([defaults boolForKey: @"NXAutoLaunch"]) {
+	if ([defaults boolForKey: @"autolaunch"]) {
 		[NSApp hide: self];
 	}
 #endif
