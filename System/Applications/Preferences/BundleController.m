@@ -134,11 +134,16 @@ static BundleController *	sharedInstance = nil;
 			Do some sanity checking to make sure we don't load a bundle twice
 		*/
 		if ([loadedBundles objectForKey: [[bundle infoDictionary] objectForKey: @"NSExecutable"]]) {
-			NSRunCriticalAlertPanel ([[bundle bundlePath] lastPathComponent],
-									 _(@"A module has already been loaded with this name!"),
-									 _(@"OK"),
-									 nil,
-									 nil);
+#if 0
+			NSRunAlertPanel ([[bundle bundlePath] lastPathComponent],
+							 _(@"A module has already been loaded with this name!"),
+							 _(@"OK"),
+							 nil,
+							 nil);
+#else
+			// FIXME: TODO - select the already-loaded module
+			NSLog (@"Module \"%@\" already loaded, bailing out.", [[bundle bundlePath] lastPathComponent]);
+#endif
 			return NO;
 		}
 
