@@ -133,7 +133,7 @@ static float defaultPadding(void) {
     if (encoding == RichTextWithGraphicsStringEncoding) {
 	NSSize size = NSZeroSize;
 	float factor = 0.0;
-        NSTextStorage *newTextStorage = [[NSTextStorage allocWithZone:[self zone]] initWithRTFDFile:fileName viewSize:&size hyphenationFactor:&factor];
+        NSTextStorage *newTextStorage = [[NSTextStorage alloc] initWithRTFDFile:fileName viewSize:&size hyphenationFactor:&factor];
         if (newTextStorage) {
             [self setRichText:YES];
             if (size.width > 0 && size.height > 0 && ![self hasMultiplePages]) [self setViewSize:size];
@@ -149,7 +149,7 @@ static float defaultPadding(void) {
             if (encoding == RichTextStringEncoding) {
                 NSSize size = NSZeroSize;
 		float factor = 0.0;
-                NSTextStorage *newTextStorage = [[NSTextStorage allocWithZone:[self zone]] initWithRTF:fileContentsAsData viewSize:&size hyphenationFactor:&factor];
+                NSTextStorage *newTextStorage = [[NSTextStorage alloc] initWithRTF:fileContentsAsData viewSize:&size hyphenationFactor:&factor];
                 if (newTextStorage) {
                     [self setRichText:YES];
                     if (size.width > 0 && size.height > 0 && ![self hasMultiplePages]) [self setViewSize:size];

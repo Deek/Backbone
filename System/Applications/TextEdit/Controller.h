@@ -1,22 +1,22 @@
 #import <Foundation/Foundation.h>
 
-@interface Controller : NSObject {
-    id infoPanel;
+@interface Controller: NSObject {
+	id	infoPanel;
 }
 
 /* NSApplication delegate methods */
-- (BOOL)application:(NSApplication *)app openFile:(NSString *)filename;
-- (BOOL)application:(NSApplication *)app openTempFile:(NSString *)filename;
-- (BOOL)applicationOpenUntitledFile:(NSApplication *)app;
-- (BOOL)applicationShouldTerminate:(NSApplication *)app;
+- (BOOL) application: (NSApplication *)app openFile: (NSString *)filename;
+- (BOOL) application: (NSApplication *)app openTempFile: (NSString *)filename;
+- (BOOL) applicationOpenUntitledFile: (NSApplication *)app;
+- (BOOL) applicationShouldTerminate: (NSApplication *)app;
 
 /* Action methods */
-- (void)createNew:(id)sender;
-- (void)open:(id)sender;
-- (void)saveAll:(id)sender;
-- (void)showInfoPanel:(id)sender;
+- (void) createNew: (id)sender;
+- (void) open: (id)sender;
+- (void) saveAll: (id)sender;
+- (void) showInfoPanel: (id)sender;
 
 /* Outlet methods */
-- (void)setVersionField:(id)anObject;	/* Fake; there's no outlet */
+- (void) setVersionField: (id)anObject;	/* Fake; there's no outlet */
 
 @end

@@ -63,7 +63,7 @@ static Preferences *sharedInstance = nil;
 	[self dealloc];
     } else {
         [super init];
-        curValues = [[[self class] preferencesFromDefaults] copyWithZone:[self zone]];
+        curValues = [[[self class] preferencesFromDefaults] copy];
         [self discardDisplayedValues];
         sharedInstance = self;
     }
@@ -179,14 +179,14 @@ static BOOL changingRTFFont = NO;
 - (void)commitDisplayedValues {
     if (curValues != displayedValues) {
         [curValues release];
-        curValues = [displayedValues copyWithZone:[self zone]];
+        curValues = [displayedValues copy];
     }
 }
 
 - (void)discardDisplayedValues {
     if (curValues != displayedValues) {
         [displayedValues release];
-        displayedValues = [curValues mutableCopyWithZone:[self zone]];
+        displayedValues = [curValues mutableCopy];
         [self updateUI];
     }
 }
@@ -196,7 +196,7 @@ static BOOL changingRTFFont = NO;
 }
 
 - (void)revertToDefault:(id)sender {
-    curValues = [defaultValues() copyWithZone:[self zone]];
+    curValues = [defaultValues() copy];
     [self discardDisplayedValues];
 }
 

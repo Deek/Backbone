@@ -17,45 +17,45 @@
 #define ForegroundLayoutToIndex @"ForegroundLayoutToIndex"
 #define OpenPanelFollowsMainWindow @"OpenPanelFollowsMainWindow"
 
-@interface Preferences : NSObject {
-    id richTextFontNameField;
-    id plainTextFontNameField;
-    id deleteBackupMatrix;
-    id saveFilesWritableButton;
-    id richTextMatrix;
-    id showPageBreaksButton;
-    id windowWidthField;
-    id windowHeightField;
-    id plainTextEncodingPopup;
-    id tabWidthField;
+@interface Preferences: NSObject {
+	id	richTextFontNameField;
+	id	plainTextFontNameField;
+	id	deleteBackupMatrix;
+	id	saveFilesWritableButton;
+	id	richTextMatrix;
+	id	showPageBreaksButton;
+	id	windowWidthField;
+	id	windowHeightField;
+	id	plainTextEncodingPopup;
+	id	tabWidthField;
 
-    NSDictionary *curValues;
-    NSMutableDictionary *displayedValues;
+	NSDictionary		*curValues;
+	NSMutableDictionary	*displayedValues;
 }
 
-+ (id)objectForKey:(id)key;	/* Convenience for getting global preferences */
-+ (void)saveDefaults;		/* Convenience for saving global preferences */
++ (id) objectForKey: (id)key;	/* Convenience for getting global preferences */
++ (void) saveDefaults;		/* Convenience for saving global preferences */
 
-+ (Preferences *)sharedInstance;
++ (Preferences *) sharedInstance;
 
-- (NSDictionary *)preferences;	/* The current preferences; contains values for the documented keys */
+- (NSDictionary *) preferences;	/* The current preferences; contains values for the documented keys */
 
-- (void)showPanel:(id)sender;	/* Shows the panel */
+- (void) showPanel: (id)sender;	/* Shows the panel */
 
-- (void)updateUI;		/* Updates the displayed values in the UI */
-- (void)commitDisplayedValues;	/* The displayed values are made current */
-- (void)discardDisplayedValues;	/* The displayed values are replaced with current prefs and updateUI is called */
+- (void) updateUI;		/* Updates the displayed values in the UI */
+- (void) commitDisplayedValues;	/* The displayed values are made current */
+- (void) discardDisplayedValues;	/* The displayed values are replaced with current prefs and updateUI is called */
 
-- (void)revert:(id)sender;	/* Reverts the displayed values to the current preferences */
-- (void)ok:(id)sender;		/* Calls commitUI to commit the displayed values as current */
-- (void)revertToDefault:(id)sender;    
+- (void) revert: (id)sender;	/* Reverts the displayed values to the current preferences */
+- (void) ok: (id)sender;		/* Calls commitUI to commit the displayed values as current */
+- (void) revertToDefault: (id)sender;    
 
-- (void)miscChanged:(id)sender;		/* Action message for most of the misc items in the UI to get displayedValues */
-- (void)changeRichTextFont:(id)sender;	/* Request to change the rich text font */
-- (void)changePlainTextFont:(id)sender;	/* Request to change the plain text font */
-- (void)changeFont:(id)fontManager;	/* Sent by the font manager */
+- (void) miscChanged: (id)sender;		/* Action message for most of the misc items in the UI to get displayedValues */
+- (void) changeRichTextFont: (id)sender;	/* Request to change the rich text font */
+- (void) changePlainTextFont: (id)sender;	/* Request to change the plain text font */
+- (void) changeFont: (id)fontManager;	/* Sent by the font manager */
 
-+ (NSDictionary *)preferencesFromDefaults;
-+ (void)savePreferencesToDefaults:(NSDictionary *)dict;
++ (NSDictionary *) preferencesFromDefaults;
++ (void) savePreferencesToDefaults:(NSDictionary *)dict;
 
 @end

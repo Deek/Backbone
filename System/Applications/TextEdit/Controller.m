@@ -12,7 +12,7 @@
 */
 
 #import <Foundation/NSFileManager.h>
-#import <AppKit/AppKit.h>
+#import <AppKit/NSApplication.h>
 #import "Controller.h"
 #import "Document.h"
 #import "Preferences.h"
@@ -104,7 +104,7 @@
 	Document	*document = [Document documentForPath: filename];
 	
 	if (!document) {
-		document =	[[Document alloc] initWithPath: filename encoding: UnknownStringEncoding uniqueZone: NO];
+		document =	[[Document alloc] initWithPath: filename encoding: UnknownStringEncoding];
 		releaseDoc = YES;
 	}
 
