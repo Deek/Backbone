@@ -98,11 +98,15 @@ RCSID("$Id$");
 */
 - (void) applicationDidFinishLaunching: (NSNotification *) not;
 {
+#ifdef GNUSTEP
 	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
 
-	if ([defaults boolForKey: @"NXAutoLaunch"]
-			|| [defaults boolForKey: @"GSAutoLaunch"])
+	if ([defaults boolForKey: @"NXAutoLaunch"]) {
 		[NSApp hide: self];
+	} else {
+		[[prefsController window] makeKeyAndOrderFront: self];
+	}
+#endif
 }
 
 /*
@@ -112,8 +116,12 @@ RCSID("$Id$");
 */
 - (void) applicationWillFinishLaunching: (NSNotification *) not;
 {
-	NSMenu		*menu = [NSApp mainMenu];
+	NSMenu			*menu = [NSApp mainMenu];
+#ifndef GNUSTEP
+	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
+#endif
 
+//	[menu setTitle: [[[NSBundle mainBundle] infoDictionary] objectForKey: @"ApplicationName"]];
 	/*
 		Windows
 	*/
@@ -127,6 +135,30 @@ RCSID("$Id$");
 	[NSApp setServicesMenu: [[menu itemWithTitle: _(@"Services")] submenu]];
 
 	[bundleController loadBundles];
+
+	/*
+		This should work, but doesn't because GNUstep starts apps hidden and
+		unhides them between -applicationWillFinishLaunching: and
+		-applicationDidFinishLaunching:
+	*/
+#ifndef GNUSTEP
+	if ([defaults boolForKey: @"NXAutoLaunch"]) {
+		[NSApp hide: self];
+	}
+#endif
+}
+
+/*
+	applicationDidUnhide:
+
+	Check whether the prefs controller window is visible, and if not, order it
+	front.
+*/
+- (void) applicationDidUnhide: (NSNotification *) not;
+{
+	NSLog (@"unhiding");
+	if (![[prefsController window] isVisible])
+		[[prefsController window] makeKeyAndOrderFront: self];
 }
 
 /*
@@ -150,22 +182,22 @@ RCSID("$Id$");
 		Let's get paranoid about stuff we load... :)
 	*/
 	if (!aBundle) {
-		NSLog (@"Controller moduleLoaded: sent nil bundle");
+		NSLog (@"Controller -moduleLoaded: sent nil bundle");
 		return;
 	}
 
 	if (!(info = [aBundle infoDictionary])) {
-		NSLog (@"Bundle %@ has no info dictionary!", aBundle);
+		NSLog (@"Bundle `%@´ has no info dictionary!", aBundle);
 		return;
 	}
 
 	if (![info objectForKey: @"NSExecutable"]) {
-		NSLog (@"Bundle %@ has no executable!", aBundle);
+		NSLog (@"Bundle `%@´ has no executable!", aBundle);
 		return;
 	}
 
 	if (![aBundle principalClass]) {
-		NSLog (@"Bundle `%@' has no principal class!", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
+		NSLog (@"Bundle `%@´ has no principal class!", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
 		return;
 	}
 

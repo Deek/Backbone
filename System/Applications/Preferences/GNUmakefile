@@ -53,13 +53,12 @@ Preferences_APPLICATION_ICON=	Preferences.tiff
 #
 # Additional libraries
 #
-ADDITIONAL_GUI_LIBS += 
-Preferences_FRAMEWORKS=		-lPrefsModule
+ADDITIONAL_GUI_LIBS += -LPrefsModule/PrefsModule.framework/Versions/Current -lPrefsModule
 
 #
 # Resource files
 #
-Preferences_MAIN_MODEL_FILE=	Preferences.gorm
+Preferences_MAIN_MODEL_FILE=	PrefsApp.gorm
 Preferences_RESOURCE_FILES= \
 	Preferences.tiff \
 	PrefsModule.tiff \
@@ -76,7 +75,7 @@ Preferences_RESOURCE_FILES= \
 	PreferencesInfo.plist
 
 Preferences_LOCALIZED_RESOURCE_FILES= \
-	Preferences.gorm \
+	PrefsApp.gorm \
 	Localizable.strings
 
 # Languages we're localized for

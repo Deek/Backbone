@@ -5,6 +5,7 @@
 RCSID("$Id$");
 
 #include <AppKit/NSApplication.h>
+#include <Foundation/NSBundle.h>
 
 int main (int argc, const char *argv[], const char *env[]) 
 {

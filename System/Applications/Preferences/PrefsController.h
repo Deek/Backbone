@@ -52,6 +52,7 @@
 }
 
 + (PrefsController *) sharedPrefsController;
+- (NSWindow *) window;
 
 /*
 	Notification methods
