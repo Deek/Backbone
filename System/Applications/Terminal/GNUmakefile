@@ -5,6 +5,7 @@
 # Public License as published by the Free Software Foundation; version 2
 # of the License. See COPYING or main.m for more information.
 
+
 include $(GNUSTEP_MAKEFILES)/common.make
 
 APP_NAME = Terminal
@@ -55,6 +56,10 @@ Terminal_RESOURCE_FILES = \
 	cursor_inverted.tiff
 
 MAKE_STRINGS_OPTIONS = --aggressive-match --aggressive-remove
+
+
+GNUSTEP_INSTALLATION_DIR=$(GNUSTEP_SYSTEM_ROOT)
+
 
 include $(GNUSTEP_MAKEFILES)/application.make
 
