@@ -4,10 +4,12 @@ export TOP_SRCDIR= $(CURDIR)
 
 include Backbone.make
 
-SUBPROJECTS = \
+SUBPROJECTS= \
 	Frameworks/PrefsModule \
 	\
 	Applications/Preferences \
+	Applications/Terminal \
+	Applications/TextEdit \
 	\
 	Tools/open
 
