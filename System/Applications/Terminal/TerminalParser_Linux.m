@@ -1317,11 +1317,14 @@ Translates '\n' to '\r' when sending.
 	case NSInsertFunctionKey  : str="\e[2~"; break;
 	case NSDeleteFunctionKey  : str="\e[3~"; break;
 	case NSEndFunctionKey     : str="\e[4~"; break;
-	case NSPageUpFunctionKey  :
-		str="\e[5~";
-		break;
-	case NSPageDownFunctionKey:
-		str="\e[6~";
+	case NSPageUpFunctionKey  : str="\e[5~"; break;
+	case NSPageDownFunctionKey: str="\e[6~"; break;
+
+	case 9:	// tab
+		if (mask&NSShiftKeyMask)
+			str="\e[Z";
+		else
+			nstr=[e characters];
 		break;
 
 	case 8: ch2=0x7f; break;
