@@ -99,6 +99,7 @@ struct selection_range
 @end
 
 @interface TerminalView (display) <TerminalScreen>
+-(void) setNeedsLazyDisplayInRect: (NSRect)r;
 @end
 
 /* TODO: this is ugly */
