@@ -60,7 +60,7 @@ static id <PrefsModule>	currentModule = nil;
 		[self dealloc];
 	} else {
 		if (![NSBundle loadNibNamed: windowNibName owner: self]) {
-			NSLog (@"PrefsController: Could not load nib \"%@\", using compiled-in version", windowNibName);
+			NSDebugLog (@"PrefsController: Could not load nib \"%@\", using compiled-in version", windowNibName);
 			theWindow = [[PrefsWindow alloc]
 						initWithContentRect: NSMakeRect (250, 250, 400, 302)
 						styleMask: NSTitledWindowMask

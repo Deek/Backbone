@@ -89,7 +89,7 @@ static const char rcsid[] =
 	[prefsViewBox setTitlePosition: NSNoTitle];
 	[prefsViewBox setBorderType: NSGrooveBorder];
 	[prefsViewBox setContentViewMargins: NSMakeSize (8, 8)];
-	NSLog (@"prefsViewBox bounds: %@", NSStringFromRect ([[prefsViewBox contentView] bounds]));
+	NSDebugLog (@"prefsViewBox bounds: %@", NSStringFromRect ([[prefsViewBox contentView] bounds]));
 	[[self contentView] addSubview: prefsViewBox];
 }
 

@@ -49,8 +49,7 @@ static const char rcsid[] =
 {
 	BundleController	*bundler = [BundleController sharedBundleController];
 
-	[bundler loadBundleInPath: filename];
-	return YES;
+	return [bundler loadBundleWithPath: filename];
 }
 
 - (BOOL) applicationShouldTerminate: (NSApplication *) app;
@@ -86,7 +85,7 @@ static const char rcsid[] =
 	if (result == NSOKButton) {		// got a new dir
 		NSArray		*pathArray = [oPanel filenames];
 
-		[bundler loadBundleInPath: [pathArray objectAtIndex:0]];
+		[bundler loadBundleWithPath: [pathArray objectAtIndex:0]];
 	}
 }
 
@@ -112,17 +111,14 @@ static const char rcsid[] =
 */
 - (void) applicationWillFinishLaunching: (NSNotification *) not;
 {
-
 	NSMenu		*menu = [NSApp mainMenu];
 	NSMenu		*infoMenu;
 	NSMenu		*editMenu;
 	NSMenu		*windowsMenu;
-	NSMenu		*servicesMenu;
 
 	[menu addItemWithTitle: _(@"Info")		action: NULL	keyEquivalent: @""];
 	[menu addItemWithTitle: _(@"Edit")		action: NULL	keyEquivalent: @""];
 	[menu addItemWithTitle: _(@"Windows")	action: NULL	keyEquivalent: @""];
-	[menu addItemWithTitle: _(@"Services")	action: NULL	keyEquivalent: @""];
 
 	[menu addItemWithTitle: _(@"Hide")		action: @selector(hide:)	keyEquivalent: @"h"];
 	[menu addItemWithTitle: _(@"Quit")		action: @selector(terminate:)	keyEquivalent: @"q"];
@@ -179,15 +175,6 @@ static const char rcsid[] =
 					keyEquivalent: @""];
 
 	[NSApp setWindowsMenu: windowsMenu];
-
-	/*
-		Services
-	*/
-	NSDebugLog (@"Services");
-	servicesMenu = [[[NSMenu alloc] init] autorelease];
-
-	[menu setSubmenu: servicesMenu forItem: [menu itemWithTitle: _(@"Services")]];
-	[NSApp setServicesMenu: servicesMenu];
 
 	[PrefsController sharedPrefsController];
 	{	// yeah, yeah, shaddap

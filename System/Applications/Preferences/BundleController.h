@@ -48,8 +48,8 @@
 
 @interface BundleController: NSObject
 {
-	id				delegate;
-	NSMutableArray	*loadedBundles;
+	id					delegate;
+	NSMutableDictionary	*loadedBundles;
 }
 
 + (BundleController *) sharedBundleController;
@@ -60,9 +60,9 @@
 - (id) delegate;
 - (void) setDelegate: (id) aDelegate;
 
-- (BOOL) loadBundleInPath: (NSString *) path;
+- (BOOL) loadBundleWithPath: (NSString *) path;
 - (void) loadBundles;
 
-- (NSArray *) loadedBundles;
+- (NSDictionary *) loadedBundles;
 
 @end

@@ -90,7 +90,7 @@ static BundleController *	sharedInstance = nil;
 		[self dealloc];
 	} else {
 		self = [super init];
-		loadedBundles = [[NSMutableArray alloc] init];
+		loadedBundles = [[NSMutableDictionary alloc] initWithCapacity: 5];
 		sharedInstance = self;
 	}
 	return sharedInstance;
@@ -98,9 +98,13 @@ static BundleController *	sharedInstance = nil;
 
 - (void) dealloc
 {
+	if (self == sharedInstance)
+		return;
+
 	[loadedBundles release];
 
 	[super dealloc];
+	self = sharedInstance = nil;
 }
 
 - (id) delegate
@@ -113,35 +117,28 @@ static BundleController *	sharedInstance = nil;
 	delegate = aDelegate;
 }
 
-- (BOOL) loadBundleInPath: (NSString *) path
+- (BOOL) loadBundleWithPath: (NSString *) path
 {
 	NSBundle	*bundle;
 
 	if (!path) {
-		NSLog (@"%@ -loadBundleInPath: No path given!", [[self class] description]);
+		NSLog (@"%@ -loadBundleWithPath: No path given!", [[self class] description]);
 		return NO;
 	}
 
 	NSDebugLog (@"Loading bundle %@...", path);
 
 	if ((bundle = [NSBundle bundleWithPath: path])) {
-		NSEnumerator	*enumerator = [loadedBundles objectEnumerator];
-		id				obj;
-
 		/*
 			Do some sanity checking to make sure we don't load a bundle twice
 		*/
-		while ((obj = [enumerator nextObject])) {
-			if ([[[bundle infoDictionary] objectForKey: @"NSExecutable"]
-						isEqualToString:
-					[[obj infoDictionary] objectForKey: @"NSExecutable"]]) {
-				NSRunCriticalAlertPanel ([[bundle bundlePath] lastPathComponent],
-										 _(@"A module has already been loaded with this name!"),
-										 _(@"OK"),
-										 nil,
-										 nil);
-				return NO;
-			}
+		if ([loadedBundles objectForKey: [[bundle infoDictionary] objectForKey: @"NSExecutable"]]) {
+			NSRunCriticalAlertPanel ([[bundle bundlePath] lastPathComponent],
+									 _(@"A module has already been loaded with this name!"),
+									 _(@"OK"),
+									 nil,
+									 nil);
+			return NO;
 		}
 
 		NSDebugLog (@"Bundle %@ successfully loaded.", path);
@@ -152,7 +149,7 @@ static BundleController *	sharedInstance = nil;
 		*/
 		if (delegate && [delegate conformsToProtocol: @protocol(PrefsApplication)])
 			[(id <PrefsApplication>) delegate moduleLoaded: bundle];
-		[loadedBundles addObject: bundle];
+		[loadedBundles setObject: bundle forKey: [[bundle infoDictionary] objectForKey: @"NSExecutable"]];
 		return YES;
 	}
 
@@ -176,7 +173,7 @@ static BundleController *	sharedInstance = nil;
 	NSDebugLog (@"Loading local bundles...");
 	counter = [[self bundlesWithExtension: @"prefs" inPath: [[NSBundle mainBundle] resourcePath]] objectEnumerator];
 	while ((obj = [counter nextObject])) {
-		[self loadBundleInPath: obj];
+		[self loadBundleWithPath: obj];
 	}
 
 	/*
@@ -194,7 +191,7 @@ static BundleController *	sharedInstance = nil;
 		domainMask |= NSSystemDomainMask;
 
 	// Get the library dirs and add our path to all of its entries
-	temp = NSSearchPathForDirectoriesInDomains (NSLibraryDirectory, NSAllDomainsMask, YES);
+	temp = NSSearchPathForDirectoriesInDomains (NSLibraryDirectory, domainMask, YES);
 
 	counter = [temp objectEnumerator];
 	while ((obj = [counter nextObject])) {
@@ -209,12 +206,12 @@ static BundleController *	sharedInstance = nil;
 		NSString		*str;
 
 		while ((str = [enum2 nextObject])) {
-			[self loadBundleInPath: str];
+			[self loadBundleWithPath: str];
 		}
 	}
 }
 
-- (NSArray *) loadedBundles
+- (NSDictionary *) loadedBundles
 {
 	return loadedBundles;
 }
