@@ -53,7 +53,7 @@ Preferences_APPLICATION_ICON=	Preferences.tiff
 #
 # Additional libraries
 #
-ADDITIONAL_GUI_LIBS += -LPrefsModule/PrefsModule.framework/Versions/Current -lPrefsModule
+ADDITIONAL_GUI_LIBS += -LPrefsModule/PrefsModule.framework/Versions/Current/$(GNUSTEP_TARGET_LDIR) -lPrefsModule
 
 #
 # Resource files
