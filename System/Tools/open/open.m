@@ -4,7 +4,7 @@
 	Open files and/or programs
 
 	Copyright (C) 2001 Free Software Foundation, Inc.
-	Copyright (C) 2001-2003 Dusk to Dawn Computing, Imc.
+	Copyright (C) 2001-2003 Jeff Teunissen <deek@d2dc.net>
 
 	Author:	Jeff Teunissen <deek@d2dc.net>
 	Created: November 2001
@@ -50,32 +50,98 @@
 #include <Foundation/NSUserDefaults.h>
 
 #include <AppKit/NSApplication.h>
-#include <AppKit/NSWorkspace.h>
+
+#include "BBFileOpener.h"
+#include "open.h"
 
 NSAutoreleasePool	*pool = nil;
 NSFileManager		*fm = nil;
 NSProcessInfo		*process = nil;
-NSUserDefaults		*defaults = nil;
-NSWorkspace			*workspace = nil;
+BBFileOpener		*opener = nil;
+
+/*
+	Variables for the application to be used.
+
+	appName is the current app to contact. Can validly be nil.
+	appNameForced is YES when specific app was forced by program name
+	or the -a argument.
+*/
+NSString			*appName = nil;
+BOOL				appNameForced = NO;
+
+/*
+	printFiles is YES when -p has been used, and is only disabled by -o.
+	waitForFileChanged is YES when forced by program name or the --wait argument
+*/
+BOOL				printFiles = NO;
+BOOL				waitForFileChanged = NO;
+BOOL				appAutolaunch = NO;
+
+/*
+	FIXME: Only partially implemented
+
+	Opening files as other types. This requires symlinks unless stdin is used.
+	That's why only stdin is currently implemented for this feature
+	-- I'm not sure how best to handle it. Should these always be opened as
+	temp files?
+*/
+BOOL				openAs = NO;
+NSString			*openAsType = nil;
+
+/* prototypes */
+id connectToApp (NSString *appName, NSString *hostName);
+BOOL openWithApp (NSString *appName, NSString *host, NSString *file, BOOL print, BOOL temp);
 
 int
-doStdInput (NSString *name, NSString *application)
+doStdInput (NSString *name)
 {
 	NSFileHandle	*fh = [NSFileHandle fileHandleWithStandardInput];
 	NSData			*data = [fh readDataToEndOfFile];
 	NSNumber		*pid = [NSNumber numberWithInt: [process processIdentifier]];
 	NSString		*tempFile = [NSTemporaryDirectory () stringByAppendingPathComponent: name];
 
+	// FIXME: this is NOT secure!
 	tempFile = [tempFile stringByAppendingString: [pid stringValue]];
-	tempFile = [tempFile stringByAppendingString: @".txt"];
+
+	if (openAs && [openAsType length]) {
+		tempFile = [tempFile stringByAppendingPathExtension: openAsType];
+	} else {
+		char			buffer[8];
+		int				dataLength;
+
+		memset (buffer, '\0', sizeof (buffer));
+		if ([data length] > sizeof (buffer) - 1)
+			[data getBytes: buffer length: sizeof (buffer) - 1];
+		else
+			[data getBytes: buffer length: [data length]];
+
+		dataLength = strlen (buffer);
+
+		if (dataLength >= 5 && !strncmp (buffer, "{\\rtf", 5)) {
+			tempFile = [tempFile stringByAppendingPathExtension: @"rtf"];
+		}
+	}
+
 	[data writeToFile: tempFile atomically: YES];
-	[workspace openFile: tempFile withApplication: application];
+
+	if (appNameForced) {
+		if (![opener openTempFile: tempFile withApp: appName])
+			return 1;
+
+		return 0;
+	} else {
+		if (![opener openTempFile: tempFile])
+			if (![opener openFile: tempFile])
+				return 1;
+	}
+
 	return 0;
 }
 
-BOOL redirectStdError (char *filename)
+BOOL
+redirectStdError (char *filename)
 {
-	signed int		fd = -1;
+	signed int	fd = -1;
 
 	if ((fd = open (filename, O_WRONLY)) < 0)
 		return NO;
@@ -84,89 +150,193 @@ BOOL redirectStdError (char *filename)
 	return YES;
 }
 
+void
+usage (NSString *name, NSString *desc)
+{
+	if (!name || !desc)
+		abort();
+
+	printf ("Usage: %s %s\n", [name cString], [desc cString]);
+	printf (
+"Options:\n"
+"	-a APP		Specify an application to use for opening the file(s)\n"
+"			(APP will be launched if it is not running)\n"
+"	-A APP		Like -a, only APP won't be launched unless a file is opened\n"
+"	-S		If an app is launched, it will be run as if on startup\n"
+"			(Some apps do different things if \"Autolaunched\")\n"
+"	-o		Cause following files to be opened (this is the default).\n"
+"	-p		Cause following files to be printed instead of opened.\n"
+"	-h, --help	Display this help and exit\n"
+	);
+	exit (0);
+}
+
+/*
+	checkArgs (name, args)
+
+	Checks the arguments and the program name. Returns the processing mode to
+	be used by the main function.
+
+	NOTE: This function modifies the object pointed to by its second argument.
+*/
+int
+checkArgs (NSString *name, NSMutableArray *args)
+{
+	NSString	*desc = @"[ options ] FILE ...";
+	BOOL		doHelp = NO;
+	int 		progMode = PM_OPEN;
+
+	[args removeObjectAtIndex: 0];	// remove app name from args
+
+	if (![name isEqualToString: @"open"]) {	// not being called as open
+		if ([name isEqualToString: @"openapp"] || [name isEqualToString: @"run"]) {
+			progMode = PM_OPENAPP;
+			desc = @"Application [ options ] FILE...";
+
+			if ([args count] < 1) {
+				doHelp = YES;
+				printf ("%s error: not enough arguments\n", [name cString]);
+			} else {
+				appName = [args objectAtIndex: 0];
+				appNameForced = YES;
+				[args removeObjectAtIndex: 0];
+			}
+		} else if ([name isEqualToString: @"open-as"]) {
+			progMode = PM_OPEN_AS;
+			desc = @"FileType [ options ] FILE...";
+
+			if ([args count] < 2) {
+				doHelp = YES;
+				printf ("%s error: not enough arguments\n", [name cString]);
+			} else {
+				openAs = YES;
+				openAsType = [args objectAtIndex: 0];
+				[args removeObjectAtIndex: 0];
+			}
+		} else if ([name hasSuffix: @".client"]) {
+			progMode = PM_APP;
+			appName = [name stringByDeletingPathExtension];
+			appNameForced = YES;
+			waitForFileChanged = YES;
+		} else {
+			progMode = PM_APP;
+			appName = name;
+			appNameForced = YES;
+		}
+	}
+
+	// If there is a "help" arg anywhere on the command-line, only do help.
+	if (doHelp
+			|| [args indexOfObject: @"-h"] != NSNotFound
+			|| [args indexOfObject: @"--help"] != NSNotFound) {
+			usage (name, desc);
+	}
+
+	return progMode;
+}
+
 int
 main (int argc, char** argv, char **env)
 {
+	NSMutableArray	*args = [[[NSProcessInfo processInfo] arguments] mutableCopy];
 	NSEnumerator	*argEnumerator = nil;
-	NSString		*appAutoLaunch = nil;
-	NSString		*application = nil;
 	NSString		*arg = nil;
-	NSString		*editor = nil;
 	NSString		*processName = nil;
-	NSString		*terminal = nil;
+
+	int				programMode;
 
 	pool = [NSAutoreleasePool new];	// create the autorelease pool
 
 	process = [NSProcessInfo processInfo];
-	defaults = [NSUserDefaults standardUserDefaults];
 	fm = [NSFileManager defaultManager];
-	workspace = [NSWorkspace sharedWorkspace];
+	opener = [BBFileOpener fileOpener];
 
-	// Default applications for opening unregistered file types....
-	if (!(editor = [defaults stringForKey: @"GSDefaultEditor"]))
-		editor = @"TextEdit";
-
-	if (!(terminal = [defaults stringForKey: @"GSDefaultTerminal"]))
-		terminal = @"Terminal";
-
-	// Process options...
-	processName = [[NSProcessInfo processInfo] processName];
-
-	if (argc == 1)	// stdin, open it with editor and don't do anything further
-		return doStdInput (processName, editor);
-
-	application = [defaults stringForKey: @"a"];
-	appAutoLaunch = [defaults stringForKey: @"A"];
+	// Check the name of the process for the names we recognize
+	processName = [process processName];
+	programMode = checkArgs (processName, args);
 
 	if (!redirectStdError ("/dev/null")) {
-		printf ("Error redirecting standard output: %s\n", strerror (errno));
+		printf ("Error redirecting standard error output: %s\n", strerror (errno));
 		return 1;
 	}
+	
+	// Process options...
+#if 0
+	if ([args count] == 0)	// stdin, open it with editor and don't do anything further
+		return doStdInput (processName);
+#endif
 
-	if (appAutoLaunch) {
-		[workspace launchApplication: appAutoLaunch showIcon: YES autolaunch: YES];
-		application = appAutoLaunch;
-	} else if (application) {
-		[workspace launchApplication: application];
-	}
-
-	argEnumerator = [[process arguments] objectEnumerator];
-	[argEnumerator nextObject];	// skip zeroth entry
+	argEnumerator = [args objectEnumerator];
 	while((arg = [argEnumerator nextObject])) {
 		NSString	*ext = [arg pathExtension];
 		BOOL		isDir = NO;
 		BOOL		exists = NO;
 
-		if ([arg isEqualToString: @"-h"] || [arg isEqualToString: @"--help"]) {
-			printf ("%s - open files\n", [processName cString]);
-			printf ("Usage: %s [ options ] filename ...\n", [processName cString]);
-			printf (
-"Options:\n"
-"	-a APP		Specify an application to use for opening the file(s)\n"
-"			(App will be launched if it is not running)\n"
-"	-A APP		Like -a, but app will be run as if on startup\n"
-"			(Some apps do different things if \"Autolaunched\")\n"
-"	-h, --help	Display this help and exit\n"
-"	-o		Accepted for backward compatibility. Does nothing.\n"
-"	-p		Causes the file(s) to be printed instead of opened.\n"
-"	-NSHost HOST	Try to open the file on the specified host\n"
-			);
-			exit (0);
+		if ([arg isEqualToString: @"-"]) {	// special filename
+			return doStdInput (processName);
+			break;
 		}
 
-		if ([arg isEqualToString: @"-o"])	// ignored, this is the default
-			continue;
+		if ([arg isEqualToString: @"-o"]) {	// this is the default
+			printFiles = NO;
+		}
 
 		if ([arg isEqualToString: @"-p"]) {
-			printf ("%s: Printing not implemented.\n", [processName cString]);
+			printFiles = YES;
 			continue;
 		}
 
-		if ([arg isEqualToString: @"-a"]	// skip it, handled already
-				|| [arg isEqualToString: @"-A"]	// ditto
-				|| [arg isEqualToString: @"-NSHost"]) {
+		/*
+			We can't send -unhide: commands to app, they get dropped by the
+			GSListener managing its DO connection.
+		*/
+#if 0
+		if ([arg isEqualToString: @"--unhide"]) {
+			if (!(app = [opener openApp: arg])) {
+				printf ("Could not contact application \"%s\"", [appName cString]);
+				break;
+			}
 
-			arg = [argEnumerator nextObject];
+			[app unhide: nil];
+			continue;
+		}
+#endif
+
+		if ([arg isEqualToString: @"-s"]) {
+			[opener setAutolaunch: YES];
+			continue;
+		}
+
+		if ([arg isEqualToString: @"-a"]) {	// launch, set app for following
+			id		newAppName = [argEnumerator nextObject]; // eat the next arg
+
+			if (!newAppName) {
+				printf ("No app name given for -a argument\n");
+				break;
+			}
+
+			appNameForced = YES;
+			appName = newAppName;
+
+			if (![opener openApp: newAppName]) {
+				printf ("Could not contact application \"%s\"", [appName cString]);
+				break;
+			}
+
+			continue;
+		}
+
+		if ([arg isEqualToString: @"-A"]) {	// set the app for following files
+			id		newAppName = [argEnumerator nextObject]; // eat the next arg
+
+			if (!newAppName) {
+				printf ("No app name given for -A argument\n");
+				break;
+			}
+
+			appNameForced = YES;
+			appName = newAppName;
+
 			continue;
 		}
 
@@ -174,14 +344,8 @@ NS_DURING
 		if ([ext isEqualToString: @"app"]	// is it an app?
 				|| [ext isEqualToString: @"debug"]
 				|| [ext isEqualToString: @"profile"]) {
-			if (![workspace launchApplication: arg]) {
-				NSString	*appName = [[arg lastPathComponent] stringByDeletingPathExtension];
-				NSString	*executable = [arg stringByAppendingPathComponent: appName];
-
-				if ([fm fileExistsAtPath: arg]) {
-					if (![NSTask launchedTaskWithLaunchPath: executable arguments: nil])
-						printf ("Unable to launch: %s", [arg cString]);
-				}
+			if (![opener openApp: arg]) {
+				printf ("%s: Unable to launch: %s", [processName cString], [arg cString]);
 			}
 			continue;
 		}
@@ -192,26 +356,27 @@ NS_DURING
 					stringByAppendingPathComponent: arg]
 					stringByStandardizingPath];
 
-//		printf ("Filename: %s\n", [arg cString]);
+		printf ("Filename: %s\n", [arg cString]);
 
 		if (!(exists = [fm fileExistsAtPath: arg isDirectory: &isDir])) {
 			printf ("%s: File \"%s\" not found.\n", [processName cString], [arg cString]);
 			continue;
 		}
 
-		if (application) {
-			[workspace openFile: arg withApplication: application];
+		if (appNameForced) {
+			if (![opener openFile: arg withApp: appName])
+				break;
+
 			continue;
 		}
 
-		if (!isDir && [fm isExecutableFileAtPath: arg]) {
-			[workspace openFile: arg withApplication: terminal];
-			continue;
+		if (![opener openFile: arg]) {	// use default application(s)
+			printf ("%s: Could not open \"%s\".", [processName cString], [arg cString]);
+			break;
 		}
 
-		if (![workspace openFile: arg]) {	// run Editor application
-			[workspace openFile: arg withApplication: editor];
-		}
+		break;	// should never reach here
+
 NS_HANDLER
 		NSLog (@"Exception while attempting open file %@ - %@: %@",
 				arg, [localException name], [localException reason]);

@@ -3,7 +3,9 @@ include $(GNUSTEP_MAKEFILES)/common.make
 TOOL_NAME=	open
 
 # The source files to be compiled
-open_OBJC_FILES=	open.m
+open_OBJC_FILES= \
+	BBFileOpener.m \
+	open.m
 
 -include GNUmakefile.preamble
 -include GNUmakefile.local
