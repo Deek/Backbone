@@ -1,9 +1,9 @@
 {
     IBInspector = {
 	Actions = (
-	    ok:,
-	    revert:,
-	    touch:
+	    "ok:",
+	    "revert:",
+	    "touch:"
 	);
 	Outlets = (
 	    window
@@ -21,11 +21,11 @@
     };
     NSControl = {
 	Actions = (
-	    takeDoubleValueFrom:,
-	    takeFloatValueFrom:,
-	    takeIntValueFrom:,
-	    takeObjectValueFrom:,
-	    takeStringValueFrom:
+	    "takeDoubleValueFrom:",
+	    "takeFloatValueFrom:",
+	    "takeIntValueFrom:",
+	    "takeObjectValueFrom:",
+	    "takeStringValueFrom:"
 	);
 	Outlets = (
 	    target
@@ -67,15 +67,15 @@
     };
     PrefsApp = {
 	Actions = (
-	    bundlesFromLocalButtonChanged:,
-	    bundlesFromNetworkButtonChanged:,
-	    bundlesFromSystemButtonChanged:,
-	    bundlesFromUserButtonChanged:,
-	    loadPrefs:,
-	    projectPathChanged:,
-	    projectPathFindButtonClicked:,
-	    resetPrefsToDefault:,
-	    savePrefs:
+	    "bundlesFromLocalButtonChanged:",
+	    "bundlesFromNetworkButtonChanged:",
+	    "bundlesFromSystemButtonChanged:",
+	    "bundlesFromUserButtonChanged:",
+	    "loadPrefs:",
+	    "projectPathChanged:",
+	    "projectPathFindButtonClicked:",
+	    "resetPrefsToDefault:",
+	    "savePrefs:"
 	);
 	Outlets = (
 	    bundlesFromLocalButton,

@@ -9,7 +9,7 @@ X = Done
 X Do something neat with the appicon, like NeXT's clock (wmCalClock?)
 ? UNIX module, to set things in Workspace
 * Colors module
-* Date/Time module
+I Date/Time module
 * Fonts module
 * Localization (setting preferred language(s))
 * Mouse module (accel speed, double-click delay, menu button)

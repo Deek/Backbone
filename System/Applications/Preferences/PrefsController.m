@@ -79,6 +79,9 @@ static id <PrefsModule>	currentModule = nil;
 	if (iconList)	// stop processing if we already have an icon list
 		return;
 
+	[prefsViewBox setContentViewMargins: NSMakeSize (0, 0)];
+	NSLog (@"Content frame: %@", NSStringFromSize([[prefsViewBox contentView] bounds].size));
+
 	/* What is the matrix? :) */
 	iconList = [[NSMatrix alloc] initWithFrame: NSMakeRect (0, 0, 64*30, 64)];
 	[iconList setCellClass: [NSButtonCell class]];
@@ -135,6 +138,7 @@ static id <PrefsModule>	currentModule = nil;
 		return NO;
 
 	currentModule = aPrefsModule;
+	[[currentModule view] setBounds: [[prefsViewBox contentView] bounds]];
 	[prefsViewBox setContentView: [currentModule view]];
 	[window setTitle: [currentModule buttonCaption]];
 	return YES;

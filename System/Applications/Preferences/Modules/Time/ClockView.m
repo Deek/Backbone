@@ -252,11 +252,7 @@ static	NSBundle	*this_bundle = nil;
 {
 	NSSize	maskSize;
 	NSPoint	maskLoc;
-	NSPoint	location;
-	NSRect	bottomInsideRect;
-	NSRect	topInsideRect;
 	NSRect	tempRect;
-	int		width;
 
 	maskSize = [mask size];
 	tempRect = NSInsetRect (aRect, (aRect.size.width - maskSize.width) / 2,
@@ -294,7 +290,7 @@ static	NSBundle	*this_bundle = nil;
 		[[NSColor blackColor] set];
 
 		PSgsave ();
-		PSrotate (0 - ((_hour * hourAdvancement) + (hourAdvancement * _min * (1.0 / 60.0))));
+		PSrotate (0 - ((_hour * hourAdvancement) + (hourAdvancement * (_min / 60.0))));
 		PSmoveto (0, 0);
 		PSlineto (0, hourLength);
 		PSstroke ();
@@ -306,106 +302,110 @@ static	NSBundle	*this_bundle = nil;
 		PSlineto (0, minLength);
 		PSstroke ();
 		PSgrestore ();
+	} else {
+		NSPoint	location;
+		NSRect	bottomInsideRect;
+		NSRect	topInsideRect;
+		int		width;
 
-		return;
-	}
-	// Rect defining the inside of the "date" area
-	bottomInsideRect = NSMakeRect (tempRect.origin.x + 1,
-								   tempRect.origin.y + 1, 54, 35);
+		// Rect defining the inside of the "date" area
+		bottomInsideRect = NSMakeRect (tempRect.origin.x + 1,
+									   tempRect.origin.y + 1, 54, 35);
 
-	// Rect defining the inside of the "time" area
-	topInsideRect = NSMakeRect (tempRect.origin.x + 1,
-								tempRect.origin.y + 39, 54, 15);
+		// Rect defining the inside of the "time" area
+		topInsideRect = NSMakeRect (tempRect.origin.x + 1,
+									tempRect.origin.y + 39, 54, 15);
 
-	// day of week
-	width = [dow size].width + [month size].width;
-	tempRect = NSInsetRect (bottomInsideRect,
-							(bottomInsideRect.size.width - width) / 2,
-							0);
+		// day of week
+		width = [dow size].width + [month size].width;
+		tempRect = NSInsetRect (bottomInsideRect,
+								(bottomInsideRect.size.width - width) / 2,
+								0);
 
-	location.x = tempRect.origin.x;
-	location.y = tempRect.origin.y + [dom2 size].height - 4;
-	[dow compositeToPoint: location operation: NSCompositeSourceOver];
-	location.x += [dow size].width;
+		location.x = tempRect.origin.x;
+		location.y = tempRect.origin.y + [dom2 size].height - 4;
+		[dow compositeToPoint: location operation: NSCompositeSourceOver];
+		location.x += [dow size].width;
 
-	// month name
-	[month compositeToPoint: location operation: NSCompositeSourceOver];
+		// month name
+		[month compositeToPoint: location operation: NSCompositeSourceOver];
 
-	// day of month
-	width = [dom2 size].width;
-	if (dom1) {
-		width += [dom1 size].width;
-	}
+		// day of month
+		width = [dom2 size].width;
+		if (dom1) {
+			width += [dom1 size].width;
+		}
 
-	tempRect = NSInsetRect (bottomInsideRect,
-							(bottomInsideRect.size.width - width) / 2,
-							0);
+		tempRect = NSInsetRect (bottomInsideRect,
+								(bottomInsideRect.size.width - width) / 2,
+								0);
 
-	location.x = tempRect.origin.x + 2;
+		location.x = tempRect.origin.x + 2;
 
-	if (dom1) {
-		location.y = tempRect.origin.y;
-		[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
-		location.x += [dom1 size].width;
-	}
-	[dom2 compositeToPoint: location operation: NSCompositeSourceOver];
+		if (dom1) {
+			location.y = tempRect.origin.y;
+			[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
+			location.x += [dom1 size].width;
+		}
+		[dom2 compositeToPoint: location operation: NSCompositeSourceOver];
 
-	/*
-		Draw the time
-	*/
-	if (!use24Hours) {	// skew the clock left for AM/PM display
-		topInsideRect.size.width -= [ampm size].width + 1;
-		location.x = topInsideRect.origin.x + topInsideRect.size.width;
-		location.y = topInsideRect.origin.y +
-					(topInsideRect.size.height / 2 - 
-					([ampm size].height / 2)) + 1;
-		[ampm compositeToPoint: location operation: NSCompositeSourceOver];
-	}
+		/*
+			Draw the time
+		*/
+		if (!use24Hours) {	// skew the clock left for AM/PM display
+			topInsideRect.size.width -= [ampm size].width + 1;
+			location.x = topInsideRect.origin.x + topInsideRect.size.width;
+			location.y = topInsideRect.origin.y +
+						(topInsideRect.size.height / 2 - 
+						([ampm size].height / 2)) + 1;
+			[ampm compositeToPoint: location operation: NSCompositeSourceOver];
+		}
 
-	width = 1 + [hour2 size].width + 1
-			+ [colon size].width + 1
-			+ [min1 size].width + 1
-			+ [min2 size].width;
+		width = 1 + [hour2 size].width + 1
+				+ [colon size].width + 1
+				+ [min1 size].width + 1
+				+ [min2 size].width;
 
-	if (hour1)
-		width += [hour1 size].width + 1;
+		if (hour1)
+			width += [hour1 size].width + 1;
 
-	tempRect = NSInsetRect (topInsideRect,
-							(topInsideRect.size.width - width) / 2,
-							1);
+		tempRect = NSInsetRect (topInsideRect,
+								(topInsideRect.size.width - width) / 2,
+								1);
 
-	location.x = tempRect.origin.x;
+		location.x = tempRect.origin.x;
 
-	if (hour1) {
+		if (hour1) {
+			location.y = tempRect.origin.y +
+						(tempRect.size.height / 2 - 
+						([hour1 size].height / 2)) + 1;
+			[hour1 compositeToPoint: location operation: NSCompositeSourceOver];
+			location.x += [hour1 size].width + 1;
+		}
+
 		location.y = tempRect.origin.y +
 					(tempRect.size.height / 2 - 
-					([hour1 size].height / 2)) + 1;
-		[hour1 compositeToPoint: location operation: NSCompositeSourceOver];
-		location.x += [hour1 size].width + 1;
+					([hour2 size].height / 2)) + 1;
+		[hour2 compositeToPoint: location operation: NSCompositeSourceOver];
+		location.x += [hour2 size].width + 1;
+
+		location.y = tempRect.origin.y +
+					(tempRect.size.height / 2 - 
+					([colon size].height / 2));
+		[colon compositeToPoint: location operation: NSCompositeSourceOver];
+		location.x += [colon size].width + 1;
+
+		location.y = tempRect.origin.y +
+					(tempRect.size.height / 2 - 
+					([min1 size].height / 2)) + 1;
+		[min1 compositeToPoint: location operation: NSCompositeSourceOver];
+		location.x += [min1 size].width + 1;
+
+		location.y = tempRect.origin.y +
+					(tempRect.size.height / 2 - 
+					([min2 size].height / 2)) + 1;
+		[min2 compositeToPoint: location operation: NSCompositeSourceOver];
 	}
-
-	location.y = tempRect.origin.y +
-				(tempRect.size.height / 2 - 
-				([hour2 size].height / 2)) + 1;
-	[hour2 compositeToPoint: location operation: NSCompositeSourceOver];
-	location.x += [hour2 size].width + 1;
-
-	location.y = tempRect.origin.y +
-				(tempRect.size.height / 2 - 
-				([colon size].height / 2));
-	[colon compositeToPoint: location operation: NSCompositeSourceOver];
-	location.x += [colon size].width + 1;
-
-	location.y = tempRect.origin.y +
-				(tempRect.size.height / 2 - 
-				([min1 size].height / 2)) + 1;
-	[min1 compositeToPoint: location operation: NSCompositeSourceOver];
-	location.x += [min1 size].width + 1;
-
-	location.y = tempRect.origin.y +
-				(tempRect.size.height / 2 - 
-				([min2 size].height / 2)) + 1;
-	[min2 compositeToPoint: location operation: NSCompositeSourceOver];
 }
 
 - (void) update: (id) sender

@@ -1,9 +1,9 @@
 {
     IBInspector = {
 	Actions = (
-	    ok:,
-	    revert:,
-	    touch:
+	    "ok:",
+	    "revert:",
+	    "touch:"
 	);
 	Outlets = (
 	    window
@@ -12,15 +12,15 @@
     };
     Keyboard = {
 	Actions = (
-	    firstAlternateChanged:,
-	    firstCommandChanged:,
-	    firstControlChanged:,
-	    loadPrefs:,
-	    resetPrefsToDefault:,
-	    savePrefs:,
-	    secondAlternateChanged:,
-	    secondCommandChanged:,
-	    secondControlChanged:
+	    "firstAlternateChanged:",
+	    "firstCommandChanged:",
+	    "firstControlChanged:",
+	    "loadPrefs:",
+	    "resetPrefsToDefault:",
+	    "savePrefs:",
+	    "secondAlternateChanged:",
+	    "secondCommandChanged:",
+	    "secondControlChanged:"
 	);
 	Outlets = (
 	    firstAlternatePopUp,
@@ -45,11 +45,11 @@
     };
     NSControl = {
 	Actions = (
-	    takeDoubleValueFrom:,
-	    takeFloatValueFrom:,
-	    takeIntValueFrom:,
-	    takeObjectValueFrom:,
-	    takeStringValueFrom:
+	    "takeDoubleValueFrom:",
+	    "takeFloatValueFrom:",
+	    "takeIntValueFrom:",
+	    "takeObjectValueFrom:",
+	    "takeStringValueFrom:"
 	);
 	Outlets = (
 	    target

@@ -37,7 +37,7 @@
 #import <AppKit/NSButtonCell.h>
 
 // size of a Prefs view
-#define PrefsRect NSMakeRect (0, 0, 384, 176)
+#define PrefsRect NSMakeRect (0, 0, 400, 196)
 
 @protocol PrefsController <NSObject>
 
