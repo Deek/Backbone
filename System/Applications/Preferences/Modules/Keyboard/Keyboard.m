@@ -33,11 +33,11 @@
 
 RCSID("$Id$");
 
-#import <AppKit/NSButton.h>
-#import <AppKit/NSNibLoading.h>
-#import <AppKit/NSOpenPanel.h>
+#include <AppKit/NSButton.h>
+#include <AppKit/NSNibLoading.h>
+#include <AppKit/NSOpenPanel.h>
 
-#import "Keyboard.h"
+#include "Keyboard.h"
 
 @interface Keyboard (Private)
 

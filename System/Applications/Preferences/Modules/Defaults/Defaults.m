@@ -31,16 +31,20 @@
 
 RCSID("$Id$");
 
-#import <Foundation/Foundation.h>
+#include <Foundation/NSDebug.h>
+#include <Foundation/NSDictionary.h>
+#include <Foundation/NSString.h>
+#include <Foundation/NSUserDefaults.h>
 
-#import <AppKit/NSBrowser.h>
-#import <AppKit/NSBrowserCell.h>
-#import <AppKit/NSImage.h>
-#import <AppKit/NSNibLoading.h>
-#import <AppKit/NSPanel.h>
-#import <AppKit/NSTextContainer.h>
+#include <AppKit/NSBrowser.h>
+#include <AppKit/NSBrowserCell.h>
+#include <AppKit/NSImage.h>
+#include <AppKit/NSNibLoading.h>
+#include <AppKit/NSPanel.h>
+#include <AppKit/NSTextContainer.h>
+#include <AppKit/NSView.h>
 
-#import "Defaults.h"
+#include "Defaults.h"
 
 static Defaults					*sharedInstance = nil;
 static NSUserDefaults			*defs = nil;
@@ -310,6 +314,7 @@ static id <PrefsController>		controller = nil;
 		[domain removeObjectForKey: def];
 		[defs setPersistentDomain: domain forName: dom];
 		[defs synchronize];
+		[defaultsBrowser reloadColumn: 1];
 
 		return;
 	}

@@ -2,10 +2,15 @@
 ADDITIONAL_CPPFLAGS +=
 
 # Additional flags to pass to the Objective-C compiler
-ADDITIONAL_OBJCFLAGS += -Wall -Werror
+ADDITIONAL_OBJCFLAGS += -Wall
 
 # Additional flags to pass to the C compiler
-ADDITIONAL_CFLAGS += -Wall -Werror
+ADDITIONAL_CFLAGS += -Wall
+
+ifeq ($(shell test -d CVS && echo -n 1), 1)
+ADDITIONAL_OBJCFLAGS += -Werror
+ADDITIONAL_CFLAGS += -Werror
+endif
 
 # Additional include directories the compiler should search
 ADDITIONAL_INCLUDE_DIRS +=

@@ -26,18 +26,22 @@
 		Boston, MA  02111-1307, USA
 */
 
+#ifndef PA_M_Defaults_Defaults_h
+#define PA_M_Defaults_Defaults_h
+
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <AppKit/NSWindow.h>
-#import <AppKit/NSMatrix.h>
-#import <AppKit/NSTextView.h>
-#import <AppKit/NSBrowser.h>
-#import <AppKit/NSButton.h>
-#import <AppKit/NSNibDeclarations.h>
-#import <PrefsModule/PrefsModule.h>
-#import <Foundation/NSUserDefaults.h>
+#include <Foundation/NSUserDefaults.h>
+
+#include <AppKit/NSWindow.h>
+#include <AppKit/NSMatrix.h>
+#include <AppKit/NSTextView.h>
+#include <AppKit/NSBrowser.h>
+#include <AppKit/NSButton.h>
+#include <AppKit/NSNibDeclarations.h>
+#include <PrefsModule/PrefsModule.h>
 
 @interface Defaults: NSObject <PrefsModule>
 {
@@ -62,3 +66,5 @@
 - (IBAction) browserSelectedSomething: (id) sender;
 
 @end 
+
+#endif	// PA_M_Defaults_Defaults_h

@@ -27,19 +27,21 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
+#ifndef PA_M_Font_Font_h
+#define PA_M_Font_Font_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <AppKit/NSNibDeclarations.h>
-#import <AppKit/NSPopUpButton.h>
-#import <AppKit/NSButton.h>
-#import <AppKit/NSScrollView.h>
-#import <AppKit/NSTextField.h>
-#import <AppKit/NSTextView.h>
+#include <AppKit/NSNibDeclarations.h>
+#include <AppKit/NSPopUpButton.h>
+#include <AppKit/NSButton.h>
+#include <AppKit/NSScrollView.h>
+#include <AppKit/NSTextField.h>
+#include <AppKit/NSTextView.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
 @interface Font: NSObject <PrefsModule>
 {
@@ -60,6 +62,4 @@
 
 @end
 
-/* Local variables:
- vim:set ft=objc:
-*/
+#endif // PA_M_Font_Font_h

@@ -33,17 +33,17 @@
 
 RCSID("$Id$");
 
-#import <Foundation/NSDebug.h>
-#import <Foundation/NSUserDefaults.h>
-#import <Foundation/NSValue.h>
+#include <Foundation/NSDebug.h>
+#include <Foundation/NSUserDefaults.h>
+#include <Foundation/NSValue.h>
 
-#import <AppKit/NSApplication.h>
-#import <AppKit/NSButton.h>
-#import <AppKit/NSNibLoading.h>
-#import <AppKit/NSOpenPanel.h>
+#include <AppKit/NSApplication.h>
+#include <AppKit/NSButton.h>
+#include <AppKit/NSNibLoading.h>
+#include <AppKit/NSOpenPanel.h>
 
-#import "Time.h"
-#import "ClockView.h"
+#include "Time.h"
+#include "ClockView.h"
 
 static Time						*sharedInstance = nil;
 static id <PrefsApplication>	owner = nil;

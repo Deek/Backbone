@@ -27,16 +27,18 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
+#ifndef PA_BundleController_h
+#define PA_BundleController_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <Foundation/NSArray.h>
-#import <Foundation/NSBundle.h>
-#import <Foundation/NSObject.h>
+#include <Foundation/NSArray.h>
+#include <Foundation/NSBundle.h>
+#include <Foundation/NSObject.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
 /*
 	Bundle Delegate protocol
@@ -62,3 +64,5 @@
 - (NSDictionary *) loadedBundles;
 
 @end
+
+#endif	// PA_BundleController_h

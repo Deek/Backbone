@@ -27,18 +27,20 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
+#ifndef PA_M_Time_Time_h
+#define PA_M_Time_Time_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <Foundation/NSObject.h>
+#include <Foundation/NSObject.h>
 
-#import <AppKit/NSNibDeclarations.h>
-#import <AppKit/NSButton.h>
-#import <AppKit/NSTextField.h>
+#include <AppKit/NSNibDeclarations.h>
+#include <AppKit/NSButton.h>
+#include <AppKit/NSTextField.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
 @interface Time: NSObject <PrefsModule>
 {
@@ -58,3 +60,5 @@
 - (IBAction) localTimeFieldChanged: (id) sender;
 
 @end
+
+#endif	// PA_M_Time_Time_h

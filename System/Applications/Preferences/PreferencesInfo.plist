@@ -3,7 +3,7 @@
     ApplicationIcon = Preferences;
     ApplicationName = Preferences;
     ApplicationRelease = "1.2.99 beta";
-    ApplicationURL = "none";
+    ApplicationURL = "http://prefsapp.sf.net/";
     Authors = (
 	"Jeff Teunissen <deek@d2dc.net>"
     );

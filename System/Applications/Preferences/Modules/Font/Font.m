@@ -30,18 +30,18 @@
 
 RCSID("$Id$");
 
-#import <AppKit/NSPopUpButton.h>
-#import <AppKit/NSButton.h>
-#import <AppKit/NSTextField.h>
-#import <AppKit/NSTextView.h>
-#import <AppKit/NSFont.h>
-#import <AppKit/NSFontPanel.h>
-#import <AppKit/NSNibLoading.h>
-#import <AppKit/NSOpenPanel.h>
+#include <AppKit/NSPopUpButton.h>
+#include <AppKit/NSButton.h>
+#include <AppKit/NSTextField.h>
+#include <AppKit/NSTextView.h>
+#include <AppKit/NSFont.h>
+#include <AppKit/NSFontPanel.h>
+#include <AppKit/NSNibLoading.h>
+#include <AppKit/NSOpenPanel.h>
 
-#import <AppKit/NSApplication.h>
+#include <AppKit/NSApplication.h>
 
-#import "Font.h"
+#include "Font.h"
 
 @interface Font (Private)
 
@@ -237,6 +237,7 @@ getFloatDefault (NSMutableDictionary *dict, NSString *name)
 
 	[fontExampleScrollView setHasHorizontalScroller: NO];
 	[fontExampleScrollView setHasVerticalScroller: YES];
+	[fontExampleScrollView setBorderType: NSBezelBorder];
 
 	if (!fontExampleTextView) {
 		NSRect frame;

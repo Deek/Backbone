@@ -32,19 +32,19 @@
 
 RCSID("$Id$");
 
-#import <Foundation/NSDebug.h>
-#import <Foundation/NSPathUtilities.h>
-#import <Foundation/NSUserDefaults.h>
+#include <Foundation/NSDebug.h>
+#include <Foundation/NSPathUtilities.h>
+#include <Foundation/NSUserDefaults.h>
 
-#import <AppKit/NSApplication.h>
-#import <AppKit/NSMenu.h>
-#import <AppKit/NSOpenPanel.h>
+#include <AppKit/NSApplication.h>
+#include <AppKit/NSMenu.h>
+#include <AppKit/NSOpenPanel.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
-#import "Controller.h"
-#import "BundleController.h"
-#import "PrefsController.h"
+#include "Controller.h"
+#include "BundleController.h"
+#include "PrefsController.h"
 
 @implementation Controller
 
@@ -174,7 +174,7 @@ RCSID("$Id$");
 		return;
 	}
 
-	[[(id <NSObject,PrefsModule>) [aBundle principalClass] alloc] initWithOwner: self];
+	[[[aBundle principalClass] alloc] initWithOwner: self];
 }
 
 - (id <PrefsController>) prefsController

@@ -20,9 +20,12 @@
 **  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
+#ifndef PA_M_Defaults_DefaultsView_h
+#define PA_M_Defaults_DefaultsView_h
 
-#import <PrefsModule/PrefsModule.h>
-#import <AppKit/NSScrollView.h>
+#include <PrefsModule/PrefsModule.h>
+#include <AppKit/NSScrollView.h>
+
 @interface DefaultsView: NSView
 {
 	id				defaultsBrowser;
@@ -38,3 +41,5 @@
 - (id) remove;
 
 @end
+
+#endif	// PA_M_Defaults_DefaultsView_h

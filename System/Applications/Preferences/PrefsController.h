@@ -26,19 +26,21 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
+#ifndef PA_PrefsController_h
+#define PA_PrefsController_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <AppKit/NSNibDeclarations.h>
-#import <AppKit/NSWindowController.h>
-#import <AppKit/NSBox.h>
-#import <AppKit/NSMatrix.h>
-#import <AppKit/NSScrollView.h>
-#import <AppKit/NSWindow.h>
+#include <AppKit/NSNibDeclarations.h>
+#include <AppKit/NSWindowController.h>
+#include <AppKit/NSBox.h>
+#include <AppKit/NSMatrix.h>
+#include <AppKit/NSScrollView.h>
+#include <AppKit/NSWindow.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
 @interface PrefsController: NSObject <PrefsController>
 {
@@ -57,3 +59,5 @@
 - (void) windowWillClose: (NSNotification *) aNotification;
 
 @end
+
+#endif	// PA_PrefsController_h

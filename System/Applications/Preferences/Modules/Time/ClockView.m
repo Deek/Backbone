@@ -33,16 +33,16 @@
 
 RCSID("$Id$");
 
-#import <Foundation/NSCalendarDate.h>
-#import <Foundation/NSTimer.h>
+#include <Foundation/NSCalendarDate.h>
+#include <Foundation/NSTimer.h>
 
-#import <AppKit/NSApplication.h>
-#import <AppKit/NSColor.h>
-#import <AppKit/NSEvent.h>
-#import <AppKit/NSImage.h>
-#import <AppKit/PSOperators.h>
+#include <AppKit/NSApplication.h>
+#include <AppKit/NSColor.h>
+#include <AppKit/NSEvent.h>
+#include <AppKit/NSImage.h>
+#include <AppKit/PSOperators.h>
 
-#import "ClockView.h"
+#include "ClockView.h"
 
 #define NEW_IMAGE(a) \
 	[[NSImage alloc] initWithContentsOfFile: [this_bundle pathForImageResource: (a)]]

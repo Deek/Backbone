@@ -26,21 +26,23 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
+#ifndef PA_Controller_h
+#define PA_Controller_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <Foundation/NSObject.h>
-#import <Foundation/NSNotification.h>
-#import <Foundation/NSString.h>
-#import <AppKit/NSApplication.h>
-#import <AppKit/NSNibDeclarations.h>
+#include <Foundation/NSObject.h>
+#include <Foundation/NSNotification.h>
+#include <Foundation/NSString.h>
+#include <AppKit/NSApplication.h>
+#include <AppKit/NSNibDeclarations.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
-#import "BundleController.h"
-#import "PrefsController.h"
+#include "BundleController.h"
+#include "PrefsController.h"
 
 @interface Controller: NSObject <PrefsApplication>
 {
@@ -62,3 +64,5 @@
 - (IBAction) open: (id) sender;
 
 @end
+
+#endif	// PA_Controller_h

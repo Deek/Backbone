@@ -27,15 +27,17 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
+#ifndef PA_M_Keyboard_Keyboard_h
+#define PA_M_Keyboard_Keyboard_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <AppKit/NSNibDeclarations.h>
-#import <AppKit/NSPopUpButton.h>
+#include <AppKit/NSNibDeclarations.h>
+#include <AppKit/NSPopUpButton.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
 @interface Keyboard: NSObject <PrefsModule>
 {
@@ -58,3 +60,5 @@
 - (IBAction) secondControlChanged: (id) sender;
 
 @end
+
+#endif	// PA_M_Keyboard_Keyboard_h

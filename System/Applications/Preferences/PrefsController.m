@@ -32,22 +32,22 @@
 
 RCSID("$Id$");
 
-#import <Foundation/NSDebug.h>
-#import <Foundation/NSInvocation.h>
-#import <Foundation/NSObjCRuntime.h>
+#include <Foundation/NSDebug.h>
+#include <Foundation/NSInvocation.h>
+#include <Foundation/NSObjCRuntime.h>
 
-#import <AppKit/NSApplication.h>
-#import <AppKit/NSNibLoading.h>
+#include <AppKit/NSApplication.h>
+#include <AppKit/NSNibLoading.h>
 
-#import <PrefsModule/PrefsModule.h>
+#include <PrefsModule/PrefsModule.h>
 
-#import "PrefsController.h"
+#include "PrefsController.h"
 
 @implementation PrefsController
 
 static PrefsController	*sharedInstance = nil;
 static NSMutableArray	*prefsViews = nil;
-static id <PrefsModule>	currentModule = nil;
+static id				currentModule = nil;
 
 + (PrefsController *) sharedPrefsController
 {
@@ -89,6 +89,7 @@ static id <PrefsModule>	currentModule = nil;
 	[iconScrollView setDocumentView: iconList];
 	[iconScrollView setHasHorizontalScroller: YES];
 	[iconScrollView setHasVerticalScroller: NO];
+	[iconScrollView setBorderType: NSBezelBorder];
 }
 
 - (oneway void) release
@@ -108,15 +109,16 @@ static id <PrefsModule>	currentModule = nil;
 {
 }
 
-- (BOOL) registerPrefsModule: (id <PrefsModule>) aPrefsModule;
+- (BOOL) registerPrefsModule: (id) aPrefsModule;
 {
 	NSButtonCell	*button = [[NSButtonCell alloc] init];
 
-	if (!aPrefsModule)
+	if (!aPrefsModule
+		|| ![aPrefsModule conformsToProtocol: @protocol(PrefsModule)])
 		return NO;
 
 	if (![prefsViews containsObject: aPrefsModule]) {
-		[prefsViews addObject: [aPrefsModule autorelease]];
+		[prefsViews addObject: aPrefsModule];
 	}
 
 	[button setTitle: [aPrefsModule buttonCaption]];
@@ -137,7 +139,8 @@ static id <PrefsModule>	currentModule = nil;
 
 - (BOOL) setCurrentModule: (id <PrefsModule>) aPrefsModule;
 {
-	if (!aPrefsModule || ![aPrefsModule view])
+	if (!aPrefsModule || ![prefsViews containsObject: aPrefsModule]
+		|| ![aPrefsModule view])
 		return NO;
 
 	currentModule = aPrefsModule;

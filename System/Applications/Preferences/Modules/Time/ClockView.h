@@ -28,15 +28,17 @@
 
 	$Id$
 */
+#ifndef PA_M_Time_ClockView_h
+#define PA_M_Time_CLockView_h
 
 #ifdef HAVE_CONFIG_H
 # include "Config.h"
 #endif
 
-#import <Foundation/NSCalendarDate.h>
+#include <Foundation/NSCalendarDate.h>
 
-#import <AppKit/NSNibDeclarations.h>
-#import <AppKit/NSView.h>
+#include <AppKit/NSNibDeclarations.h>
+#include <AppKit/NSView.h>
 
 @interface ClockView: NSView
 {
@@ -77,3 +79,5 @@
 - (void) setUses24Hours: (BOOL) flag;
 
 @end
+
+#endif	// PA_M_Time_ClockView_h
