@@ -137,12 +137,12 @@ static	NSImage		*month = nil;
 	static int	lastdom = -1, lastmonth = -1, lasthour = -1, lastmin = -1;
 	static BOOL	last24 = NO;
 
-	int			_hour = [aDate hourOfDay];
-	int			_min = [aDate minuteOfHour];
-	int			_dow = [aDate dayOfWeek];
-	int			_dom = [aDate dayOfMonth];
-	int			_month = [aDate monthOfYear];
-	
+	int		_hour = [aDate hourOfDay];
+	int		_min = [aDate minuteOfHour];
+	int		_dow = [aDate dayOfWeek];
+	int		_dom = [aDate dayOfMonth];
+	int		_month = [aDate monthOfYear];
+
 	BOOL	dateChanged = NO;
 
 	if (lastdom != _dom) {
@@ -226,8 +226,8 @@ static	NSImage		*month = nil;
 	int		width;
 
 	maskSize = [mask size];
-	tempRect = NSInsetRect(aRect, (aRect.size.width - maskSize.width) / 2,
-								 (aRect.size.height - maskSize.height) / 2);
+	tempRect = NSInsetRect (aRect, (aRect.size.width - maskSize.width) / 2,
+							(aRect.size.height - maskSize.height) / 2);
 	maskLoc = NSMakePoint (tempRect.origin.x, tempRect.origin.y);
 
 	// Rect defining the inside of the "date" area
@@ -268,7 +268,7 @@ static	NSImage		*month = nil;
 							0);
 
 	location.x = tempRect.origin.x + 2;
-	
+
 	if (dom1) {
 		location.y = tempRect.origin.y;
 		[dom1 compositeToPoint: location operation: NSCompositeSourceOver];
