@@ -244,12 +244,15 @@ static	NSImage		*month = nil;
 	[mask compositeToPoint: maskLoc operation: NSCompositeSourceOver];
 
 	// day of week
-	location.x = bottomInsideRect.origin.x +
-				(bottomInsideRect.size.width / 2 - 
-				(([dow size].width + [month size].width)/2));
-	location.y = bottomInsideRect.origin.y + ([dom2 size].height - 3);
+	width = [dow size].width + [month size].width;
+	tempRect = NSInsetRect (bottomInsideRect,
+							(bottomInsideRect.size.width - width) / 2,
+							0);
+
+	location.x = tempRect.origin.x + 2;
+	location.y = tempRect.origin.y + [dom2 size].height - 4;
 	[dow compositeToPoint: location operation: NSCompositeSourceOver];
-	location.x += [dow size].width + 2;
+	location.x += [dow size].width;
 
 	// month name
 	[month compositeToPoint: location operation: NSCompositeSourceOver];
