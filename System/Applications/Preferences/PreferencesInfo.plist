@@ -2,14 +2,14 @@
     ApplicationDescription = "GNUstep Preferences Editor";
     ApplicationIcon = Preferences;
     ApplicationName = Preferences;
-    ApplicationRelease = "1.2.0";
+    ApplicationRelease = "1.2.99 beta";
     ApplicationURL = "none";
     Authors = (
 	"Jeff Teunissen <deek@d2dc.net>"
     );
     Copyright = "Copyright (C) 2002 Dusk to Dawn Computing";
     CopyrightDescription = "Released under the GNU GPL. See COPYING-app for details.";
-    FullVersionID = "1.2.0";
+    FullVersionID = "1.2.99";
     NSTypes = (
     	{
 	    NSName = "prefs";

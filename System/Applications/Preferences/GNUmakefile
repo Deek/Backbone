@@ -44,7 +44,7 @@ CVS_FLAGS=		-d:pserver:anonymous@cvs.quakeforge.net:/cvsroot/prefsapp
 #
 PACKAGE_NAME=		Preferences
 APP_NAME=		Preferences
-VERSION=		1.2.0
+VERSION=		1.2.99
 Preferences_PRINCIPAL_CLASS=	NSApplication
 Preferences_APPLICATION_ICON=	Preferences.tiff
 
