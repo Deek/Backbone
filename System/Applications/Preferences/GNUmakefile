@@ -32,6 +32,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 #
 SUBPROJECTS=	\
 	PrefsModule \
+	Modules/Font \
 	Modules/Keyboard \
 	Modules/Time
 #
