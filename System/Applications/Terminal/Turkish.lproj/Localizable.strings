@@ -151,8 +151,7 @@ add comments above this one
 /* File: TerminalViewPrefs.m:255 */
 "Scroll-back length in lines:" = "Satırlarda uzunluğu scroll-back et:";
 /* File: TerminalViewPrefs.m:651 */
-= "Send a double escape for the escape key.\n\nThis means that the escape key will be\nrecognized faster by many programs, but\nyou can't use it as a substitute for meta.";
-"Escape tuşu için çift Esc girin.\n\nBöylece esc tuşunu programlar\n daha hızlı tanıyabilir, ama\nbunum meta için yedek olarak kullanamazsınız."
+"Send a double escape for the escape key.\n\nThis means that the escape key will be\nrecognized faster by many programs, but\nyou can't use it as a substitute for meta." = "Escape tuşu için çift Esc girin.\n\nBöylece esc tuşunu programlar\n daha hızlı tanıyabilir, ama\nbunum meta için yedek olarak kullanamazsınız.";
 /* File: TerminalViewPrefs.m:492 */
 /* File: TerminalViewPrefs.m:487 */
 "Shell" = "Kabuk";
