@@ -161,7 +161,7 @@ static id				currentModule = nil;
 	return YES;
 }
 
-- (BOOL) setCurrentModule: (id <PrefsModule>) aPrefsModule;
+- (BOOL) setCurrentModule: (id) aPrefsModule;
 {
 	if (!aPrefsModule || ![prefsViews containsObject: aPrefsModule]
 		|| ![aPrefsModule view])
@@ -174,12 +174,12 @@ static id				currentModule = nil;
 	return YES;
 }
 
-- (id) window;
+- (NSWindow*) window;
 {
 	return window;
 }
 
-- (id <PrefsModule>) currentModule;
+- (id) currentModule;
 {
 	return currentModule;
 }

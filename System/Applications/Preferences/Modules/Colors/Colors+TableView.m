@@ -6,7 +6,7 @@
 	TableView delegate
 */
 
-- (int) numberOfRowsInTableView: (id) tableView
+- (int) numberOfRowsInTableView: (NSTableView*) tableView
 {
 	return [list count];
 }
