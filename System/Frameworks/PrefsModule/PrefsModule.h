@@ -68,6 +68,7 @@
 	Returns the module currently be displayed, or nil if no module is
 	currently being displayed.
 */
+
 - (id) currentModule;
 
 /*
@@ -108,7 +109,7 @@
 /*
 	Returns a reference to the shared prefs controller.
 */
-- (id) prefsController;
+- (id<PrefsController>) prefsController;
 
 @end
 
