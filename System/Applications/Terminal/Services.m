@@ -100,7 +100,7 @@ of the License. See COPYING or main.m for more information.
 	}
 
 	{
-		int i,c=[cmdline length];
+		int i;
 		BOOL add_args;
 		NSMutableString *str=[cmdline mutableCopy];
 		unichar ch;
@@ -108,7 +108,7 @@ of the License. See COPYING or main.m for more information.
 
 		add_args=YES;
 		p_pos=-1;
-		for (i=0;i<c-1;i++)
+		for (i=0;i<[str length]-1;i++)
 		{
 			ch=[str characterAtIndex: i];
 			if (ch!='%')
