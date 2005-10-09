@@ -21,10 +21,11 @@ of the License. See COPYING or main.m for more information.
 static NSUserDefaults *ud;
 
 
-static NSString
+NSString
 	*TerminalParser_LinuxPrefsDidChangeNotification=
-		@"TerminalParser_LinuxPrefsDidChangeNotification",
-	*CharacterSetKey=@"Linux_CharacterSet";
+		@"TerminalParser_LinuxPrefsDidChangeNotification";
+
+static NSString *CharacterSetKey=@"Linux_CharacterSet";
 
 
 static NSString *characterSet;
