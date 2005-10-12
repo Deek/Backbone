@@ -51,6 +51,8 @@
 	IBOutlet NSScrollView	*fontExampleScrollView;
 	IBOutlet NSTextView		*fontExampleTextView;
 	IBOutlet NSButton		*enableAntiAliasingButton;
+	IBOutlet NSButton		*enableSubpixelButton;
+	IBOutlet NSButton		*subpixelModeButton;
 
 	IBOutlet NSWindow	*window;
 	IBOutlet id			view;

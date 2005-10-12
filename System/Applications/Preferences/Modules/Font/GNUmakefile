@@ -13,7 +13,7 @@ Font_LANGUAGES=	\
 	Russian
 
 Font_LOCALIZED_RESOURCE_FILES= \
-	Font.gorm \
+	Fonts.gorm \
 	Localizable.strings
 
 Font_OBJC_FILES= \

@@ -12,4 +12,4 @@ add comments above this one
 "Font: Could not load nib \"Font\", aborting."
 = "Font: Could not load nib \"Font\", aborting.";
 /* File: Font.m:252 */
-"Example Text" = "The quick brown fox jumped over the lazy dog.\n0123456789";
+"Example Text" = "Sphinx of black quartz, judge my vow.\n0123456789";
