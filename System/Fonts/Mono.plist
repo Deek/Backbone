@@ -1,0 +1,40 @@
+{
+    Faces = (
+	{
+	    Files = (
+		"DejaVuSansMono-Roman.ttf"
+	    );
+	    Name = Regular;
+	    PostScriptName = "DejaVuSansMono-Roman";
+	    Traits = 512;
+	    Weight = 5;
+	},
+	{
+	    Files = (
+		"DejaVuSansMono-Oblique.ttf"
+	    );
+	    Name = "Regular Oblique";
+	    PostScriptName = "DejaVuSansMono-Oblique";
+	    Traits = 513;
+	    Weight = 5;
+	},
+	{
+	    Files = (
+		"DejaVuSansMono-Bold.ttf"
+	    );
+	    Name = Bold;
+	    PostScriptName = "DejaVuSansMono-Bold";
+	    Traits = 514;
+	    Weight = 9;
+	},
+	{
+	    Files = (
+		"DejaVuSansMono-BoldOb.ttf"
+	    );
+	    Name = "Bold Oblique";
+	    PostScriptName = "DejaVuSansMono-BoldOb";
+	    Traits = 515;
+	    Weight = 9;
+	},
+    );
+}

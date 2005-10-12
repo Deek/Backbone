@@ -1,0 +1,76 @@
+{
+    Faces = (
+	{
+	    Files = (
+		"DejaVuSerif-Roman.ttf"
+	    );
+	    Name = Regular;
+	    PostScriptName = "DejaVuSerif-Roman";
+	    Traits = 0;
+	    Weight = 5;
+	},
+	{
+	    Files = (
+		"DejaVuSerif-Oblique.ttf"
+	    );
+	    Name = "Regular Oblique";
+	    PostScriptName = "DejaVuSerif-Oblique";
+	    Traits = 1;
+	    Weight = 5;
+	},
+	{
+	    Files = (
+		"DejaVuSerifCondensed.ttf"
+	    );
+	    Name = "Regular Condensed";
+	    PostScriptName = "DejaVuSerifCondensed";
+	    Traits = 16;
+	    Weight = 5;
+	},
+	{
+	    Files = (
+		"DejaVuSerifCondensed-Oblique.ttf"
+	    );
+	    Name = "Regular Condensed Oblique";
+	    PostScriptName = "DejaVuSerifCondensed-Oblique";
+	    Traits = 17;
+	    Weight = 5;
+	},
+	{
+	    Files = (
+		"DejaVuSerif-Bold.ttf"
+	    );
+	    Name = Bold;
+	    PostScriptName = "DejaVuSerif-Bold";
+	    Traits = 2;
+	    Weight = 9;
+	},
+	{
+	    Files = (
+		"DejaVuSerif-BoldOblique.ttf"
+	    );
+	    Name = "Bold Oblique";
+	    PostScriptName = "DejaVuSerif-BoldOblique";
+	    Traits = 3;
+	    Weight = 9;
+	},
+	{
+	    Files = (
+		"DejaVuSerifCondensed-Bold.ttf"
+	    );
+	    Name = "Bold Condensed";
+	    PostScriptName = "DejaVuSerifCondensed-Bold";
+	    Traits = 18;
+	    Weight = 9;
+	},
+	{
+	    Files = (
+		"DejaVuSerifCondensed-BoldOblique.ttf"
+	    );
+	    Name = "Bold Condensed Oblique";
+	    PostScriptName = "DejaVuSerifCondensed-BoldOblique";
+	    Traits = 19;
+	    Weight = 9;
+	}
+    );
+}

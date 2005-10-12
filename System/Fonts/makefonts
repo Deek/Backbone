@@ -1,0 +1,65 @@
+#! /bin/sh
+
+EXTRAS="AUTHORS BUGS LICENSE"
+
+INSTALL_DIR=$GNUSTEP_INSTALLATION_DIR
+if [ ! "$INSTALL_DIR" ]; then
+	INSTALL_DIR=$GNUSTEP_SYSTEM_ROOT
+fi
+if [ ! "$INSTALL_DIR" ]; then
+	INSTALL_DIR=/usr/GNUstep/System
+fi
+INSTALL_DIR=${INSTALL_DIR}/Library/Fonts
+
+CMD="nfont"
+
+if [ "$1" = "install" ]; then
+	CMD="fontinstall"
+elif [ "$1" = "clean" ]; then
+	CMD="clean"
+elif [ "$1" = "uninstall" ]; then
+	CMD="uninstall"
+fi
+
+nfont ()
+{
+	# We do this because we want to use "$@" later on...
+	DIR=${1}.nfont
+	shift
+	PLIST=$1
+	shift
+
+	# ok, now do the work
+	echo -n Creating ${DIR}...
+	[ -d "${DIR}" ] && rm -rf "${DIR}"
+	mkdir "$DIR"
+	cp "$PLIST" "$DIR/FontInfo.plist"
+	cp "$@" "$DIR"
+	echo done.
+}
+
+fontinstall ()
+{
+	if [ ! -d "$1" ]; then
+		nfont "$@"
+	fi
+	rm -fr "${INSTALL_DIR}/${1}.nfont"
+	cp -R "${1}.nfont" "${INSTALL_DIR}"
+	echo "Installed ${INSTALL_DIR}/${1}.nfont"
+}
+
+clean ()
+{
+	rm -fr "${1}.nfont"
+	echo "Cleaned ${1}.nfont"
+}
+
+uninstall ()
+{
+	rm -fr "${INSTALL_DIR}/${1}.nfont"
+	echo "Removed ${INSTALL_DIR}/${1}.nfont"
+}
+
+$CMD System				System.plist	$EXTRAS	DejaVuSans.ttf DejaVuSans-*.ttf DejaVuSansCondensed*.ttf
+$CMD "System Monospace" Mono.plist		$EXTRAS	DejaVuSansMono*.ttf
+$CMD "System Serif"		Serif.plist 	$EXTRAS	DejaVuSerif*.ttf

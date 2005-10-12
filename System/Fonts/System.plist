@@ -1,0 +1,76 @@
+{
+    Faces = (
+	{
+	    Files = (
+		DejaVuSans.ttf
+	    );
+	    Name = Book;
+	    PostScriptName = DejaVuSans;
+	    Weight = 5;
+	    Traits = 0;
+	},
+	{
+	    Files = (
+		"DejaVuSans-Oblique.ttf"
+	    );
+	    Name = "Book Oblique";
+	    PostScriptName = "DejaVuSans-Oblique";
+	    Weight = 5;
+	    Traits = 1;
+	},
+	{
+	    Files = (
+		DejaVuSansCondensed.ttf
+	    );
+	    Name = "Book Condensed";
+	    PostScriptName = DejaVuSansCondensed;
+	    Weight = 5;
+	    Traits = 16;
+	},
+	{
+	    Files = (
+		"DejaVuSansCondensed-Oblique.ttf"
+	    );
+	    Name = "Book Condensed Oblique";
+	    PostScriptName = "DejaVuSansCondensed-Oblique";
+	    Weight = 5;
+	    Traits = 17;
+	},
+	{
+	    Files = (
+		"DejaVuSans-Bold.ttf"
+	    );
+	    Name = Bold;
+	    PostScriptName = "DejaVuSans-Bold";
+	    Weight = 9;
+	    Traits = 2;
+	},
+	{
+	    Files = (
+		"DejaVuSans-BoldOblique.ttf"
+	    );
+	    Name = "Bold Oblique";
+	    PostScriptName = "DejaVuSans-BoldOblique";
+	    Weight = 9;
+	    Traits = 3;
+	},
+	{
+	    Files = (
+		"DejaVuSansCondensed-Bold.ttf"
+	    );
+	    Name = "Bold Condensed";
+	    PostScriptName = "DejaVuSansCondensed-Bold";
+	    Weight = 9;
+	    Traits = 18;
+	},
+	{
+	    Files = (
+		"DejaVuSansCondensed-BoldOblique.ttf"
+	    );
+	    Name = "Bold Condensed Oblique";
+	    PostScriptName = "DejaVuSansCondensed-BoldOblique";
+	    Weight = 9;
+	    Traits = 19;
+	}
+    );
+}
