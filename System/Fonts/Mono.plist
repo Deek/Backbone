@@ -2,21 +2,21 @@
     Faces = (
 	{
 	    Files = (
-		"DejaVuSansMono-Roman.ttf"
+		"DejaVuSansMono.ttf"
 	    );
-	    Name = Regular;
-	    PostScriptName = "DejaVuSansMono-Roman";
+	    Name = Book;
+	    PostScriptName = "DejaVuSansMono";
 	    Traits = 512;
-	    Weight = 5;
+	    Weight = 4;
 	},
 	{
 	    Files = (
 		"DejaVuSansMono-Oblique.ttf"
 	    );
-	    Name = "Regular Oblique";
+	    Name = "Book Oblique";
 	    PostScriptName = "DejaVuSansMono-Oblique";
 	    Traits = 513;
-	    Weight = 5;
+	    Weight = 4;
 	},
 	{
 	    Files = (
@@ -29,10 +29,10 @@
 	},
 	{
 	    Files = (
-		"DejaVuSansMono-BoldOb.ttf"
+		"DejaVuSansMono-BoldOblique.ttf"
 	    );
 	    Name = "Bold Oblique";
-	    PostScriptName = "DejaVuSansMono-BoldOb";
+	    PostScriptName = "DejaVuSansMono-BoldOblique";
 	    Traits = 515;
 	    Weight = 9;
 	},

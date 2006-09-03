@@ -40,11 +40,12 @@ nfont ()
 
 fontinstall ()
 {
-	if [ ! -d "$1" ]; then
-		nfont "$@"
-	fi
+#	if [ ! -d "$1" ]; then
+#		nfont "$@"
+#	fi
 	rm -fr "${INSTALL_DIR}/${1}.nfont"
-	cp -R "${1}.nfont" "${INSTALL_DIR}"
+	install -d -m755 "${INSTALL_DIR}/${1}.nfont"
+	install -D -m644 "${1}.nfont"/* "${INSTALL_DIR}/${1}.nfont" 
 	echo "Installed ${INSTALL_DIR}/${1}.nfont"
 }
 

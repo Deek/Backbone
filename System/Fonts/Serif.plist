@@ -2,39 +2,39 @@
     Faces = (
 	{
 	    Files = (
-		"DejaVuSerif-Roman.ttf"
+		"DejaVuSerif.ttf"
 	    );
-	    Name = Regular;
-	    PostScriptName = "DejaVuSerif-Roman";
+	    Name = Book;
+	    PostScriptName = DejaVuSerif;
 	    Traits = 0;
-	    Weight = 5;
+	    Weight = 4;
 	},
 	{
 	    Files = (
 		"DejaVuSerif-Oblique.ttf"
 	    );
-	    Name = "Regular Oblique";
+	    Name = "Book Oblique";
 	    PostScriptName = "DejaVuSerif-Oblique";
 	    Traits = 1;
-	    Weight = 5;
+	    Weight = 4;
 	},
 	{
 	    Files = (
 		"DejaVuSerifCondensed.ttf"
 	    );
-	    Name = "Regular Condensed";
+	    Name = "Book Condensed";
 	    PostScriptName = "DejaVuSerifCondensed";
 	    Traits = 16;
-	    Weight = 5;
+	    Weight = 4;
 	},
 	{
 	    Files = (
 		"DejaVuSerifCondensed-Oblique.ttf"
 	    );
-	    Name = "Regular Condensed Oblique";
+	    Name = "Book Condensed Oblique";
 	    PostScriptName = "DejaVuSerifCondensed-Oblique";
 	    Traits = 17;
-	    Weight = 5;
+	    Weight = 4;
 	},
 	{
 	    Files = (
