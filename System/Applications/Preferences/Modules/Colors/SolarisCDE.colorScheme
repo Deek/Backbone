@@ -1,0 +1,31 @@
+{
+    Name = "Solaris CDE";
+    controlBackgroundColor = "0.682353 0.698039 0.764706";
+    controlColor = "0.682353 0.698039 0.764706";
+    controlDarkShadowColor = "0.364706 0.376471 0.411765";
+    controlHighlightColor = "0.862745 0.870588 0.898039";
+    controlLightHighlightColor = "0.862745 0.870588 0.898039";
+    controlShadowColor = "0.682353 0.698039 0.764706";
+    controlTextColor = "0.000000 0.000000 0.000000";
+    disabledControlTextColor = "0.364706 0.376471 0.411765";
+    gridColor = "0.576471 0.592157 0.647058";
+    headerColor = "0.682353 0.698039 0.764706";
+    headerTextColor = "0.000000 0.000000 0.000000";
+    highlightColor = "1.000000 1.000000 1.000000";
+    keyboardFocusIndicatorColor = "0.698039 0.301961 0.478431";
+    knobColor = "0.682353 0.698039 0.764706";
+    scrollBarColor = "0.576471 0.592157 0.647058";
+    selectedControlColor = "0.698039 0.301961 0.478431";
+    selectedControlTextColor = "0.000000 0.000000 0.000000";
+    selectedKnobColor = "0.682353 0.698039 0.764706";
+    selectedMenuItemColor = "0.698039 0.301961 0.478431";
+    selectedMenuItemTextColor = "0.000000 0.000000 0.000000";
+    selectedTextBackgroundColor = "0.682353 0.698039 0.764706";
+    selectedTextColor = "0.000000 0.000000 0.000000";
+    shadowColor = "0.000000 0.000000 0.000000";
+    textBackgroundColor = "0.576471 0.592157 0.647058";
+    textColor = "0.000000 0.000000 0.000000";
+    windowBackgroundColor = "0.682353 0.698039 0.764706";
+    windowFrameColor = "0.000000 0.000000 0.000000";
+    windowFrameTextColor = "1.000000 1.000000 1.000000";
+}

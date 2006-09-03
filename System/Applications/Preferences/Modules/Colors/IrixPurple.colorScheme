@@ -1,0 +1,31 @@
+{
+    Name = "SGI Irix Purple";
+    controlBackgroundColor = "0.692913 0.464567 0.692913";
+    controlColor = "0.692913 0.464567 0.692913";
+    controlDarkShadowColor = "0.000000 0.000000 0.000000";
+    controlHighlightColor = "0.692913 0.464567 0.692913";
+    controlLightHighlightColor = "1.000000 0.696851 1.000000";
+    controlShadowColor = "0.346456 0.232284 0.346456";
+    controlTextColor = "0.000000 0.000000 0.000000";
+    disabledControlTextColor = "0.346456 0.232284 0.346456";
+    gridColor = "0.519685 0.348425 0.519685";
+    headerColor = "0.692913 0.464567 0.692913";
+    headerTextColor = "0.000000 0.000000 0.000000";
+    highlightColor = "1.000000 0.696851 1.000000";
+    keyboardFocusIndicatorColor = "0.000000 0.000000 0.000000";
+    knobColor = "0.692913 0.464567 0.692913";
+    scrollBarColor = "0.519685 0.348425 0.519685";
+    selectedControlColor = "1.000000 0.696851 1.000000";
+    selectedControlTextColor = "0.000000 0.000000 0.000000";
+    selectedKnobColor = "0.692913 0.464567 0.692913";
+    selectedMenuItemColor = "1.000000 0.696851 1.000000";
+    selectedMenuItemTextColor = "0.000000 0.000000 0.000000";
+    selectedTextBackgroundColor = "0.692913 0.464567 0.692913";
+    selectedTextColor = "0.000000 0.000000 0.000000";
+    shadowColor = "0.000000 0.000000 0.000000";
+    textBackgroundColor = "0.913386 0.913386 0.913386";
+    textColor = "0.000000 0.000000 0.000000";
+    windowBackgroundColor = "0.692913 0.464567 0.692913";
+    windowFrameColor = "0.000000 0.000000 0.000000";
+    windowFrameTextColor = "1.000000 0.696851 1.000000";
+}

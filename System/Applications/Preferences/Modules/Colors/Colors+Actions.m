@@ -2,76 +2,79 @@
 
 @implementation Colors (Actions)
 
-- (IBAction) percentChanged: (id) sender
+- (IBAction) colorChanged: (id)sender
 {
-	[self updateEditWindow];
-}
+	NSString 	*key = nil;
 
-- (IBAction) schemeUpdated: (id) sender
-{
-	[self updateEditWindow];
-}
+	if (sender == color1)
+		key = @"1";
+	else if (sender == color2)
+		key = @"2";
+	else if (sender == color3)
+		key = @"3";
+	else if (sender == color4)
+		key = @"4";
+	else if (sender == color5)
+		key = @"5";
+	else if (sender == color6)
+		key = @"6";
+	else if (sender == color7)
+		key = @"7";
+	else if (sender == color8)
+		key = @"8";
+	else if (sender == color9)
+		key = @"9";
+	else if (sender == color10)
+		key = @"10";
+	else if (sender == colorSelectionWell) {
+		// do something here
+	}
 
-- (IBAction) colorChanged: (id) sender
-{
-	if (currentScheme != nil)
-	{
-		[self setColor: backgroundColorWell withName: @"base"];
-		[self setColor: textBackgroundColorWell withName: @"textfieldbgd"];
-		[self setColor: sliderBackgroundColorWell withName: @"sliderbgd"];
-		[self updateEditWindow];		
+	if (key) {
+		NSMutableDictionary	*colors = [defaults dictionaryForKey: @"CustomColors"];
+
+		if (!colors)
+			colors = [NSMutableDictionary new];
+		[colors setObject: [[sender color] RGBStringRepresentation] forKey: key];
+		[defaults setObject: colors forKey: @"CustomColors"];
+		[defaults synchronize];
 	}
 }
 
-- (IBAction) checkboxChanged: (id) sender
+/*
+- (IBAction) saveScheme: (id)sender;
+- (IBAction) colorSelected: (id)sender;
+- (IBAction) schemeSelected: (id)sender;
+- (IBAction) removeScheme: (id)sender;
+- (IBAction) updateSystemColors: (id)sender;
+*/
+- (IBAction) schemeSelected: (id)sender
 {
-	if (currentScheme != nil)
-	{
-		[self setCheckbox: checkboxTextBackground withName: @"use_textfieldbgd"];
-		[self setCheckbox: checkboxSliderBackground withName: @"use_sliderbgd"];
-		[self updateEditWindow];		
+	NSString	*file;
+	NSString	*selected;
+
+	if (sender != schemeBrowser
+			|| !(selected = [[sender selectedCell] stringValue])
+			|| !(file = [schemeList objectForKey: selected])) {
+		[colorSelectionPopUp setEnabled: NO];
+		return;
 	}
+
+	[currentScheme release];
+	currentScheme = [[NSMutableDictionary dictionaryWithContentsOfFile: file] retain];
+
+	[colorSelectionPopUp setEnabled: YES];
+	[preview setColors: currentScheme];
+	[preview setNeedsDisplay: YES];
 }
 
-- (IBAction) useScheme: (id) sender
+- (IBAction) updateSystemColors: (id)sender
 {
-	if (currentScheme != nil)
-	{
+	if (currentScheme)
 		[self setColorList: currentScheme];
-		[self saveScheme: self];
-	}
 }
 
-- (IBAction) initColorLevels: (id) sender
-{
-	[highlightPercent setFloatValue: 50.0];
-	[mediumPercent setFloatValue: -25.0];
-	[darkPercent setFloatValue: -50.0];
-	[blackPercent setFloatValue: -100.0];
-	
-	[self percentChanged: self];	
-}
-
-- (IBAction) newScheme: (id) sender
-{
-	NSMutableDictionary* colorStrings = [self defaultColors];
-	NSString* name = @"new Scheme";
-	int i=1;
-	while ([list objectForKey: name] != nil)
-	{
-		name = [NSString stringWithFormat: @"new Scheme %d", i];
-		i++;
-	}
-	[colorStrings setObject: name forKey: @"name"];
-	[list setObject: colorStrings forKey: name];
-	currentScheme = colorStrings;
-	[colorSchemesList deselectAll: nil];
-	[colorSchemesList reloadData];
-	//[colorSchemesList display]; // That's a GNUstep BUG ! the display shouldn't be forced. TODO: patch it...
-	[self updateEditWindow];
-	[self saveScheme: self];
-}
-
+/*
 - (IBAction) deleteScheme: (id) sender 
 {
 	if ((currentScheme != nil) && ([currentScheme objectForKey: @"name"] != nil))
@@ -124,7 +127,7 @@
 				[self saveScheme: self];
 				[self deleteSchemeNamed: oldName];
 				[list removeObjectForKey: oldName];
-			}	
+			}
 			else
 			{
 				[schemeName setStringValue: oldName];
@@ -142,4 +145,5 @@
 	}
 }
 
+*/
 @end	

@@ -8,20 +8,22 @@ BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
 FRAMEWORKS= PrefsModule
 include $(TOP_SRCDIR)/Backbone.make
 
-Colors_LANGUAGES=	\
-	English 
+Colors_LANGUAGES= \
+	English
 
 Colors_LOCALIZED_RESOURCE_FILES= \
-	Colors.gorm 
-
-Colors_OBJC_FILES= \
-	Colors.m Colors+Actions.m Colors+Utilities.m Colors+TableView.m Preview.m NSColor+str.m
-
-Colors_HEADERS= \
-	Colors.h Preview.h NSColor+str.h
+	Color.gorm
 
 Colors_PRINCIPAL_CLASS= \
 	Colors
+
+Colors_OBJC_FILES= \
+	NSColor+StringHandling.m \
+	Colors.m \
+	Colors+Utilities.m \
+	Colors+Actions.m \
+	Colors+TableView.m \
+	Preview.m
 
 -include GNUmakefile.preamble
 

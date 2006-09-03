@@ -1,0 +1,31 @@
+{
+    Name = "Backbone Skinny";
+    controlBackgroundColor = "0.831684 0.831684 0.831684";
+    controlColor = "0.831684 0.831684 0.831684";
+    controlDarkShadowColor = "0.606913 0.606913 0.606913";
+    controlHighlightColor = "0.831684 0.831684 0.831684";
+    controlLightHighlightColor = "1 1 1";
+    controlShadowColor = "0.831684 0.831684 0.831684";
+    controlTextColor = "0 0 0";
+    disabledControlTextColor = "0.606913 0.606913 0.606913";
+    gridColor = "0.72974 0.72974 0.72974";
+    headerColor = "0.606913 0.606913 0.606913";
+    headerTextColor = "0 0 0";
+    highlightColor = "1 1 1";
+    keyboardFocusIndicatorColor = "0 0 0";
+    knobColor = "0.831684 0.831684 0.831684";
+    scrollBarColor = "0.72974 0.72974 0.72974";
+    selectedControlColor = "1 1 1";
+    selectedControlTextColor = "0 0 0";
+    selectedKnobColor = "0.831684 0.831684 0.831684";
+    selectedMenuItemColor = "1 1 1";
+    selectedMenuItemTextColor = "0 0 0";
+    selectedTextBackgroundColor = "0.831684 0.831684 0.831684";
+    selectedTextColor = "0 0 0";
+    shadowColor = "0 0 0";
+    textBackgroundColor = "1 1 1";
+    textColor = "0 0 0";
+    windowBackgroundColor = "0.831684 0.831684 0.831684";
+    windowFrameColor = "0 0 0";
+    windowFrameTextColor = "1 1 1";
+}

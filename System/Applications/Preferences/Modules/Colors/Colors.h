@@ -2,81 +2,69 @@
 #define __COLORS_PREFS_H__
 
 #include <AppKit/AppKit.h>
+#include <AppKit/NSNibDeclarations.h>
 #include <PrefsModule/PrefsModule.h>
-#include "NSColor+str.h"
-#include "Preview.h"
+#include "NSColor+StringHandling.h"
+
+extern NSUserDefaults	*defaults;
 
 @interface Colors: NSObject <PrefsModule>
 {
 	IBOutlet NSWindow	*window;
-	id			view;
-	IBOutlet id		editButton;
+	IBOutlet NSView		*view;
 
-	IBOutlet id		highlightColorWell;
-	IBOutlet id		highlightPercent;
+	id preview;
 
-	IBOutlet id		backgroundColorWell;
+	IBOutlet NSBrowser		*schemeBrowser;
+	IBOutlet NSPopUpButton	*commands;
+	IBOutlet NSPopUpButton	*colorSelectionPopUp;
+	IBOutlet NSColorWell	*colorSelectionWell;
 
-	IBOutlet id		mediumColorWell;
-	IBOutlet id		mediumPercent;
+	IBOutlet NSColorWell	*color1;
+	IBOutlet NSColorWell	*color2;
+	IBOutlet NSColorWell	*color3;
+	IBOutlet NSColorWell	*color4;
+	IBOutlet NSColorWell	*color5;
+	IBOutlet NSColorWell	*color6;
+	IBOutlet NSColorWell	*color7;
+	IBOutlet NSColorWell	*color8;
+	IBOutlet NSColorWell	*color9;
+	IBOutlet NSColorWell	*color10;
+	IBOutlet NSColorWell	*color11;
+	IBOutlet NSColorWell	*color12;
 
-	IBOutlet id		darkColorWell;
-	IBOutlet id		darkPercent;
-
-	IBOutlet id		blackColorWell;
-	IBOutlet id		blackPercent;
-
-	IBOutlet id		colorSchemesList;
-	IBOutlet id		preview;
-
-	IBOutlet id		schemeName;
-
-	IBOutlet id		checkboxTextBackground;
-	IBOutlet id		textBackgroundColorWell;
-	IBOutlet id		checkboxSliderBackground;
-	IBOutlet id		sliderBackgroundColorWell;
-
-	NSMutableDictionary* 	list;
-	NSMutableDictionary*	currentScheme;
+	NSDictionary			*schemeList;
+	NSMutableDictionary		*currentScheme;
 }
-
-- (void) initUI;
-- (id) initWithOwner: (id <PrefsApplication>) anOwner;
-- (void) showView: (id) sender;
-- (NSView *) view;
-- (NSString *) buttonCaption;
-- (NSImage *) buttonImage;
-- (SEL) buttonAction;
-
-- (NSMutableDictionary*) loadSchemesFromPath: (NSString*) path;
-- (void) updateEditWindow;
 
 @end
 
 @interface Colors (Actions)
 
-- (IBAction) colorChanged: (id) sender;
-- (IBAction) checkboxChanged: (id) sender;
-- (IBAction) initColorLevels: (id) sender;
+- (IBAction) saveScheme: (id)sender;
+- (IBAction) colorChanged: (id)sender;
+- (IBAction) colorSelected: (id)sender;
+- (IBAction) schemeSelected: (id)sender;
+- (IBAction) removeScheme: (id)sender;
+- (IBAction) updateSystemColors: (id)sender;
 
-- (IBAction) schemeUpdated: (id) sender;
+@end
 
-- (IBAction) useScheme: (id) sender;
-- (IBAction) newScheme: (id) sender;
-- (IBAction) deleteScheme: (id) sender;
-- (IBAction) saveScheme: (id) sender;
+@interface Colors (BrowserDelegate)
 
 @end
 
 @interface Colors (Utilities)
 
-- (NSMutableDictionary*) defaultColors;
-- (void) setColorList: (NSMutableDictionary*) clist;
-- (float) checkFloat: (float) c;
-- (NSColor*) createColorFromRed: (float) r Green: (float) g Blue: (float) b Percent: (float) p;
-- (void) setColor: (NSColorWell*) colorWell withName: (NSString*) colorName;
-- (void) setCheckbox: (NSButton*) checkbox withName: (NSString*) name;
-- (void) deleteSchemeNamed: (NSString*) name;
+- (NSArray *) colorSchemeDirectoryList;
+- (NSArray *) colorSchemeFilesInPath: (NSString *) path;
+- (NSDictionary *) colorSchemes;
+
+- (void) loadColorWells;
+
+- (void) removeColorSchemeNamed: (NSString *)name;
+- (void) setColorList: (NSDictionary *)colorList;
+- (void) setColor: (NSColor *)aColor forKey: (NSString *)colorKey;
 
 @end
 

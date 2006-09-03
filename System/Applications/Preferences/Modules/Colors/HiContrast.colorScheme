@@ -1,0 +1,31 @@
+{
+    Name = "High Contrast";
+    controlBackgroundColor = "1 1 1";
+    controlColor = "1 1 1";
+    controlDarkShadowColor = "0 0 0";
+    controlHighlightColor = "0 0 0";
+    controlLightHighlightColor = "0 0 0";
+    controlShadowColor = "0 0 0";
+    controlTextColor = "0 0 0";
+    disabledControlTextColor = "0.72974 0.72974 0.72974";
+    gridColor = "0 0 0";
+    headerColor = "0 0 0";
+    headerTextColor = "1 1 1";
+    highlightColor = "0 0 0";
+    keyboardFocusIndicatorColor = "0 0 0";
+    knobColor = "0.72974 0.72974 0.72974";
+    scrollBarColor = "0 0 0";
+    selectedControlColor = "0 0 0";
+    selectedControlTextColor = "1 1 1";
+    selectedKnobColor = "0.72974 0.72974 0.72974";
+    selectedMenuItemColor = "0 0 0";
+    selectedMenuItemTextColor = "1 1 1";
+    selectedTextBackgroundColor = "0 0 0";
+    selectedTextColor = "1 1 1";
+    shadowColor = "0 0 0";
+    textBackgroundColor = "1 1 1";
+    textColor = "0 0 0";
+    windowBackgroundColor = "1 1 1";
+    windowFrameColor = "0 0 0";
+    windowFrameTextColor = "1 1 1";
+}

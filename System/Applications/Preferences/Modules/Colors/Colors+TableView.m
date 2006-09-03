@@ -3,42 +3,25 @@
 @implementation Colors (TableView)
 
 /*
-	TableView delegate
+	Browser delegate methods
 */
-
-- (int) numberOfRowsInTableView: (NSTableView*) tableView
+- (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column
 {
-	return [list count];
+	if (sender != schemeBrowser)
+		return 0;
+
+	if (column != 0)
+		return 0;
+
+	return [schemeList count];
 }
 
-- (id) tableView: (NSTableView*) tableView objectValueForTableColumn: (NSTableColumn*) column row: (int) row
+- (void) browser: (NSBrowser *)sender willDisplayCell: (id)cell atRow: (int)row column: (int)column
 {
-	NSArray* keys = [[list allKeys] sortedArrayUsingSelector: @selector (caseInsensitiveCompare:)];
-	id object = [keys objectAtIndex: row];
-	if ([[list objectForKey: object] isEqual: currentScheme]) 
-	{
-		[tableView selectRow: row byExtendingSelection: NO];
-	}
-	else
-	{
-//		[tableView deselectRow: row]; // shouldn't be needed; bug gnustep TODO: patch gnustep
-	}
-	return object;
-}
-
-- (BOOL) tableView: (NSTableView*) tableview shouldSelectRow: (int) row
-{
-	[editButton setEnabled: YES];
-	NSArray* keys = [[list allKeys] sortedArrayUsingSelector: @selector (caseInsensitiveCompare:)];
-	currentScheme = [list objectForKey: [keys objectAtIndex: row]];
-	[self updateEditWindow];
-
-	return YES;
-}
-
-- (BOOL) tableView: (NSTableView*) tableview shouldEditTableColumn: (NSTableColumn*) column row: (int) row
-{
-	return YES;
+	NSArray	*sorted = [schemeList keysSortedByValueUsingSelector:@selector(compare:)];
+	
+	[cell setLeaf: YES];
+	[cell setStringValue: [sorted objectAtIndex: row]];
 }
 
 @end	

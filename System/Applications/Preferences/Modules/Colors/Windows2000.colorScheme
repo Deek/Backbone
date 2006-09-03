@@ -1,0 +1,31 @@
+{
+	Name = "Windows 2000";
+	controlBackgroundColor = "0.8313725 0.815686 0.784314";
+	controlColor = "0.8313725 0.815686 0.784314";
+	controlDarkShadowColor = "0.25 0.25 0.25";
+	controlHighlightColor = "0.8313725 0.815686 0.784314";
+	controlLightHighlightColor = "1 1 1";
+	controlShadowColor = "0.5 0.5 0.5";
+	controlTextColor = "0 0 0";
+	disabledControlTextColor = "0.5 0.5 0.5";
+	gridColor = "0.25 0.25 0.25";
+	headerColor = "0.8313725 0.815686 0.784314";
+	headerTextColor = "0 0 0";
+	highlightColor = "1 1 1";
+	keyboardFocusIndicatorColor = "0 0 0";
+	knobColor = "0.8313725 0.815686 0.784314";
+	scrollBarColor = "0.737255 0.713725 0.686275";
+	selectedControlColor = "1 1 1";
+	selectedControlTextColor = "0 0 0";
+	selectedKnobColor = "0.8313725 0.815686 0.784314";
+	selectedMenuItemColor = "0.0390625 0.140625 0.4140625";
+	selectedMenuItemTextColor = "1 1 1";
+	selectedTextBackgroundColor = "0.0390625 0.140625 0.4140625";
+	selectedTextColor = "1 1 1";
+	shadowColor = "0.25 0.25 0.25";
+	textBackgroundColor = "1 1 1";
+	textColor = "0 0 0";
+	windowBackgroundColor = "0.8313725 0.815686 0.784314";
+	windowFrameColor = "0.0390625 0.140625 0.4140625";
+	windowFrameTextColor = "1 1 1";
+}

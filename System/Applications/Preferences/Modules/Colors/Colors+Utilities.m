@@ -1,149 +1,233 @@
 #include "Colors.h"
 
+#include <Foundation/NSArray.h>
+
+#define ColorString(r,g,b) \
+	[NSString stringWithFormat: @"%g %g %g", (r), (g), (b)]
+
 @implementation Colors (Utilities)
 
-- (NSMutableDictionary*) defaultColors
+- (NSMutableDictionary *) standardColors
 {
-  float NSBlack = 0;
-  float NSDarkGray = 0.333;
-  float NSGray = 0.5;
-  float NSLightGray = 0.667;
-  float NSWhite = 1;
+	static float	Black = 0.0;
+	static float	DarkGray = 1.0 / 3.0;
+	static float	Gray = 1.0 / 2.0;
+	static float	LightGray = 2.0 / 3.0;
+	static float	White = 1.0;
 
-  NSString* white = [NSString stringWithFormat: @"%f %f %f",
-		    NSWhite, NSWhite, NSWhite];
-  NSString* lightGray = [NSString stringWithFormat: @"%f %f %f",
-			NSLightGray, NSLightGray, NSLightGray];
-  NSString* gray = [NSString stringWithFormat: @"%f %f %f",
-		   NSGray, NSGray, NSGray];
-  NSString* darkGray = [NSString stringWithFormat: @"%f %f %f",
-		       NSDarkGray, NSDarkGray, NSDarkGray];
-  NSString* black = [NSString stringWithFormat: @"%f %f %f",
-		    NSBlack, NSBlack, NSBlack];
+	NSString	*white = ColorString (White, White, White);
+	NSString	*lightGray = ColorString (LightGray, LightGray, LightGray);
+	NSString	*gray = ColorString (Gray, Gray, Gray);
+	NSString	*darkGray = ColorString (DarkGray, DarkGray, DarkGray);
+	NSString	*black = ColorString (Black, Black, Black);
 
-  NSMutableDictionary* colorStrings = [[NSMutableDictionary alloc]
-		     initWithObjectsAndKeys:
-		     @"System Colors (dark)", @"name",
-		     lightGray, @"base",
-		     lightGray, @"controlBackgroundColor",
-		     lightGray, @"controlColor",
-		     lightGray, @"controlHighlightColor",
-		     white, @"controlLightHighlightColor",
-		     darkGray, @"controlShadowColor",
-		     black, @"controlDarkShadowColor",
-		     black, @"controlTextColor",
-		     darkGray, @"disabledControlTextColor",
-		     gray, @"gridColor",
-		     lightGray, @"headerColor",
-		     black, @"headerTextColor",
-		     white, @"highlightColor",
-		     black, @"keyboardFocusIndicatorColor",
-		     lightGray, @"knobColor",
-		     gray, @"scrollBarColor",
-		     white, @"selectedControlColor",
-		     black, @"selectedControlTextColor",
-		     lightGray, @"selectedKnobColor",
-		     white, @"selectedMenuItemColor",
-		     black, @"selectedMenuItemTextColor",
-		     lightGray, @"selectedTextBackgroundColor",
-		     black, @"selectedTextColor",
-		     black, @"shadowColor",
-		     white, @"textBackgroundColor",
-		     black, @"textColor",
-		     lightGray, @"windowBackgroundColor",
-		     black, @"windowFrameColor",
-		     white, @"windowFrameTextColor",
-		     nil];
-
-	return [colorStrings autorelease];
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+				lightGray, @"controlBackgroundColor",
+				lightGray, @"controlColor",
+				lightGray, @"controlHighlightColor",
+				white, @"controlLightHighlightColor",
+				darkGray, @"controlShadowColor",
+				black, @"controlDarkShadowColor",
+				black, @"controlTextColor",
+				darkGray, @"disabledControlTextColor",
+				gray, @"gridColor",
+				lightGray, @"headerColor",
+				black, @"headerTextColor",
+				white, @"highlightColor",
+				black, @"keyboardFocusIndicatorColor",
+				lightGray, @"knobColor",
+				gray, @"scrollBarColor",
+				white, @"selectedControlColor",
+				black, @"selectedControlTextColor",
+				lightGray, @"selectedKnobColor",
+				white, @"selectedMenuItemColor",
+				black, @"selectedMenuItemTextColor",
+				lightGray, @"selectedTextBackgroundColor",
+				black, @"selectedTextColor",
+				black, @"shadowColor",
+				white, @"textBackgroundColor",
+				black, @"textColor",
+				lightGray, @"windowBackgroundColor",
+				black, @"windowFrameColor",
+				white, @"windowFrameTextColor",
+				NULL];
 }
 
-- (void) setColorList: (NSMutableDictionary*) clist
+- (void) setColorList: (NSDictionary *)colorList
 {
-	NSColorList* systemColors = [NSColorList colorListNamed: @"System"];
-	if (systemColors == nil)
-	{
+	NSColorList		*systemColors = [NSColorList colorListNamed: @"System"];
+	NSEnumerator	*keys;
+	id				current;
+	BOOL			changed = NO;
+
+	if (!systemColors)
 		systemColors = [[NSColorList alloc] initWithName: @"System"];
-	}
 
-	{
-	  NSEnumerator *e;
-	  NSString *r;
-	  BOOL changed = NO;
-
-	  // Set up default system colors
-
-	  e = [clist keyEnumerator];
+	// Set up default system colors
+	keys = [colorList keyEnumerator];
 	
-	  while ((r = (NSString *)[e nextObject])) 
-	    {
-	      NSString *cs;
-	      NSColor *c;
+	while ((current = [keys nextObject])) {
+		if ([systemColors colorWithKey: current]) {	// continue;
+			NSColor *new = [NSColor colorWithRGBStringRepresentation: [colorList objectForKey: current]];
 
-	      if ([systemColors colorWithKey: r])
-	      {
-	      //  continue;
+//			NSCAssert1 (new, @"couldn't get default system color %@", r);
+			if (new) {
+				[systemColors setColor: new forKey: current];
+				changed = YES;
+			}
+		}
+	}
 
-	      cs = [clist objectForKey: r];
-	      c = [NSColor colorFromString: cs];
+	if (changed)
+		[systemColors writeToFile: nil];
+}
 
-	      //NSCAssert1(c, @"couldn't get default system color %@", r);
-		if (c) [systemColors setColor: c forKey: r];
+- (void) setColor: (NSColor *)aColor forKey: (NSString *)colorKey
+{
+	// We want it in RGB space
+	NSColor* c = [aColor colorUsingColorSpaceName: @"NSCalibratedRGBColorSpace"];
 
-	      changed = YES;
-              }
-	    }
-
-	  if (changed)
-	    [systemColors writeToFile: nil];
+	if (c) {
+		[currentScheme setObject: [c RGBStringRepresentation] forKey: colorKey];
 	}
 }
 
-- (float) checkFloat: (float) c 
+- (void) removeColorSchemeNamed: (NSString *)name
 {
-	if (c < 0) return 0;
-	if (c > 1) return 1;
-	return c;
-}
+	NSArray			*dirs = [self colorSchemeDirectoryList];
+	NSString		*dir = [dirs objectAtIndex: 0];
+	NSFileManager	*fm = [NSFileManager defaultManager];
+	NSString		*path = [NSString stringWithFormat: @"%@/%@.colorScheme", dir, name];
 
-- (NSColor*) createColorFromRed: (float) r Green: (float) g Blue: (float) b Percent: (float) p
-{
-	float R = [self checkFloat: r+(r*p)];
-	float G = [self checkFloat: g+(g*p)];
-	float B = [self checkFloat: b+(b*p)];
-	return [NSColor colorWithCalibratedRed: R green: G blue: B alpha: 1.0];
-}
-
-- (void) setColor: (NSColorWell*) colorWell withName: (NSString*) colorName
-{
-	// NSLog (@"colorspacename : %@", [[backgroundColorWell color] colorSpaceName]);
-	NSColor* c = [[colorWell color] colorUsingColorSpaceName: @"NSCalibratedRGBColorSpace"];
-	if (c != nil)
-	{
-		[currentScheme setObject: [NSString stringWithFormat: @"%f %f %f",
-			    [c redComponent], [c greenComponent], [c blueComponent]] forKey: colorName];
+	if (dir	&& path
+		&& [fm fileExistsAtPath: path]
+		&& [fm isDeletableFileAtPath: path]) {
+		[fm removeFileAtPath: path handler: nil];
 	}
+
+	[schemeList release];
+	schemeList = [self colorSchemes];
 }
 
-- (void) setCheckbox: (NSButton*) checkbox withName: (NSString*) name
+- (NSArray *) colorSchemeDirectoryList
 {
-	if ([checkbox state] == NSOnState) 
-	{
-		[currentScheme setObject: @"YES" forKey: name];
+	NSMutableArray		*dirList = [[NSMutableArray alloc] initWithCapacity: 3];
+	NSArray				*temp;
+	NSEnumerator		*counter;
+	id					entry;
+
+	NSDebugLog (@"Finding Colors dirs...");
+	// Get the library dirs and add our path to all of its entries
+	temp = NSSearchPathForDirectoriesInDomains (NSLibraryDirectory, NSAllDomainsMask, YES);
+
+	counter = [temp objectEnumerator];
+	while ((entry = [counter nextObject])) {
+		[dirList addObject: [entry stringByAppendingPathComponent: @"Colors"]];
 	}
-	else
-	{
-		[currentScheme setObject: @"NO" forKey: name];
-	} 
+	NSDebugLog (@"Colors dirs: %@", dirList);
+
+	return [NSArray arrayWithArray: [dirList autorelease]];
 }
 
-- (void) deleteSchemeNamed: (NSString*) name
+- (NSArray *) colorSchemeFilesInPath: (NSString *) path
 {
-	NSString* path = [[NSString stringWithFormat: 
-		@"~/GNUstep/Library/Colors/%@.uicolors", name] stringByExpandingTildeInPath];
-	NSFileManager* fm = [NSFileManager defaultManager];
-	[fm removeFileAtPath: path handler: nil];
-	[list removeObjectForKey: name];
+	NSMutableArray	*fileList = [[NSMutableArray alloc] initWithCapacity: 5];
+	NSEnumerator	*enumerator;
+	NSFileManager	*fm = [NSFileManager defaultManager];
+	NSString		*file;
+	BOOL			isDir;
+
+	// ensure path exists, and is a directory
+	if (![fm fileExistsAtPath: path isDirectory: &isDir])
+		return nil;
+
+	if (!isDir)
+		return nil;
+
+	// scan for files matching the extension in the dir
+	enumerator = [[fm directoryContentsAtPath: path] objectEnumerator];
+	while ((file = [enumerator nextObject])) {
+		NSString	*fullFileName = [path stringByAppendingPathComponent: file];
+
+		// ensure file exists, and is NOT directory
+		if (![fm fileExistsAtPath: fullFileName isDirectory: &isDir])
+			continue;
+
+		if (isDir)
+			continue;
+
+		if ([[file pathExtension] isEqualToString: @"colorScheme"])
+			[fileList addObject: fullFileName];
+	}
+	return [NSArray arrayWithArray: [fileList autorelease]];
+}
+
+- (NSDictionary *) colorSchemes
+{
+	NSEnumerator		*dirs = [[self colorSchemeDirectoryList] objectEnumerator];
+	NSEnumerator		*files = [NSMutableArray new];
+	NSMutableDictionary	*schemes = [NSMutableDictionary new];
+	id					current;
+
+	while ((current = [dirs nextObject])) {
+		files = [[self colorSchemeFilesInPath: current] objectEnumerator];
+
+		while ((current = [files nextObject])) {
+			NSMutableDictionary	*scheme;
+			NSString			*name;
+
+			if ((scheme = [NSDictionary dictionaryWithContentsOfFile: current])
+					&& (name = [scheme objectForKey: @"Name"])
+					&& ![[schemes allKeys] containsObject: name])
+				[schemes setObject: current forKey: name];
+		}
+	}
+	return [NSDictionary dictionaryWithDictionary: [schemes autorelease]];
+}
+
+- (void) loadColorWells
+{
+	id				customColors;
+	id				colorString;
+
+	if (!(customColors = [defaults dictionaryForKey: @"CustomColors"]))
+		return;
+
+	if ((colorString = [customColors objectForKey: @"1"]))
+		[color1 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"2"]))
+		[color2 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"3"]))
+		[color3 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"4"]))
+		[color4 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"5"]))
+		[color5 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"6"]))
+		[color6 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"7"]))
+		[color7 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"8"]))
+		[color8 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"9"]))
+		[color9 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"10"]))
+		[color10 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"11"]))
+		[color11 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
+
+	if ((colorString = [customColors objectForKey: @"12"]))
+		[color12 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
 }
 
 @end	
