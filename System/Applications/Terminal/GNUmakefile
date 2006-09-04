@@ -10,7 +10,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 APP_NAME = Terminal
 
-ADDITIONAL_OBJCFLAGS += -Wall -O2 -D$(subst -,_,$(GNUSTEP_HOST_OS))
+ADDITIONAL_OBJCFLAGS += -O2 -D$(subst -,_,$(GNUSTEP_HOST_OS))
 
 # Useful warnings:
 #	-W -Wformat=2 -Wno-sign-compare -Wpointer-arith \
