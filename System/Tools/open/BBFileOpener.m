@@ -73,8 +73,9 @@ static BBFileOpener		*sharedInstance = nil;
 		fm = [NSFileManager defaultManager];
 		workspace = [NSWorkspace sharedWorkspace];
 		timeout = 10.0;	// default seconds
+		sharedInstance = self;
 	}
-	return sharedInstance = self;
+	return sharedInstance;
 }
 
 - (id) retain
