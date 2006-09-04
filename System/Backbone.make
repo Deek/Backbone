@@ -18,3 +18,5 @@ $(foreach fw,$(FRAMEWORKS), $(eval $(call FRAMEWORK_link, $(fw))))
 ifneq ($(FRAMEWORKS),)
 ADDITIONAL_INCLUDE_DIRS += -I$(BBFRAMEWORKS)
 endif
+
+BACKBONE_VERSION=0.0.1

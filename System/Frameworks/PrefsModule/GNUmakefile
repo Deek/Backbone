@@ -32,7 +32,7 @@ FRAMEWORK_NAME=		PrefsModule
 PrefsModule_HEADER_FILES= \
 	PrefsModule.h
 
-PrefsModule_CURRENT_VERSION_NAME=1.1.0
+PrefsModule_CURRENT_VERSION_NAME=1.2.0
 PrefsModule_DEPLOY_WITH_CURRENT_VERSION=yes
 
 -include GNUmakefile.preamble

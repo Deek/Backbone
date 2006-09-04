@@ -2,19 +2,10 @@
 ADDITIONAL_CPPFLAGS +=
 
 # Additional flags to pass to the Objective-C compiler
-ADDITIONAL_OBJCFLAGS += -Wall -DHAVE_CONFIG_H
+ADDITIONAL_OBJCFLAGS += -DHAVE_CONFIG_H
 
 # Additional flags to pass to the C compiler
-ADDITIONAL_CFLAGS += -Wall -DHAVE_CONFIG_H
-ifeq ($(shell test -d CVS && echo -n 1), 1)
-ADDITIONAL_OBJCFLAGS += -Werror
-ADDITIONAL_CFLAGS += -Werror
-endif
-
-# work around gcc 3.3 strict-aliasing bug in selector handling
-ifeq ($(shell $(CC) -dumpversion | cut -d. -f1,2), 3.3)
-ADDITIONAL_OBJCFLAGS += -fno-strict-aliasing
-endif
+ADDITIONAL_CFLAGS += -DHAVE_CONFIG_H
 
 export ADDITIONAL_OBJCFLAGS
 export ADDITIONAL_CFLAGS
