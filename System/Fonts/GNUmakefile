@@ -5,6 +5,8 @@ install:
 	sh $(CURDIR)/makefonts install
 
 clean:
+	sh $(CURDIR)/makefonts clean
+
 distclean:
 	sh $(CURDIR)/makefonts clean
 

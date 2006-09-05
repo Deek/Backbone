@@ -30,11 +30,18 @@ nfont ()
 	shift
 
 	# ok, now do the work
-	echo -n Creating ${DIR}...
-	[ -d "${DIR}" ] && rm -rf "${DIR}"
-	mkdir "$DIR"
-	cp "$PLIST" "$DIR/FontInfo.plist"
-	cp "$@" "$DIR"
+	if [ -d "${DIR}" ]; then
+		echo -n Updating ${DIR}...
+		cp "$PLIST" "$DIR/FontInfo.plist"
+		for i in "$@"; do
+			cp -up "$i" "$DIR/$i"
+		done
+	else
+		echo -n Creating ${DIR}...
+		mkdir "$DIR"
+		cp "$PLIST" "$DIR/FontInfo.plist"
+		cp -p "$@" "$DIR"
+	fi
 	echo done.
 }
 
