@@ -46,7 +46,7 @@ distdirs :=	$(shell find . -type d -print | egrep -ve '($(distdir)|CVS|/\..*$$|^
 changelog: ChangeLog
 ChangeLog:
 	@-echo "Creating ChangeLog from CVS. This may take some time..."
-	@-.misc/cvs2cl --stdout -b --utc -U .misc/logNames.txt > $@
+	@-perl -w .misc/cvs2cl --stdout -b --utc -U .misc/logNames.txt > $@
 
 distdir: distclean changelog
 	@-echo "Making distribution tree for Backbone System v$(BACKBONE_VERSION)"
