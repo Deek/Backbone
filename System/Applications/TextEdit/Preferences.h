@@ -9,6 +9,7 @@
 #define DeleteBackup @"DeleteBackup"
 #define SaveFilesWritable @"SaveFilesWritable"
 #define RichText @"RichText"
+#define WriteBOM @"WriteBOM"
 #define ShowPageBreaks @"ShowPageBreaks"
 #define WindowWidth @"WidthInChars"
 #define WindowHeight @"HeightInChars"
@@ -20,7 +21,7 @@
 @interface Preferences: NSObject {
 	id	richTextFontNameField;
 	id	plainTextFontNameField;
-	id	deleteBackupMatrix;
+	id	keepBackupButton;
 	id	saveFilesWritableButton;
 	id	richTextMatrix;
 	id	showPageBreaksButton;
@@ -28,6 +29,7 @@
 	id	windowHeightField;
 	id	plainTextEncodingPopup;
 	id	tabWidthField;
+	id	writeBOMButton;
 
 	NSDictionary		*curValues;
 	NSMutableDictionary	*displayedValues;

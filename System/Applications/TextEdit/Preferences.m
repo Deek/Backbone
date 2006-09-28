@@ -1,6 +1,6 @@
 /*
 		Preferences.m
-		Copyright (c) 1995-1996, NeXT Software, Inc.
+		Copyright (C) 1995-1996, NeXT Software, Inc.
 		All rights reserved.
 		Author: Ali Ozer
 
@@ -36,6 +36,7 @@ defaultValues (void)
 				[NSNumber numberWithBool:YES], RichText, 
 				[NSNumber numberWithBool:NO], ShowPageBreaks,
 				[NSNumber numberWithBool:NO], OpenPanelFollowsMainWindow,
+				[NSNumber numberWithBool:NO], WriteBOM,
 				[NSNumber numberWithInt:80], WindowWidth, 
 				[NSNumber numberWithInt:30], WindowHeight, 
 				[NSNumber numberWithInt:UnknownStringEncoding], PlainTextEncoding,
@@ -117,10 +118,11 @@ showFontInField (NSFont *font, NSTextField *field)
 {
 	showFontInField ([displayedValues objectForKey:RichTextFont], richTextFontNameField);
 	showFontInField ([displayedValues objectForKey:PlainTextFont], plainTextFontNameField);
-	[deleteBackupMatrix selectCellWithTag: [[displayedValues objectForKey: DeleteBackup] boolValue] ? 1 : 0];
+	[keepBackupButton setState: [[displayedValues objectForKey: DeleteBackup] boolValue]];
 	[saveFilesWritableButton setState: [[displayedValues objectForKey: SaveFilesWritable] boolValue]];
 	[richTextMatrix selectCellWithTag: [[displayedValues objectForKey: RichText] boolValue] ? 1 : 0];
 	[showPageBreaksButton setState: [[displayedValues objectForKey: ShowPageBreaks] boolValue]];
+	[writeBOMButton setState: [[displayedValues objectForKey: DeleteBackup] boolValue]];
 
 	[windowWidthField setIntValue: [[displayedValues objectForKey: WindowWidth] intValue]];
 	[windowHeightField setIntValue: [[displayedValues objectForKey: WindowHeight] intValue]];
@@ -141,8 +143,9 @@ showFontInField (NSFont *font, NSTextField *field)
 		no = [[NSNumber alloc] initWithBool: NO];
 	}
 
-	[displayedValues setObject: ([[deleteBackupMatrix selectedCell] tag] ? yes : no) forKey: DeleteBackup];
 	[displayedValues setObject: ([[richTextMatrix selectedCell] tag] ? yes : no) forKey: RichText];
+	[displayedValues setObject: ([keepBackupButton state] ? yes : no) forKey: DeleteBackup];
+	[displayedValues setObject: ([writeBOMButton state] ? yes : no) forKey: WriteBOM];
 	[displayedValues setObject: ([saveFilesWritableButton state] ? yes : no) forKey: SaveFilesWritable];
 	[displayedValues setObject: ([showPageBreaksButton state] ? yes : no) forKey: ShowPageBreaks];
 	[displayedValues setObject: [NSNumber numberWithInt: [[plainTextEncodingPopup selectedItem] tag]] forKey: PlainTextEncoding];
@@ -257,6 +260,7 @@ static BOOL changingRTFFont = NO;
 	getBoolDefault (ShowPageBreaks);
 	getBoolDefault (SaveFilesWritable);
 	getBoolDefault (OpenPanelFollowsMainWindow);
+	getBoolDefault (WriteBOM);
 	getIntDefault (WindowWidth);
 	getIntDefault (WindowHeight);
 	getIntDefault (PlainTextEncoding);
@@ -269,10 +273,10 @@ static BOOL changingRTFFont = NO;
 }
 
 #define setBoolDefault(name) \
-  {if ([[defaultValues() objectForKey:name] isEqual:[dict objectForKey:name]]) [defaults removeObjectForKey:name]; else [defaults setBool:[[dict objectForKey:name] boolValue] forKey:name];}
+  {if ([[defaultValues() objectForKey:name] isEqual:[dict objectForKey:name]]) [defaults removeObjectForKey:name]; else [defaults setObject:([[dict objectForKey:name] boolValue]? @"YES" : @"NO") forKey:name];}
 
 #define setIntDefault(name) \
-  {if ([[defaultValues() objectForKey:name] isEqual:[dict objectForKey:name]]) [defaults removeObjectForKey:name]; else [defaults setInteger:[[dict objectForKey:name] intValue] forKey:name];}
+  {if ([[defaultValues() objectForKey:name] isEqual:[dict objectForKey:name]]) [defaults removeObjectForKey:name]; else [defaults setObject:[[dict objectForKey:name] stringValue] forKey:name];}
 
 + (void) savePreferencesToDefaults: (NSDictionary *)dict
 {
@@ -283,6 +287,7 @@ static BOOL changingRTFFont = NO;
 	setBoolDefault (ShowPageBreaks);
 	setBoolDefault (SaveFilesWritable);
 	setBoolDefault (OpenPanelFollowsMainWindow);
+	setBoolDefault (WriteBOM);
 	setIntDefault (WindowWidth);
 	setIntDefault (WindowHeight);
 	setIntDefault (PlainTextEncoding);

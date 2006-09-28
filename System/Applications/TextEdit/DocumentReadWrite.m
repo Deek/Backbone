@@ -280,6 +280,11 @@ defaultPadding (void)
 			NSMutableData	*bom = [NSMutableData dataWithBytes: &utf8Marker length: sizeof (utf8Marker)];
 			NSData			*data = [[textStorage string] dataUsingEncoding: encoding];
 
+			if (![[Preferences objectForKey: WriteBOM] boolValue]) {
+				success = [data writeToFile: actualFileNameToSave atomically: YES];
+				break;
+			}
+			
 			if (!data)
 				break;
 

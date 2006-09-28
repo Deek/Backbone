@@ -28,9 +28,7 @@ TextEdit_LOCALIZED_RESOURCE_FILES= \
 	Localizable.strings
 
 TextEdit_LANGUAGES= \
-	English \
-	German \
-	Russian
+	English
 
 #
 # Source
