@@ -122,7 +122,7 @@ showFontInField (NSFont *font, NSTextField *field)
 	[saveFilesWritableButton setState: [[displayedValues objectForKey: SaveFilesWritable] boolValue]];
 	[richTextMatrix selectCellWithTag: [[displayedValues objectForKey: RichText] boolValue] ? 1 : 0];
 	[showPageBreaksButton setState: [[displayedValues objectForKey: ShowPageBreaks] boolValue]];
-	[writeBOMButton setState: [[displayedValues objectForKey: DeleteBackup] boolValue]];
+	[writeBOMButton setState: [[displayedValues objectForKey: WriteBOM] boolValue]];
 
 	[windowWidthField setIntValue: [[displayedValues objectForKey: WindowWidth] intValue]];
 	[windowHeightField setIntValue: [[displayedValues objectForKey: WindowHeight] intValue]];
