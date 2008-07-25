@@ -405,6 +405,28 @@ copyright 2002, 2003 Alexander Malmberg <alexander@malmberg.org>
 	return YES;
 }
 
+/* TODO: eliminate the need for these, need to get rid of GSListener */
+- (BOOL) application: (NSApplication *)sender
+	runProgram: (NSString *)path
+	withArguments: (NSArray *)args
+	inDirectory: (NSString *)directory
+	properties: (NSDictionary *)properties
+{
+	return [self terminalRunProgram: path
+				withArguments: args
+				inDirectory: directory
+				properties: properties];
+}
+
+- (BOOL) application: (NSApplication *)sender
+	runCommand: (NSString *)cmdline
+	inDirectory: (NSString *)directory
+	properties: (NSDictionary *)properties
+{
+	return [self terminalRunCommand: cmdline
+				inDirectory: directory
+				properties: properties];
+}
 
 
 -(BOOL) terminalRunProgram: (NSString *)path
