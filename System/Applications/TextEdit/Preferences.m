@@ -261,6 +261,7 @@ static BOOL changingRTFFont = NO;
 	getBoolDefault (SaveFilesWritable);
 	getBoolDefault (OpenPanelFollowsMainWindow);
 	getBoolDefault (WriteBOM);
+
 	getIntDefault (WindowWidth);
 	getIntDefault (WindowHeight);
 	getIntDefault (PlainTextEncoding);
@@ -288,13 +289,16 @@ static BOOL changingRTFFont = NO;
 	setBoolDefault (SaveFilesWritable);
 	setBoolDefault (OpenPanelFollowsMainWindow);
 	setBoolDefault (WriteBOM);
+
 	setIntDefault (WindowWidth);
 	setIntDefault (WindowHeight);
 	setIntDefault (PlainTextEncoding);
 	setIntDefault (TabWidth);
 	setIntDefault (ForegroundLayoutToIndex);
+
 	if (![[dict objectForKey: RichTextFont] isEqual: [NSFont userFontOfSize: 0.0]])
 		[NSFont setUserFont: [dict objectForKey: RichTextFont]];
+
 	if (![[dict objectForKey: PlainTextFont] isEqual: [NSFont userFixedPitchFontOfSize: 0.0]])
 		[NSFont setUserFixedPitchFont: [dict objectForKey: PlainTextFont]];
 }
