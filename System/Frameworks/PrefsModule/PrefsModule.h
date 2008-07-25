@@ -108,7 +108,7 @@
 /*
 	Returns a reference to the shared prefs controller.
 */
-- (id<PrefsController>) prefsController;
+- (id) prefsController;
 
 @end
 
