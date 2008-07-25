@@ -1893,8 +1893,15 @@ static int handled_mask=
 
 		for (i=0;i<c;i++)
 		{
+			NSString *s=[data objectAtIndex: i];
+			NSRange r=[s rangeOfCharacterFromSet: [NSCharacterSet whitespaceCharacterSet]];;
+
+			if (i)
 			[tp sendString: @" "];
-			[tp sendString: [data objectAtIndex: i]];
+			if (!r.length)
+				[tp sendString: s];
+			else
+				[tp sendString: [NSString stringWithFormat: @"\"%@\"",s]];
 		}
 		return YES;
 	}
