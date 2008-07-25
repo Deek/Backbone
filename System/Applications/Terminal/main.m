@@ -360,6 +360,7 @@ copyright 2002, 2003 Alexander Malmberg <alexander@malmberg.org>
 		[quitPanel setFrameOrigin: o];
 	}
 
+	[quitPanel setExcludedFromWindowsMenu: NO];
 	[quitPanel makeKeyAndOrderFront: self];
 	quitPanelOpen=YES;
 
@@ -376,6 +377,7 @@ copyright 2002, 2003 Alexander Malmberg <alexander@malmberg.org>
 	[NSApp replyToApplicationShouldTerminate: NO];
 	quitPanelOpen=NO;
 	[quitPanel orderOut: self];
+	[quitPanel setExcludedFromWindowsMenu: YES];
 }
 
 -(void) noMoreActiveWindows: (NSNotification *)n
