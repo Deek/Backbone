@@ -1,0 +1,14 @@
+*-stamp
+*.app/
+*.debug/
+*.framework/
+*.nfont/
+*.prefs/
+*.profile/
+dejavu-ttf-*
+derived_src/
+obj/
+shared*_obj/
+*ChangeLog
+*term.gdt
+*term.gpr

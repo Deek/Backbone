@@ -43,12 +43,13 @@ distdir=	Backbone-System-$(BACKBONE_VERSION)
 distfiles :=	$(shell find . -type f -print | egrep -ve '($(distdir)|CVS|/\..*$$|\.tar\..*$$)')
 distdirs :=	$(shell find . -type d -print | egrep -ve '($(distdir)|CVS|/\..*$$|^\.$$)')
 
-changelog: ChangeLog
-ChangeLog:
-	@-echo "Creating ChangeLog from CVS. This may take some time..."
-	@-perl -w .misc/cvs2cl --stdout -b --utc -U .misc/logNames.txt > $@
+#changelog: ChangeLog
+#ChangeLog:
+#	@-echo "Creating ChangeLog from CVS. This may take some time..."
+#	@-perl -w .misc/cvs2cl --stdout -b --utc -U .misc/logNames.txt > $@
 
-distdir: distclean changelog
+#distdir: distclean changelog
+distdir: distclean
 	@-echo "Making distribution tree for Backbone System v$(BACKBONE_VERSION)"
 	@-rm -rf $(distdir)
 	@mkdir $(distdir)
@@ -74,4 +75,5 @@ distro: distdir
 	tar -ch $(distdir) | bzip2 -9 > $(distdir).tar.bz2
 	-rm -rf $(distdir)
 
-.PHONY: changelog ChangeLog distdir distro
+#.PHONY: changelog ChangeLog distdir distro
+.PHONY: distdir distro
