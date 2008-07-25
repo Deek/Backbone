@@ -635,7 +635,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 		{
 			NSString *new_title;
 			title_buf[title_len]=0;
-			new_title=[NSString stringWithCString: title_buf];
+			new_title=[NSString stringWithUTF8String: title_buf];
 			[ts ts_setTitle: new_title  type: title_type];
 			vc_state=ESnormal;
 
