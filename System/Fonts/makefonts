@@ -1,6 +1,6 @@
 #! /bin/sh
 
-EXTRAS="AUTHORS BUGS LICENSE"
+EXTRAS="AUTHORS BUGS COPYING"
 
 INSTALL_DIR=$GNUSTEP_INSTALLATION_DIR
 if [ ! "$INSTALL_DIR" ]; then
@@ -47,9 +47,9 @@ nfont ()
 
 fontinstall ()
 {
-#	if [ ! -d "$1" ]; then
-#		nfont "$@"
-#	fi
+	if [ ! -d "$1" ]; then
+		nfont "$@"
+	fi
 	rm -fr "${INSTALL_DIR}/${1}.nfont"
 	install -d -m755 "${INSTALL_DIR}/${1}.nfont"
 	install -D -m644 "${1}.nfont"/* "${INSTALL_DIR}/${1}.nfont" 
