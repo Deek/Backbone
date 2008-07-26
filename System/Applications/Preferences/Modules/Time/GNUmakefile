@@ -28,7 +28,9 @@ Time_RESOURCE_FILES= \
 	Time-P.tiff
 
 Time_OBJC_FILES= \
-	ClockView.m \
+	BBCalClock.m \
+	BBClassicAnalog.m \
+	BBClockView.m \
 	Time.m
 
 Time_HEADERS= \

@@ -3,8 +3,7 @@
 
 	Controller class for this bundle
 
-	Copyright (C) 2002 Dusk to Dawn Computing, Inc.
-	Additional copyrights here
+	Copyright (C) 2002 Dusk to Dawn Computing
 
 	Author: Jeff Teunissen <deek@d2dc.net>
 	Date:	29 Jun 2002
@@ -27,12 +26,6 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
-#ifdef HAVE_CONFIG_H
-# include "Config.h"
-#endif
-
-RCSID("$Id$");
-
 #include <Foundation/NSDebug.h>
 #include <Foundation/NSUserDefaults.h>
 #include <Foundation/NSValue.h>
@@ -43,7 +36,7 @@ RCSID("$Id$");
 #include <AppKit/NSOpenPanel.h>
 
 #include "Time.h"
-#include "ClockView.h"
+#include "BBClockView.h"
 
 static Time						*sharedInstance = nil;
 static id <PrefsApplication>	owner = nil;
@@ -61,18 +54,12 @@ static id <PrefsController>		controller = nil;
 static NSBundle				*bundle = nil;
 static NSUserDefaults		*defaults = nil;
 static NSWindow				*iconWin = nil;
-static ClockView			*iconClock = nil;
+static BBClockView			*iconClock = nil;
 
 - (void) updateUI
 {
-	[clockUses24HoursButton setIntValue: [defaults boolForKey: @"ClockUses24Hours"]];
-	[clockIsAnalogButton setIntValue: [defaults boolForKey: @"ClockIsAnalog"]];
-	[clockSecondHandButton setIntValue: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
 	[localTimeZoneField setStringValue: [defaults stringForKey: @"Local Time Zone"]];
-
-	[iconClock setUses24Hours: [defaults boolForKey: @"ClockUses24Hours"]];
-	[iconClock setAnalog: [defaults boolForKey: @"ClockIsAnalog"]];
-	[iconClock setAnalogSecondHand: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
+//FIXME
 	[view setNeedsDisplay: YES];
 }
 
@@ -129,11 +116,8 @@ static ClockView			*iconClock = nil;
 
 		// Let's be mean to the app, taking its icon away
 		iconWin = [NSApp iconWindow];
-		iconClock = [[ClockView alloc] initWithFrame: [iconWin frame]];
-		[iconClock setUses24Hours: [defaults boolForKey: @"ClockUses24Hours"]];
-		[iconClock setAnalog: [defaults boolForKey: @"ClockIsAnalog"]];
-		[iconClock setAnalogSecondHand: [defaults boolForKey: @"AnalogClockHasSecondHand"]];
-
+		iconClock = [[BBClockView alloc] initWithFrame: [iconWin frame]];
+//FIXME
 		[iconWin setContentView: iconClock];
 
 		sharedInstance = self;

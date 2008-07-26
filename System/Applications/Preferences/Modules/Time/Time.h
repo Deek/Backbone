@@ -3,8 +3,7 @@
 
 	Controller class for this bundle
 
-	Copyright (C) 2001 Dusk to Dawn Computing, Inc.
-	Additional copyrights here
+	Copyright (C) 2001 Dusk to Dawn Computing
 
 	Author: Jeff Teunissen <deek@d2dc.net>
 	Date:	24 Nov 2001
@@ -29,10 +28,6 @@
 */
 #ifndef PA_M_Time_Time_h
 #define PA_M_Time_Time_h
-
-#ifdef HAVE_CONFIG_H
-# include "Config.h"
-#endif
 
 #include <Foundation/NSObject.h>
 
