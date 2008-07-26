@@ -49,10 +49,10 @@
 	IBOutlet id		map;
 }
 
-- (IBAction) clockIsAnalogChanged: (id) sender;
-- (IBAction) clockSecondHandChanged: (id) sender;
-- (IBAction) clockUses24HoursChanged: (id) sender;
-- (IBAction) localTimeFieldChanged: (id) sender;
+- (IBAction) clockIsAnalogChanged: (id)sender;
+- (IBAction) clockSecondHandChanged: (id)sender;
+- (IBAction) clockUses24HoursChanged: (id)sender;
+- (IBAction) localTimeFieldChanged: (id)sender;
 
 @end
 

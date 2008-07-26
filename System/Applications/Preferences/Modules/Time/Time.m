@@ -93,7 +93,7 @@ static BBClockView			*iconClock = nil;
 
 @implementation Time
 
-- (id) initWithOwner: (id <PrefsApplication>) anOwner
+- (id) initWithOwner: (id <PrefsApplication>)anOwner
 {
 	if (sharedInstance) {
 		[self dealloc];
@@ -157,28 +157,28 @@ static BBClockView			*iconClock = nil;
 /*
 	Action methods
 */
-- (IBAction) clockIsAnalogChanged: (id) sender
+- (IBAction) clockIsAnalogChanged: (id)sender
 {
 	[defaults setBool: [sender intValue] forKey: @"ClockIsAnalog"];
 	[defaults synchronize];
 	[self updateUI];
 }
 
-- (IBAction) clockSecondHandChanged: (id) sender
+- (IBAction) clockSecondHandChanged: (id)sender
 {
 	[defaults setBool: [sender intValue] forKey: @"AnalogClockHasSecondHand"];
 	[defaults synchronize];
 	[self updateUI];
 }
 
-- (IBAction) clockUses24HoursChanged: (id) sender
+- (IBAction) clockUses24HoursChanged: (id)sender
 {
 	[defaults setBool: [sender intValue] forKey: @"ClockUses24Hours"];
 	[defaults synchronize];
 	[self updateUI];
 }
 
-- (IBAction) localTimeFieldChanged: (id) sender
+- (IBAction) localTimeFieldChanged: (id)sender
 {
 	NSMutableDictionary	*globals = nil;
 
