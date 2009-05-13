@@ -377,6 +377,7 @@ static int scrollBackLines;
 			f_boldTerminalFont=f=[[NSTextField alloc] init];
 			[f setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
 			[f setEditable: NO];
+			[f setBackgroundColor: [NSColor controlBackgroundColor]];
 			[hb addView: f  enablingXResizing: YES];
 			DESTROY(f);
 
@@ -404,6 +405,7 @@ static int scrollBackLines;
 			f_terminalFont=f=[[NSTextField alloc] init];
 			[f setAutoresizingMask: NSViewWidthSizable|NSViewHeightSizable];
 			[f setEditable: NO];
+			[f setBackgroundColor: [NSColor controlBackgroundColor]];
 			[hb addView: f  enablingXResizing: YES];
 			DESTROY(f);
 
