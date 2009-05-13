@@ -15,6 +15,7 @@ of the License. See COPYING or main.m for more information.
 #include <AppKit/NSColorPanel.h>
 #include <AppKit/NSColorWell.h>
 #include <AppKit/NSFont.h>
+#include <AppKit/NSFontManager.h>
 #include <AppKit/NSGraphics.h>
 #include <AppKit/NSImage.h>
 #include <AppKit/NSTextField.h>
