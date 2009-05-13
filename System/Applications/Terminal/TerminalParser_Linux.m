@@ -1118,9 +1118,9 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 			screen_char_t ch;
 
 			char *inp;
-			int in_size;
+			size_t in_size;
 			char *outp;
-			int out_size;
+			size_t out_size;
 			int char_width;
 
 			int ret;
@@ -1211,10 +1211,10 @@ Translates '\n' to '\r' when sending.
 	if (iconv_input_state)
 	{
 		unsigned int *inp;
-		int insize;
+		size_t insize;
 		char *outp;
 		char buf[16+1];
-		int outsize;
+		size_t outsize;
 		int ret;
 	
 		for (i=0;i<l;i++)
