@@ -11,10 +11,10 @@
 	},
 	{
 	    Files = (
-		"DejaVuSerif-Oblique.ttf"
+		"DejaVuSerif-Italic.ttf"
 	    );
-	    Name = "Book Oblique";
-	    PostScriptName = "DejaVuSerif-Oblique";
+	    Name = "Book Italic";
+	    PostScriptName = "DejaVuSerif-Italic";
 	    Traits = 1;
 	    Weight = 4;
 	},
@@ -29,10 +29,10 @@
 	},
 	{
 	    Files = (
-		"DejaVuSerifCondensed-Oblique.ttf"
+		"DejaVuSerifCondensed-Italic.ttf"
 	    );
-	    Name = "Book Condensed Oblique";
-	    PostScriptName = "DejaVuSerifCondensed-Oblique";
+	    Name = "Book Condensed Italic";
+	    PostScriptName = "DejaVuSerifCondensed-Italic";
 	    Traits = 17;
 	    Weight = 4;
 	},
@@ -47,10 +47,10 @@
 	},
 	{
 	    Files = (
-		"DejaVuSerif-BoldOblique.ttf"
+		"DejaVuSerif-BoldItalic.ttf"
 	    );
-	    Name = "Bold Oblique";
-	    PostScriptName = "DejaVuSerif-BoldOblique";
+	    Name = "Bold Italic";
+	    PostScriptName = "DejaVuSerif-BoldItalic";
 	    Traits = 3;
 	    Weight = 9;
 	},
@@ -65,10 +65,10 @@
 	},
 	{
 	    Files = (
-		"DejaVuSerifCondensed-BoldOblique.ttf"
+		"DejaVuSerifCondensed-BoldItalic.ttf"
 	    );
-	    Name = "Bold Condensed Oblique";
-	    PostScriptName = "DejaVuSerifCondensed-BoldOblique";
+	    Name = "Bold Condensed Italic";
+	    PostScriptName = "DejaVuSerifCondensed-BoldItalic";
 	    Traits = 19;
 	    Weight = 9;
 	}
