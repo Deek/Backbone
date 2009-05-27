@@ -684,9 +684,11 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 	case 127:
 //		del(currcons);
 		return;
-	case 128+27:
-		vc_state = ESsquare;
-		return;
+	case 128+27:			// This kills UTF-8 unless we do some funky stuff
+		if (!utf && !utf_count) {
+			vc_state = ESsquare;
+			return;
+		}
 	}
 	switch(vc_state) {
 	case ESesc:
@@ -1147,6 +1149,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 			{
 				outp=(char *)&unich;
 				out_size=4;
+				utf_count=0;	// reset the non-internal utf count
 
 				ret=iconv(iconv_state,&inp,&in_size,&outp,&out_size);
 
@@ -1168,6 +1171,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 
 				if (errno==EINVAL)
 				{ /* incomplete input sequence. wait for more input. */
+					utf_count=1;	// FIXME: is this the right thing to do?
 					break;
 				}
 
