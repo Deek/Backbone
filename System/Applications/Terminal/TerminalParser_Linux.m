@@ -685,7 +685,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 //		del(currcons);
 		return;
 	case 128+27:			// This kills UTF-8 unless we do some funky stuff
-		if (!utf && !utf_count) {
+		if (!utf_count) {
 			vc_state = ESsquare;
 			return;
 		}
