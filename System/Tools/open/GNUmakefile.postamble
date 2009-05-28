@@ -22,7 +22,7 @@ after-install::
 	@-if [ -e $(GNUSTEP_TOOLS)/openapp -a ! -L $(GNUSTEP_TOOLS)/openapp ]; then \
 		echo "  Replacing the \"openapp\" script with a symlink to \"open\"..."; \
 		ln -f $(GNUSTEP_TOOLS)/openapp $(GNUSTEP_TOOLS)/openapp.gnustep; \
-		ln -sf $(GNUSTEP_INSTALLATION_DIR)/Tools/open $(GNUSTEP_TOOLS)/openapp; \
+		ln -sf $(GNUSTEP_TOOLS)/open $(GNUSTEP_TOOLS)/openapp; \
 	fi
 
 # Things to do before uninstalling

@@ -53,9 +53,5 @@ Terminal_RESOURCE_FILES = \
 
 MAKE_STRINGS_OPTIONS = --aggressive-match --aggressive-remove
 
-
-GNUSTEP_INSTALLATION_DIR=$(GNUSTEP_SYSTEM_ROOT)
-
-
 include $(GNUSTEP_MAKEFILES)/application.make
 

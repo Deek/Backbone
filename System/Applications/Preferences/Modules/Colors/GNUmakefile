@@ -2,8 +2,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 BUNDLE_NAME=		Colors
 BUNDLE_EXTENSION=	.prefs
-
-BUNDLE_INSTALL_DIR=	$(GNUSTEP_INSTALLATION_DIR)/Library/Preferences
+BUNDLE_INSTALL_DIR=	$(GNUSTEP_LIBRARY)/Preferences
 
 FRAMEWORKS= PrefsModule
 include $(TOP_SRCDIR)/Backbone.make

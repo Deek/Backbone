@@ -1,8 +1,24 @@
-include $(GNUSTEP_MAKEFILES)/common.make
+# Make sure that GNUSTEP_MAKEFILES is set.
+# First, try the "gnustep-config" program which should be in the path somewhere.
+# If that fails, try sourcing the GNUstep.conf file (which should be a legal Make fragment).
+# Finally, just give up and assume the default value.
+ifeq ($(GNUSTEP_MAKEFILES),)
+GNUSTEP_MAKEFILES=$(shell gnustep-config --variable=GNUSTEP_MAKEFILES)
+ifeq ($(GNUSTEP_MAKEFILES),)
+-include /etc/GNUstep/GNUstep.conf
+ifeq ($(GNUSTEP_MAKEFILES),)
+GNUSTEP_MAKEFILES=/usr/GNUstep/Library/Makefiles
+endif
+endif
+endif
 
+export GNUSTEP_MAKEFILES
 export TOP_SRCDIR= $(CURDIR)
+export GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
 
 include Backbone.make
+
+include $(GNUSTEP_MAKEFILES)/common.make
 
 # Additional flags to pass to the C compiler
 ADDITIONAL_OBJCFLAGS += -Wall

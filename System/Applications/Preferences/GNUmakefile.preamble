@@ -37,11 +37,10 @@ ADDITIONAL_WO_LIBS +=
 #
 # Flags dealing with installing and uninstalling
 #
-GNUSTEP_INSTALLATION_DIR=$(GNUSTEP_SYSTEM_ROOT)
 
 # Additional directories to be created during installation
 ADDITIONAL_INSTALL_DIRS += \
-	$(GNUSTEP_USER_ROOT)/Library/Preferences \
-	$(GNUSTEP_LOCAL_ROOT)/Library/Preferences \
-	$(GNUSTEP_NETWORK_ROOT)/Library/Preferences \
-	$(GNUSTEP_SYSTEM_ROOT)/Library/Preferences
+	$(GNUSTEP_USER_DIR)/$(GNUSTEP_USER_DIR_LIBRARY)/Preferences \
+	$(GNUSTEP_LOCAL_LIBRARY)/Preferences \
+	$(GNUSTEP_NETWORK_LIBRARY)/Preferences \
+	$(GNUSTEP_SYSTEM_LIBRARY)/Preferences
