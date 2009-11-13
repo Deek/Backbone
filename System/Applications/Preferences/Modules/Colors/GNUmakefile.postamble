@@ -9,7 +9,7 @@
   
 # Things to do after installing
 after-install::
-	$(INSTALL) -m644 -D $(wildcard *.colorScheme) $(GNUSTEP_LIBRARY)/Colors
+	$(INSTALL) -m644 $(wildcard *.colorScheme) $(GNUSTEP_LIBRARY)/Colors
 
 # Things to do before uninstalling
 # before-uninstall::

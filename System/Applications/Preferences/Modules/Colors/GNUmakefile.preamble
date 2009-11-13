@@ -36,4 +36,6 @@ ADDITIONAL_WO_LIBS +=
 #
 
 # Additional directories to be created during installation
-ADDITIONAL_INSTALL_DIRS +=
+ADDITIONAL_INSTALL_DIRS += \
+	$(GNUSTEP_LIBRARY)/Colors \
+	$(GNUSTEP_USER_DIR)/$(GNUSTEP_USER_DIR_LIBRARY)/Colors
