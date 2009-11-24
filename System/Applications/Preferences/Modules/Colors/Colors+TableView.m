@@ -7,16 +7,16 @@
 */
 - (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column
 {
-	if (sender != schemeBrowser)
-		return 0;
-
-	if (column != 0)
+	if ((sender != schemeBrowser) || !column)
 		return 0;
 
 	return [schemeList count];
 }
 
-- (void) browser: (NSBrowser *)sender willDisplayCell: (id)cell atRow: (int)row column: (int)column
+- (void) browser: (NSBrowser *)sender 
+ willDisplayCell: (id)cell
+           atRow: (int)row
+          column: (int)column
 {
 	NSArray	*sorted = [schemeList keysSortedByValueUsingSelector:@selector(compare:)];
 	
@@ -24,4 +24,4 @@
 	[cell setStringValue: [sorted objectAtIndex: row]];
 }
 
-@end	
+@end
