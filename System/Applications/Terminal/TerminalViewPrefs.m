@@ -224,11 +224,11 @@ static int scrollBackLines;
 	[w_cursorColor setColor: [[self class] cursorColor]];
 
 	f=[isa terminalFont];
-	[f_terminalFont setStringValue: [NSString stringWithFormat: @"%@ %0.1f",[f fontName],[f pointSize]]];
+	[f_terminalFont setStringValue: [NSString stringWithFormat: @"%@ %g pt.",[f displayName],[f pointSize]]];
 	[f_terminalFont setFont: f];
 
 	f=[isa boldTerminalFont];
-	[f_boldTerminalFont setStringValue: [NSString stringWithFormat: @"%@ %0.1f",[f fontName],[f pointSize]]];
+	[f_boldTerminalFont setStringValue: [NSString stringWithFormat: @"%@ %g pt.",[f displayName],[f pointSize]]];
 	[f_boldTerminalFont setFont: f];
 
 	[f_scrollBackLines setIntValue: scrollBackLines];
@@ -456,22 +456,20 @@ static int scrollBackLines;
 	[self _pickFont];
 }
 
-/*
-TODO: The return type here should be (void), but due to forwarding issues in
--base, it has to be (id) to avoid a return type mismatch error
-*/
--(id) changeFont: (id)sender
+- (void) changeFont: (id)sender
 {
-	NSFont *f;
+	NSFont *font;
+	NSFontManager *fm = (NSFontManager *)sender;
 
-	if (!f_cur) return nil;
-	f=[sender convertFont: [f_cur font]];
-	if (!f) return nil;
+	if (!f_cur)
+		return;
 
-	[f_cur setStringValue: [NSString stringWithFormat: @"%@ %0.1f",[f fontName],[f pointSize]]];
-	[f_cur setFont: f];
+	font = [fm convertFont: [f_cur font]];
+	if (!font)
+		return;
 
-	return nil;
+	[f_cur setStringValue: [NSString stringWithFormat: @"%@ %g pt.", [font displayName], [font pointSize]]];
+	[f_cur setFont: font];
 }
 
 @end

@@ -227,10 +227,16 @@ won't be necessary.
 		[[self window] autoSetupKeyViewChain];
 }
 
-
-/* well, it works */
--(BOOL) respondsToSelector: (SEL)s
+/*
+	Forwarding stuff: In addition to handling our own messages, we're acting 
+	as a proxy for the currently-displayed preference page; therefore, we 
+	respond to anything it does.
+*/
+- (BOOL) respondsToSelector: (SEL)s
 {
+	if (!s)	// should never happen
+		return NO;
+
 	if ([super respondsToSelector: s])
 		return YES;
 
@@ -239,28 +245,23 @@ won't be necessary.
 	return NO;
 }
 
--(void) forwardInvocation: (NSInvocation *)i
+- (void) forwardInvocation: (NSInvocation *)i
 {
-	if (current)
-		if ([current respondsToSelector: [i selector]])
-		{
-			[i invokeWithTarget: current];
-			return;
-		}
+	if (current && [current respondsToSelector: [i selector]]) {
+		[i invokeWithTarget: current];
+		return;
+	}
 	[super forwardInvocation: i];
 }
 
--(NSMethodSignature *) methodSignatureForSelector: (SEL)sel
+- (NSMethodSignature *) methodSignatureForSelector: (SEL)sel
 {
-	NSMethodSignature *ms;
+	NSMethodSignature *ms = [super methodSignatureForSelector: sel];
 
-	ms=[super methodSignatureForSelector: sel];
-	if (ms)
-		return ms;
-
-	ms=[current methodSignatureForSelector: sel];
+	if (!ms && current) {
+		ms = [current methodSignatureForSelector: sel];
+	}
 	return ms;
 }
 
 @end
-
