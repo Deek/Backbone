@@ -34,7 +34,7 @@
 {
 	owner = anOwner;
 	NSRect	textViewRect;
-  
+
 	if ((self = [super initWithFrame: frameRect])) {
 		defaultsBrowser = [[NSBrowser alloc] initWithFrame: NSMakeRect(8, 76, 384, 112)];
 		[defaultsBrowser setAllowsMultipleSelection: NO];
@@ -73,7 +73,7 @@
 		[scrollView setDocumentView: [editTextView autorelease]];
 
 		[self addSubview: [scrollView autorelease]];
-	    
+
 		removeButton = [[NSButton alloc] initWithFrame: NSMakeRect (328, 43, 64, 27)];
 		[removeButton setTitle: @"Save"];
 		[removeButton setTarget: owner];
@@ -90,17 +90,17 @@
 	return self;
 }
 
-- (id) defaultsBrowser; 
+- (id) defaultsBrowser
 {
 	return defaultsBrowser;
 }
 
-- (id) editTextView;
+- (id) editTextView
 {
 	return editTextView;
 }
 
-- (id) remove;
+- (id) remove
 {
 	return removeButton;
 }

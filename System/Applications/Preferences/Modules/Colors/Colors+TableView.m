@@ -13,15 +13,15 @@
 	return [schemeList count];
 }
 
-- (void) browser: (NSBrowser *)sender 
+- (void) browser: (NSBrowser *)sender
  willDisplayCell: (id)cell
            atRow: (int)row
           column: (int)column
 {
-	NSArray	*sorted = [schemeList keysSortedByValueUsingSelector:@selector(compare:)];
-	
+	NSArray	*sorted = [schemeList keysSortedByValueUsingSelector: @selector(compare:)];
+
+	NSDebugLog (@"Scheme list: %@", schemeList);
 	[cell setLeaf: YES];
 	[cell setStringValue: [sorted objectAtIndex: row]];
 }
-
 @end

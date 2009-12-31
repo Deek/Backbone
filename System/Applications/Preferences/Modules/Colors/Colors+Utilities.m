@@ -65,7 +65,7 @@
 
 	// Set up default system colors
 	keys = [colorList keyEnumerator];
-	
+
 	while ((current = [keys nextObject])) {
 		if ([systemColors colorWithKey: current]) {	// continue;
 			NSColor *new = [NSColor colorWithRGBStringRepresentation: [colorList objectForKey: current]];
@@ -182,6 +182,7 @@
 				[schemes setObject: current forKey: name];
 		}
 	}
+	NSDebugLog (@"Color scheme files: %@", schemes);
 	return [NSDictionary dictionaryWithDictionary: [schemes autorelease]];
 }
 
@@ -230,4 +231,4 @@
 		[color12 setColor: [NSColor colorWithRGBStringRepresentation: colorString]];
 }
 
-@end	
+@end

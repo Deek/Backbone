@@ -12,7 +12,7 @@ static NSArray *
 colorPopUpNames (void)
 {
 	static NSArray *names = nil;
-	
+
 	if (!names)
 		names = [NSArray arrayWithObjects:
 			@"3D Light Highlight",
@@ -45,7 +45,7 @@ colorPopUpNames (void)
 	return names;
 }
 
-@implementation Colors 
+@implementation Colors
 
 - (void) dealloc
 {
@@ -60,7 +60,7 @@ colorPopUpNames (void)
 		[self dealloc];
 		return;
 	}
-	
+
 	if (!view) {
 		view = [[window contentView] retain];
 		[view removeFromSuperview];
@@ -138,4 +138,4 @@ colorPopUpNames (void)
 {
 }
 
-@end	
+@end
