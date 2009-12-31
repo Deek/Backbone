@@ -19,7 +19,6 @@
 	    NSMIMETypes = ("application/x-gnustep-prefsmodule");
 	    NSIcon = PrefsModule;
 	    NSRole = Viewer;
-	    NSDocumentClass = Document;
 	}
     );
 }
