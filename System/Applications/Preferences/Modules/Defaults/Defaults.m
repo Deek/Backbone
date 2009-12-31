@@ -193,12 +193,12 @@ static id <PrefsController>		controller = nil;
 
 	switch (column) {
 		case 0:
-			[cell setStringValue: [[[defs persistentDomainNames] objectAtIndex: row] description]];
+			[cell setStringValue: [[[[defs persistentDomainNames] sortedArrayUsingSelector: @selector(compare:)] objectAtIndex: row] description]];
 			break;
 
 		case 1: {
 			NSString *nm = [[defaultsBrowser selectedCellInColumn: 0] stringValue];
-			NSArray *keys = [[defs persistentDomainForName: nm] allKeys];
+			NSArray *keys = [[[defs persistentDomainForName: nm] allKeys] sortedArrayUsingSelector: @selector(compare:)];
 			NSString *_title = [keys objectAtIndex: row];
 
 			[cell setLeaf: YES];
