@@ -2,11 +2,15 @@
 
 EXTRAS="AUTHORS BUGS COPYING"
 
+if [ -f /etc/GNUstep/GNUstep.conf ]; then
+	. /etc/GNUstep/GNUstep.conf
+fi
+
 INSTALL_DIR=$GNUSTEP_SYSTEM_LIBRARY
 if [ ! "$INSTALL_DIR" ]; then
 	INSTALL_DIR=$GNUSTEP_SYSTEM_ROOT/Library
 fi
-if [ ! "$INSTALL_DIR" ]; then
+if [ "$INSTALL_DIR" = "/Library" ]; then
 	INSTALL_DIR=/usr/GNUstep/System/Library
 fi
 INSTALL_DIR=${INSTALL_DIR}/Fonts
