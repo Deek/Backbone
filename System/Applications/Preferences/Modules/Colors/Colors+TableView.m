@@ -7,7 +7,7 @@
 */
 - (int) browser: (NSBrowser *)sender numberOfRowsInColumn: (int)column
 {
-	if ((sender != schemeBrowser) || !column)
+	if ((sender != schemeBrowser) || column != 0)
 		return 0;
 
 	return [schemeList count];
