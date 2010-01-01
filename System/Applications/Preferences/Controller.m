@@ -46,10 +46,12 @@ RCSID("$Id$");
 #include "BundleController.h"
 #include "PrefsController.h"
 
+#undef HAVE_HIDDEN_START
+
 @implementation Controller
 
 static NSUserDefaults *defaults = nil;
-#if 0
+#ifdef HAVE_HIDDEN_START
 static BOOL doneLaunching = NO;
 #endif
 
@@ -115,7 +117,7 @@ static BOOL doneLaunching = NO;
 - (void) applicationDidFinishLaunching: (NSNotification *) not;
 {
 	if ([defaults boolForKey: @"autolaunch"]) {
-#if 1
+#ifndef HAVE_HIDDEN_START
 		[NSApp hide: self];
 #endif
 	} else {
@@ -152,7 +154,7 @@ static BOOL doneLaunching = NO;
 		unhides them between -applicationWillFinishLaunching: and
 		-applicationDidFinishLaunching:
 	*/
-#if 0
+#ifdef HAVE_HIDDEN_START
 	if ([defaults boolForKey: @"autolaunch"]) {
 		[NSApp hide: self];
 	}
@@ -167,7 +169,7 @@ static BOOL doneLaunching = NO;
 */
 - (void) applicationDidUnhide: (NSNotification *) not;
 {
-#if 0
+#ifdef HAVE_HIDDEN_START
 	if (doneLaunching && ![[prefsController window] isVisible])
 #else
 	if (![[prefsController window] isVisible])
