@@ -1,14 +1,14 @@
 {
-    ApplicationDescription = "GNUstep Preferences Editor";
+    ApplicationDescription = "Backbone Preferences Manager";
     ApplicationIcon = Preferences;
     ApplicationName = Preferences;
-    ApplicationRelease = "1.2.99 beta";
-    ApplicationURL = "http://prefsapp.sf.net/";
+    ApplicationRelease = "1.2.99 gamma";
+    ApplicationURL = "http://backbone.nongnu.org/";
     Authors = (
 	"Jeff Teunissen <deek@d2dc.net>"
     );
-    Copyright = "Copyright \U00a9 2002 Dusk to Dawn Computing";
-    CopyrightDescription = "Released under the GNU GPL. See COPYING-app for details.";
+    Copyright = "Copyright \U00a9 2002-2010 Dusk to Dawn Computing";
+    CopyrightDescription = "Released under GNU GPLv2+; See GPLv2 for details.";
     FullVersionID = "1.2.99";
     NSTypes = (
     	{

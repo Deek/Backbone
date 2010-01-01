@@ -3,7 +3,7 @@
     ApplicationIcon = Terminal;
     ApplicationName = Terminal;
     ApplicationRelease = "0.9.4";
-    ApplicationURL = "http://www.nongnu.org/terminal/";
+    ApplicationURL = "http://backbone.nongnu.org/";
     Authors = (
 	"Alexander Malmberg <alex@malmberg.org>"
     );
