@@ -32,6 +32,7 @@ bits
 /* Used as a marker. */
 #define MULTI_CELL_GLYPH 0xfffe
 
+#define TERMINAL_IDENTIFIER "Backbone_Terminal"
 
 @protocol TerminalScreen
 -(void) ts_sendCString: (const char *)str;

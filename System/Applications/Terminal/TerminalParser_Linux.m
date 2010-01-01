@@ -630,6 +630,9 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 	{
 	case 0:
 		return;
+	case 5:	// ASCII ENQ char
+		[ts ts_sendCString: TERMINAL_IDENTIFIER "\r"];
+		return;
 	case 7:
 		if (vc_state==EStitle_buf)
 		{

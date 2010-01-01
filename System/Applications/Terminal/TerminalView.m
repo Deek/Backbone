@@ -1757,7 +1757,7 @@ Handle master_fd
 		if (cdirectory)
 			chdir(cdirectory);
 		putenv("TERM=linux");
-		putenv("TERM_PROGRAM=GNUstep_Terminal");
+		putenv("TERM_PROGRAM=" TERMINAL_IDENTIFIER);
 		execv(cpath,(char *const*)cargs);
 		fprintf(stderr,"Unable to spawn process '%s': %m!",cpath);
 		exit(1);
