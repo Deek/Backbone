@@ -1223,7 +1223,7 @@ Translates '\n' to '\r' when sending.
 		char buf[16+1];
 		size_t outsize;
 		int ret;
-	
+
 		for (i=0;i<l;i++)
 		{
 			ucs=[s characterAtIndex: i];
@@ -1238,7 +1238,7 @@ Translates '\n' to '\r' when sending.
 			ret=iconv(iconv_input_state,(char **)&inp,&insize,&outp,&outsize);
 			if (outsize!=sizeof(buf))
 			{
-				[ts ts_sendCString: buf  length: sizeof(buf)-outsize];
+				[ts ts_sendCString: (const char *)buf  length: sizeof(buf)-outsize];
 			}
 			else
 				NSBeep();
@@ -1254,7 +1254,7 @@ Translates '\n' to '\r' when sending.
 			if (ucs<256)
 			{
 				buf=ucs;
-				[ts ts_sendCString: &buf  length: 1];
+				[ts ts_sendCString: (const char *)&buf  length: 1];
 			}
 			else
 				NSBeep();
@@ -1389,7 +1389,7 @@ Translates '\n' to '\r' when sending.
 		unsigned char tmp;
 		tmp=ch2;
 		NSDebugLLog(@"key",@"  send %02x",ch2);
-		[ts ts_sendCString: &tmp  length: 1];
+		[ts ts_sendCString: (const char *)&tmp  length: 1];
 	}
 }
 
