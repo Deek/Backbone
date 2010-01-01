@@ -9,13 +9,10 @@
     );
     Copyright = (
 	"Copyright \U00a9 1995-1996 NeXT Software, Inc.",
-	"Copyright \U00a9 2001-2003 Dusk to Dawn Computing, Inc."
+	"Copyright \U00a9 2001-2010 Dusk to Dawn Computing"
     );
     CopyrightDescription = "You may freely copy, distribute, and reuse the code in this example.";
     NSExtensions = {
-//	"" = {
-//	    NSIcon = text.tiff;
-//	};
 	rtf = {
 	    NSIcon = rtf.tiff;
 	};
@@ -23,6 +20,9 @@
 	    NSIcon = rtfd.tiff;
 	};
 	txt = {
+	    NSIcon = text.tiff;
+	};
+	"*" = {
 	    NSIcon = text.tiff;
 	};
     };
