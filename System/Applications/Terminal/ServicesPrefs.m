@@ -9,6 +9,7 @@ of the License. See COPYING or main.m for more information.
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSUserDefaults.h>
+#include <Foundation/NSValue.h>
 #include <AppKit/NSButton.h>
 #include <AppKit/NSPopUpButton.h>
 #include <AppKit/NSTextField.h>

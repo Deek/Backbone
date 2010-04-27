@@ -12,6 +12,7 @@
 #import "ScalingScrollView.h"
 
 #import <Foundation/NSGeometry.h>
+#import <Foundation/NSValue.h>
 #import <AppKit/NSPopUpButton.h>
 #import <AppKit/NSScroller.h>
 #import <AppKit/NSButtonCell.h>
