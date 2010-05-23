@@ -281,7 +281,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 int
 main (int argc, char** argv, char **env)
 {
-	NSMutableArray	*args = [[[NSProcessInfo processInfo] arguments] mutableCopy];
+	NSMutableArray	*args = nil;
 	NSEnumerator	*argEnumerator = nil;
 	NSString		*arg = nil;
 	NSString		*processName = nil;
@@ -291,6 +291,7 @@ main (int argc, char** argv, char **env)
 	pool = [NSAutoreleasePool new];	// create the autorelease pool
 
 	process = [NSProcessInfo processInfo];
+	args = [[process arguments] mutableCopy];
 	fm = [NSFileManager defaultManager];
 	opener = [BBFileOpener fileOpener];
 
