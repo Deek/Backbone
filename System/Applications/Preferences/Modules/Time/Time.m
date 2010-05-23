@@ -34,6 +34,7 @@
 RCSID("$Id$");
 
 #include <Foundation/NSDebug.h>
+#include <Foundation/NSDictionary.h>
 #include <Foundation/NSUserDefaults.h>
 #include <Foundation/NSValue.h>
 

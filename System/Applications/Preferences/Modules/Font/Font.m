@@ -32,6 +32,8 @@ RCSID("$Id$");
 
 #include <math.h>
 
+#include <Foundation/NSUserDefaults.h>
+
 #include <AppKit/NSPopUpButton.h>
 #include <AppKit/NSButton.h>
 #include <AppKit/NSTextField.h>

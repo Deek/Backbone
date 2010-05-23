@@ -33,6 +33,9 @@
 
 RCSID("$Id$");
 
+#include <Foundation/NSUserDefaults.h>
+#include <Foundation/NSDictionary.h>
+
 #include <AppKit/NSButton.h>
 #include <AppKit/NSNibLoading.h>
 #include <AppKit/NSOpenPanel.h>
