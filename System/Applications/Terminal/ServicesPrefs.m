@@ -7,7 +7,9 @@ Public License as published by the Free Software Foundation; version 2
 of the License. See COPYING or main.m for more information.
 */
 
+#include <Foundation/NSBundle.h>
 #include <Foundation/NSString.h>
+#include <Foundation/NSDictionary.h>
 #include <Foundation/NSUserDefaults.h>
 #include <Foundation/NSValue.h>
 #include <AppKit/NSButton.h>

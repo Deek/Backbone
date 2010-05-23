@@ -10,7 +10,9 @@ of the License. See COPYING or main.m for more information.
 #include <Foundation/NSNotification.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSUserDefaults.h>
+
 #include <AppKit/NSBox.h>
+#include <AppKit/NSButton.h>
 #include <AppKit/NSColor.h>
 #include <AppKit/NSColorPanel.h>
 #include <AppKit/NSColorWell.h>
@@ -18,7 +20,9 @@ of the License. See COPYING or main.m for more information.
 #include <AppKit/NSFontManager.h>
 #include <AppKit/NSGraphics.h>
 #include <AppKit/NSImage.h>
+#include <AppKit/NSMatrix.h>
 #include <AppKit/NSTextField.h>
+
 #include <GNUstepGUI/GSVbox.h>
 #include <GNUstepGUI/GSHbox.h>
 #include "Label.h"
