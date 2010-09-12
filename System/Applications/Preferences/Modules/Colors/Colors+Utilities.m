@@ -111,7 +111,7 @@
 
 - (NSArray *) colorSchemeDirectoryList
 {
-	NSMutableArray		*dirList = [[NSMutableArray alloc] initWithCapacity: 3];
+	NSMutableArray		*dirList = [[[NSMutableArray alloc] initWithCapacity: 3] autorelease];
 	NSArray				*temp;
 	NSEnumerator		*counter;
 	id					entry;
@@ -126,12 +126,12 @@
 	}
 	NSDebugLog (@"Colors dirs: %@", dirList);
 
-	return [NSArray arrayWithArray: [dirList autorelease]];
+	return [NSArray arrayWithArray: dirList];
 }
 
 - (NSArray *) colorSchemeFilesInPath: (NSString *) path
 {
-	NSMutableArray	*fileList = [[NSMutableArray alloc] initWithCapacity: 5];
+	NSMutableArray	*fileList = [[[NSMutableArray alloc] initWithCapacity: 5] autorelease];
 	NSEnumerator	*enumerator;
 	NSFileManager	*fm = [NSFileManager defaultManager];
 	NSString		*file;
@@ -159,14 +159,14 @@
 		if ([[file pathExtension] isEqualToString: @"colorScheme"])
 			[fileList addObject: fullFileName];
 	}
-	return [NSArray arrayWithArray: [fileList autorelease]];
+	return [NSArray arrayWithArray: fileList];
 }
 
 - (NSDictionary *) colorSchemes
 {
 	NSEnumerator		*dirs = [[self colorSchemeDirectoryList] objectEnumerator];
-	NSEnumerator		*files = [NSMutableArray new];
-	NSMutableDictionary	*schemes = [NSMutableDictionary new];
+	NSEnumerator		*files;
+	NSMutableDictionary	*schemes = [[NSMutableDictionary new] autorelease];
 	id					current;
 
 	while ((current = [dirs nextObject])) {
@@ -183,7 +183,7 @@
 		}
 	}
 	NSDebugLog (@"Color scheme files: %@", schemes);
-	return [NSDictionary dictionaryWithDictionary: [schemes autorelease]];
+	return [NSDictionary dictionaryWithDictionary: schemes];
 }
 
 - (void) loadColorWells
