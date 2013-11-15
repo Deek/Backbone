@@ -21,8 +21,8 @@ include Backbone.make
 include $(GNUSTEP_MAKEFILES)/common.make
 
 # Additional flags to pass to the C compiler
-ADDITIONAL_OBJCFLAGS += -Wall
-ADDITIONAL_CFLAGS += -Wall
+ADDITIONAL_OBJCFLAGS += -Wall -std=gnu99
+ADDITIONAL_CFLAGS += -Wall -std=gnu99
 ifeq ($(werror), yes)
 ADDITIONAL_OBJCFLAGS += -Werror
 ADDITIONAL_CFLAGS += -Werror

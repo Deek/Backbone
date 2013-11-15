@@ -33,6 +33,7 @@
 RCSID("$Id$");
 
 #include <Foundation/NSDebug.h>
+#include <Foundation/NSDictionary.h>
 #include <Foundation/NSPathUtilities.h>
 #include <Foundation/NSUserDefaults.h>
 
@@ -203,22 +204,22 @@ static BOOL doneLaunching = NO;
 	}
 
 	if (!(info = [aBundle infoDictionary])) {
-		NSLog (@"Bundle `%@´ has no info dictionary!", aBundle);
+		NSLog (@"Bundle \u2018%@\u2019 has no info dictionary!", aBundle);
 		return;
 	}
 
 	if (![info objectForKey: @"NSExecutable"]) {
-		NSLog (@"Bundle `%@´ has no executable!", aBundle);
+		NSLog (@"Bundle \u2018%@\u2019 has no executable!", aBundle);
 		return;
 	}
 
 	if (![aBundle principalClass]) {
-		NSLog (@"Bundle `%@´ has no principal class!", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
+		NSLog (@"Bundle \u2018%@\u2019 has no principal class!", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
 		return;
 	}
 
 	if (![[aBundle principalClass] conformsToProtocol: @protocol(PrefsModule)]) {
-		NSLog (@"Bundle %@'s principal class does not conform to the PrefsModule protocol.", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
+		NSLog (@"Bundle \u2018%@\u2019s principal class does not conform to the PrefsModule protocol.", [[info objectForKey: @"NSExecutable"] lastPathComponent]);
 		return;
 	}
 
