@@ -45,6 +45,7 @@
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSFileHandle.h>
 #include <Foundation/NSPathUtilities.h>
+#include <Foundation/NSUserDefaults.h>
 #include <Foundation/NSValue.h>
 
 #include <AppKit/NSApplication.h>
@@ -55,6 +56,7 @@
 NSAutoreleasePool	*pool = nil;
 NSFileManager		*fm = nil;
 NSProcessInfo		*process = nil;
+NSUserDefaults		*defaults = nil;
 BBFileOpener		*opener = nil;
 
 /*
@@ -136,6 +138,30 @@ doStdInput (NSString *name)
 	return 0;
 }
 
+void
+newAppName (NSString *newApp)
+{
+	if (!newApp) {
+		printf ("%s: no appname given for -a\n", [newApp UTF8String]);
+		return;
+	}
+
+	[appName release];
+	appName = [newApp retain];
+}
+
+NSString *
+defaultEditor (void)
+{
+	NSString	*defaultEditor = @"TextEdit";
+	NSString	*tmp;
+
+	if ((tmp = [defaults stringForKey: @"GSDefaultEditor"]))
+		defaultEditor = tmp;
+
+	return defaultEditor;
+}
+
 BOOL
 redirectStdError (char *filename)
 {
@@ -157,16 +183,23 @@ usage (NSString *name, NSString *desc)
 	printf ("Usage: %s %s\n", [name cString], [desc cString]);
 	printf (
 "Options:\n"
-"	-a APP		Specify an application to use for opening the file(s).\n"
-"			(APP will be launched if it is not running.)\n"
-"	-A APP		Like -a, only APP won't be launched unless a file is\n"
-"			opened.\n"
-"	-s		If an app is launched, it will be run as if on startup.\n"
-"			(Some apps do different things if \"Autolaunched\".)\n"
-"	-o		Cause following files to be opened (this is the\n"
-"			default).\n"
-"	-p		Cause following files to be printed instead of opened.\n"
-"	-h, --help	Display this help and exit\n"
+"    -a APP      Specify an application to use for opening the file(s).\n"
+"                (APP will be launched if it is not running.)\n"
+"    -A APP      Like -a, only APP won't be launched unless a file is opened\n"
+"    -s          If an app is launched, it will be run as if on startup\n"
+"                (Some apps do different things if \"Autolaunched\".)\n"
+"\n"
+"    -f          Read standard input, send to default text editor\n"
+"    -           Read standard input, use -a/-A to decide app\n"
+"\n"
+"    -o          Following files will be opened (this is the default).\n"
+"    -p          Following files will be printed instead of opened.\n"
+"\n"
+"    -e          Following files will be opened with TextEdit\n"
+"    -t          Following files will be opened with the default text editor\n"
+"\n"
+"    -W, --wait  Wait for application to exit before returning.\n"
+"    -h, --help  Display this help and exit\n"
 	);
 	exit (0);
 }
@@ -294,6 +327,7 @@ main (int argc, char** argv, char **env)
 	args = [[process arguments] mutableCopy];
 	fm = [NSFileManager defaultManager];
 	opener = [BBFileOpener fileOpener];
+	defaults = [NSUserDefaults standardUserDefaults];
 
 	// Check the name of the process for the names we recognize
 	processName = [process processName];
@@ -359,18 +393,10 @@ main (int argc, char** argv, char **env)
 		}
 
 		if ([arg isEqualToString: @"-a"]) {	// launch, set app for following
-			id		newAppName = [argEnumerator nextObject]; // eat the next arg
-
-			if (!newAppName) {
-				printf ("%s: no appname given for -a\n", [processName cString]);
-				break;
-			}
-
+			newAppName ([argEnumerator nextObject]);
 			appNameForced = YES;
-			[appName release];
-			appName = [newAppName retain];
 
-			if (![opener openApp: newAppName]) {
+			if (![opener openApp: appName]) {
 				printf ("%s: could not contact application: %s\n", [processName cString], [appName cString]);
 				break;
 			}
@@ -379,15 +405,25 @@ main (int argc, char** argv, char **env)
 		}
 
 		if ([arg isEqualToString: @"-A"]) {	// set the app for following files
-			id		newAppName = [argEnumerator nextObject]; // eat the next arg
-
-			if (!newAppName) {
-				printf ("%s: no appname given for -A\n", [processName cString]);
-				break;
-			}
-
+			newAppName ([argEnumerator nextObject]);
 			appNameForced = YES;
-			appName = newAppName;
+			continue;
+		}
+
+		if ([arg isEqualToString: @"-e"]) {
+			newAppName (@"TextEdit");
+			continue;
+		}
+
+		if ([arg isEqualToString: @"-f"]) {	// stdout to editor
+
+			newAppName (defaultEditor());
+			return doStdInput (processName);
+			break;
+		}
+
+		if ([arg isEqualToString: @"-t"]) {
+			newAppName (defaultEditor ());
 
 			continue;
 		}
