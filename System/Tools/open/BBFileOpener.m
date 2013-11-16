@@ -43,6 +43,13 @@ static NSFileManager	*fm = nil;
 
 static BBFileOpener		*sharedInstance = nil;
 
+#ifdef DEBUG
+# define DPRINT(fmt, ...) \
+	printf ("%s\n", [[NSString stringWithFormat: fmt, __VA_ARGS__] UTF8String])
+#else
+# define DPRINT(fmt, ...)
+#endif
+
 @interface BBFileOpener (Private)
 - (id) connectToApp: (NSString *)fileName;
 - (BOOL) openFile: (NSString *)file : (NSString *)app : (BOOL)print : (BOOL)temp;
@@ -211,6 +218,7 @@ static BBFileOpener		*sharedInstance = nil;
 	if (!fileName)
 		return nil;
 
+	DPRINT (@"connecting to %@", fileName);
 	appName = [[fileName lastPathComponent] stringByDeletingPathExtension];
 
 NS_DURING
@@ -218,13 +226,19 @@ NS_DURING
 															host: host];
 NS_HANDLER
 	app = nil;
+
 NS_ENDHANDLER
-	if (app)
+	if (app) {
+		DPRINT (@"connected to %@", app);
 		return app;
+	} else {
+		DPRINT (@"failed to connect to %@, launching", fileName);
+	}
 
-	if (![workspace launchApplication: fileName showIcon: YES autolaunch: autolaunch])
+	if (![workspace launchApplication: fileName showIcon: YES autolaunch: autolaunch]) {
+		DPRINT (@"Workspace failed to launch %@", fileName);
 		return nil;	// don't bother, workspace couldn't exec it
-
+	}
 NS_DURING
 	app = [NSConnection rootProxyForConnectionWithRegisteredName: appName
 															host: host];
