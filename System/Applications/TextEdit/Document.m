@@ -50,7 +50,7 @@
 	[self setHyphenationFactor: 0.0];
 }
 
-- (id) init
+- (id) initWithPath: (NSString *)filename encoding: (int)encoding
 {
 	static NSPoint   cascadePoint = {0.0, 0.0};
 	NSLayoutManager  *layoutManager;
@@ -128,6 +128,20 @@
 		[self setViewSize: size];
 	}
 
+	potentialSaveDirectory = nil;
+
+	if (filename) {
+		if (![self loadFromPath: filename encoding: encoding]) {
+			[self release];
+			return nil;
+		}
+
+		[Document setLastOpenSavePanelDirectory: [filename stringByDeletingLastPathComponent]];
+
+		[[self firstTextView] setSelectedRange: NSMakeRange (0, 0)];
+		[self setDocumentName: filename];
+	}
+
 NS_DURING
 	[[NSNotificationCenter defaultCenter]
 	 addObserver: self
@@ -139,29 +153,12 @@ NS_HANDLER
 	NSDebugLog (@"%@ caught registering observer, ignoring.", [localException name]);
 NS_ENDHANDLER
 
-	potentialSaveDirectory = nil;
 	return self;
 }
 
-- (id) initWithPath: (NSString *)filename
-		   encoding: (int)encoding
+- (id) init
 {
-	if (!(self = [self init])) {
-		return nil;
-	}
-
-	if (filename && ![self loadFromPath: filename encoding: encoding]) {
-		[self release];
-		return nil;
-	}
-
-	if (filename) {
-		[Document setLastOpenSavePanelDirectory: [filename stringByDeletingLastPathComponent]];
-	}
-
-	[[self firstTextView] setSelectedRange: NSMakeRange (0, 0)];
-	[self setDocumentName: filename];
-	return self;
+	return [self initWithPath: nil encoding: UnknownStringEncoding];
 }
 
 + (BOOL) openUntitled
