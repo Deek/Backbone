@@ -97,7 +97,7 @@
 		int     windowWidth = [[Preferences objectForKey: WindowWidth] intValue];
 		NSFont  *font = [Preferences objectForKey: [self isRichText] ? RichTextFont: PlainTextFont];
 		NSSize  size;
-#ifdef GNUSTEP
+#if 0	//def GNUSTEP
 		NSFont   *screenFont = [font screenFont];
 		NSGlyph  nGlyph;
 
