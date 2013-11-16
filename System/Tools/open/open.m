@@ -299,6 +299,12 @@ main (int argc, char** argv, char **env)
 	processName = [process processName];
 	programMode = checkArgs (processName, args);
 
+	/*
+		FIXME: If we don't redirect stderr, apps' NSLog entries will show up 
+		in the terminal. What we really want is for Workspace to be launching
+		the apps and doing all the logging, so we can use stderr to report 
+		stuff.
+	*/
 	if (!redirectStdError ("/dev/null")) {
 		printf ("%s: error redirecting stderr: %s\n", [processName cString], strerror (errno));
 		return 1;
@@ -306,6 +312,7 @@ main (int argc, char** argv, char **env)
 	
 	// Process options...
 #if 0
+	// FIXME: re-enable this by checking whether there's input on stdin ?
 	if ([args count] == 0)	// stdin, open it with editor and don't do anything further
 		return doStdInput (processName);
 #endif
