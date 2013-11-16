@@ -1399,13 +1399,13 @@ validateToggleItem (NSMenuItem *aCell, BOOL useFirst, NSString *first, NSString 
 	SEL  action = [aCell action];
 
 #ifdef GNUSTEP
-	const char  *sel_name = sel_get_name (action);
+	const char  *mySEL = sel_getName (action);
 
-	if (!strcmp (sel_name, sel_get_name (@selector (toggleRich:)))) {
+	if (!strcmp (mySEL, sel_getName (@selector (toggleRich:)))) {
 		validateToggleItem (aCell, [self isRichText], _(@"&Make Plain Text"), _(@"&Make Rich Text"));
-	} else if (!strcmp (sel_name, sel_get_name (@selector (togglePageBreaks:)))) {
+	} else if (!strcmp (mySEL, sel_getName (@selector (togglePageBreaks:)))) {
 		validateToggleItem (aCell, [self hasMultiplePages], _(@"&Wrap to Window"), _(@"&Wrap to Page"));
-	} else if (!strcmp (sel_name, sel_get_name (@selector (toggleHyphenation:)))) {
+	} else if (!strcmp (mySEL, sel_getName (@selector (toggleHyphenation:)))) {
 		if (!hyphenationSupported ()) {	// Disable it
 			return NO;
 		}
