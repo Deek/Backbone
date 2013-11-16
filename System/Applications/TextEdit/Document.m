@@ -124,11 +124,16 @@
 		[self setViewSize: size];
 	}
 
+NS_DURING
 	[[NSNotificationCenter defaultCenter]
 		addObserver: self
 		   selector: @selector (fixUpScrollViewBackgroundColor:)
 			   name: NSSystemColorsDidChangeNotification
 			 object: nil];
+NS_HANDLER
+	// Deal with the idiotic exception silently.
+	NSDebugLog (@"%@ caught registering observer, ignoring.", [localException name]);
+NS_ENDHANDLER
 
 	potentialSaveDirectory = nil;
 	return self;
@@ -194,13 +199,18 @@
 {
 	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
 
-	[center removeObserver: self
-					  name: NSSystemColorsDidChangeNotification
-					object: nil];
-
+NS_DURING
 	[center removeObserver: self
 					  name: NSTextStorageDidProcessEditingNotification
 					object: [self textStorage]];
+
+	[center removeObserver: self
+					  name: NSSystemColorsDidChangeNotification
+					object: nil];
+NS_HANDLER
+	// Deal with the idiotic exception silently.
+	NSDebugLog (@"%@ caught unregistering observers, ignoring.", [localException name]);
+NS_ENDHANDLER
 
 	[[self firstTextView] setDelegate: nil];
 	[[self window] setDelegate: nil];
