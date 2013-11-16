@@ -1,30 +1,30 @@
 /*
-	ContactApp.m
+    ContactApp.m
 
-	Code for contacting an application and getting it to open files.
+    Code for contacting an application and getting it to open files.
 
-	Copyright (C) 2001-2003 Jeff Teunissen <deek@d2dc.net>
+    Copyright (C) 2001-2003 Jeff Teunissen <deek@d2dc.net>
 
-	Author:	Jeff Teunissen <deek@d2dc.net>
-	Created: 31 Oct 2003
+    Author:	Jeff Teunissen <deek@d2dc.net>
+    Created: 31 Oct 2003
 
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License as
-	published by the Free Software Foundation; either version 2 of
-	the License, or (at your option) any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of
+    the License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-	See the GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public
-	License along with this program; if not, write to:
+    See the GNU General Public License for more details.
 
-		Free Software Foundation
-		59 Temple Place - Suite 330
-		Boston, MA 02111-1307, USA
+    You should have received a copy of the GNU General Public
+    License along with this program; if not, write to:
+
+        Free Software Foundation
+        59 Temple Place - Suite 330
+        Boston, MA 02111-1307, USA
 */
 #include <Foundation/NSConnection.h>
 #include <Foundation/NSException.h>
@@ -37,15 +37,17 @@
 
 #include "BBFileOpener.h"
 
-static NSUserDefaults	*defaults = nil;
-static NSWorkspace		*workspace = nil;
-static NSFileManager	*fm = nil;
+static NSUserDefaults  *defaults = nil;
+static NSWorkspace     *workspace = nil;
+static NSFileManager   *fm = nil;
 
-static BBFileOpener		*sharedInstance = nil;
+static BBFileOpener  *sharedInstance = nil;
+
+#define DEBUG
 
 #ifdef DEBUG
 # define DPRINT(fmt, ...) \
-	printf ("%s\n", [[NSString stringWithFormat: fmt, __VA_ARGS__] UTF8String])
+    printf ("%s\n", [[NSString stringWithFormat: fmt, __VA_ARGS__] UTF8String])
 #else
 # define DPRINT(fmt, ...)
 #endif
@@ -59,7 +61,7 @@ static BBFileOpener		*sharedInstance = nil;
 @implementation BBFileOpener
 
 /*
-	Singleton bookkeeping stuff.
+    Singleton bookkeeping stuff.
 */
 + (BBFileOpener *) fileOpener
 {
@@ -104,7 +106,7 @@ static BBFileOpener		*sharedInstance = nil;
 }
 
 /***
-	Okay, now that we got that crap out of the way, let's do something useful.
+    Okay, now that we got that crap out of the way, let's do something useful.
 ***/
 
 - (BOOL) autolaunch
@@ -154,80 +156,85 @@ static BBFileOpener		*sharedInstance = nil;
 
 - (BOOL) openFile: (NSString *)file
 {
-	id	app = [self bestAppForFile: file];
+	id  app = [self bestAppForFile: file];
 
-	if (app)
+	if (app) {
 		return [self openFile: file : app : NO : NO];
+	}
 
 	return NO;
 }
 
-- (BOOL) openFile: (NSString *)file withApp:(NSString *)app
+- (BOOL) openFile: (NSString *)file withApp: (NSString *)app
 {
 	return [self openFile: file : app : NO : NO];
 }
 
 - (BOOL) openTempFile: (NSString *)file
 {
-	id	app = [self bestAppForFile: file];
+	id  app = [self bestAppForFile: file];
 
-	if (app)
+	if (app) {
 		return [self openFile: file : app : NO : YES];
+	}
 
 	return NO;
 }
 
-- (BOOL) openTempFile: (NSString *)file withApp:(NSString *)app
+- (BOOL) openTempFile: (NSString *)file withApp: (NSString *)app
 {
 	return [self openFile: file : app : NO : YES];
 }
 
 - (BOOL) printFile: (NSString *)file
 {
-	id	app = [self bestAppForFile: file];
+	id  app = [self bestAppForFile: file];
 
-	if (app)
+	if (app) {
 		return [self openFile: file : app : YES : NO];
+	}
 
 	return NO;
 }
 
-- (BOOL) printFile: (NSString *)file withApp:(NSString *)app
+- (BOOL) printFile: (NSString *)file withApp: (NSString *)app
 {
 	return [self openFile: file : app : YES : NO];
 }
+
 @end
 
 
 @implementation BBFileOpener (Private)
 /*
-	connectToApp:
+    connectToApp:
 
-	Attempt to connect to a running application. If it is not running, it will
-	be launched, using NSWorkspace -launchApplication:showIcon:autolaunch:.
+    Attempt to connect to a running application. If it is not running, it will
+    be launched, using NSWorkspace -launchApplication:showIcon:autolaunch:.
 
-	This function keeps trying to connect to the application for up to 10
-	seconds.
+    This function keeps trying to connect to the application for up to 10
+    seconds.
 */
 - (id) connectToApp: (NSString *)fileName
 {
-	id				app = nil;
-	NSDate			*expiry = [NSDate dateWithTimeIntervalSinceNow: timeout];
-	NSString		*appName = nil;
+	id        app = nil;
+	NSDate    *expiry = [NSDate dateWithTimeIntervalSinceNow: timeout];
+	NSString  *appName = nil;
 
-	if (!fileName)
+	if (!fileName) {
 		return nil;
+	}
 
 	DPRINT (@"connecting to %@", fileName);
 	appName = [[fileName lastPathComponent] stringByDeletingPathExtension];
 
 NS_DURING
 	app = [NSConnection rootProxyForConnectionWithRegisteredName: appName
-															host: host];
+	                                                        host: host];
 NS_HANDLER
 	app = nil;
-
 NS_ENDHANDLER
+
 	if (app) {
 		DPRINT (@"connected to %@", app);
 		return app;
@@ -239,20 +246,21 @@ NS_ENDHANDLER
 		DPRINT (@"Workspace failed to launch %@", fileName);
 		return nil;	// don't bother, workspace couldn't exec it
 	}
+
 NS_DURING
 	app = [NSConnection rootProxyForConnectionWithRegisteredName: appName
-															host: host];
+	                                                        host: host];
 
 	while (!app && [expiry timeIntervalSinceNow] > 0) {
-		NSRunLoop	*loop = [NSRunLoop currentRunLoop];
+		NSRunLoop  *loop = [NSRunLoop currentRunLoop];
 
 		[NSTimer scheduledTimerWithTimeInterval: 0.1
-									 invocation: nil
-										repeats: NO];
+		                             invocation: nil
+		                                repeats: NO];
 		[loop runUntilDate: [NSDate dateWithTimeIntervalSinceNow: 0.2]];
 
 		app = [NSConnection rootProxyForConnectionWithRegisteredName: appName
-																host: host];
+		                                                        host: host];
 	}
 NS_HANDLER
 	return nil;
@@ -262,16 +270,17 @@ NS_ENDHANDLER
 }
 
 - (BOOL) openFile: (NSString *)file
-				 : (NSString *)appName
-				 : (BOOL)print
-				 : (BOOL)temp
+   : (NSString *)appName
+   : (BOOL)print
+   : (BOOL)temp
 {
-	const char	*appCString;
-	const char	*fileCString;
-	id			app;
+	const char  *appCString;
+	const char  *fileCString;
+	id          app;
 
-	if (!appName || !file)
+	if (!appName || !file) {
 		return NO;
+	}
 
 	appCString = [appName cString];
 	fileCString = [file cString];
@@ -282,30 +291,30 @@ NS_ENDHANDLER
 	}
 
 	if (print) {
-		if (![app respondsToSelector: @selector(application:printFile:)]
-			|| ![app application: nil printFile: file]) {
+		if (![app respondsToSelector: @selector (application:printFile:)]
+		    || ![app application: nil printFile: file]) {
 			printf ("Application \"%s\" could not print file \"%s\"\n",
-					appCString,
-					fileCString);
+			        appCString,
+			        fileCString);
 			return NO;
 		}
 		return YES;
 	} else {
 		if (temp) {
-			if (![app respondsToSelector: @selector(application:openTempFile:)]
-				|| ![app application: nil openTempFile: file]) {
+			if (![app respondsToSelector: @selector (application:openTempFile:)]
+			    || ![app application: nil openTempFile: file]) {
 				printf ("Application \"%s\" could not open temporary file \"%s\"\n",
-						appCString,
-						fileCString);
+				        appCString,
+				        fileCString);
 				return NO;
 			}
 			return YES;
 		} else {
-			if (![app respondsToSelector: @selector(application:openFile:)]
-				|| ![app application: nil openFile: file]) {
+			if (![app respondsToSelector: @selector (application:openFile:)]
+			    || ![app application: nil openFile: file]) {
 				printf ("Application \"%s\" could not open file \"%s\"\n",
-						appCString,
-						fileCString);
+				        appCString,
+				        fileCString);
 				return NO;
 			}
 			return YES;
@@ -315,28 +324,31 @@ NS_ENDHANDLER
 
 - (NSString *) bestAppForFile: (NSString *)file
 {
-	NSString	*app = nil;
-	NSString	*type = nil;
-	NSString	*tmp;
-	NSString	*defaultApp = @"TextEdit";
+	NSString  *app = nil;
+	NSString  *type = nil;
+	NSString  *tmp;
+	NSString  *defaultApp = @"TextEdit";
 
-	if (![workspace getInfoForFile: file application: &app type: &type])
+	if (![workspace getInfoForFile: file application: &app type: &type]) {
 		return nil;	// file does not exist
-
-	if ((tmp = [defaults stringForKey: @"GSDefaultEditor"]))
+	}
+	if ((tmp = [defaults stringForKey: @"GSDefaultEditor"])) {
 		defaultApp = tmp;
-	
-	if ([type isEqualToString: NSShellCommandFileType]) {	// is executable
-		id temp = [defaults stringForKey: @"GSDefaultTerminal"];
+	}
 
-		if (temp)
+	if ([type isEqualToString: NSShellCommandFileType]) {	// is executable
+		id  temp = [defaults stringForKey: @"GSDefaultTerminal"];
+
+		if (temp) {
 			return temp;
+		}
 
 		return @"Terminal";
 	}
 
-	if (app)
+	if (app) {
 		return app;
+	}
 
 	return defaultApp;
 }

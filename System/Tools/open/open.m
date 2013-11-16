@@ -1,33 +1,33 @@
 /*
-	open.m
+    open.m
 
-	Open files and/or programs
+    Open files and/or programs
 
-	Copyright (C) 2001 Free Software Foundation, Inc.
-	Copyright (C) 2001-2003 Jeff Teunissen <deek@d2dc.net>
+    Copyright (C) 2001 Free Software Foundation, Inc.
+    Copyright (C) 2001-2003 Jeff Teunissen <deek@d2dc.net>
 
-	Author:	Jeff Teunissen <deek@d2dc.net>
-	Created: November 2001
+    Author:	Jeff Teunissen <deek@d2dc.net>
+    Created: November 2001
 
-	Originally based on "gopen", by Gregory Casamento <greg_casamento@yahoo.com>
+    Originally based on "gopen", by Gregory Casamento <greg_casamento@yahoo.com>
 
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License as
-	published by the Free Software Foundation; either version 2 of
-	the License, or (at your option) any later version.
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of
+    the License, or (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-	See the GNU General Public License for more details.
-	
-	You should have received a copy of the GNU General Public
-	License along with this program; if not, write to:
+    See the GNU General Public License for more details.
 
-		Free Software Foundation
-		59 Temple Place - Suite 330
-		Boston, MA 02111-1307, USA
+    You should have received a copy of the GNU General Public
+    License along with this program; if not, write to:
+
+        Free Software Foundation
+        59 Temple Place - Suite 330
+        Boston, MA 02111-1307, USA
 */
 
 #include <errno.h>
@@ -53,40 +53,40 @@
 #include "BBFileOpener.h"
 #include "open.h"
 
-NSAutoreleasePool	*pool = nil;
-NSFileManager		*fm = nil;
-NSProcessInfo		*process = nil;
-NSUserDefaults		*defaults = nil;
-BBFileOpener		*opener = nil;
+NSAutoreleasePool  *pool = nil;
+NSFileManager      *fm = nil;
+NSProcessInfo      *process = nil;
+NSUserDefaults     *defaults = nil;
+BBFileOpener       *opener = nil;
 
 /*
-	Variables for the application to be used.
+    Variables for the application to be used.
 
-	appName is the current app to contact. Can validly be nil.
-	appNameForced is YES when specific app was forced by program name
-	or the -a argument.
+    appName is the current app to contact. Can validly be nil.
+    appNameForced is YES when specific app was forced by program name
+    or the -a argument.
 */
-NSString			*appName = nil;
-BOOL				appNameForced = NO;
+NSString  *appName = nil;
+BOOL      appNameForced = NO;
 
 /*
-	printFiles is YES when -p has been used, and is only disabled by -o.
-	waitForFileChanged is YES when forced by program name or the --wait argument
+    printFiles is YES when -p has been used, and is only disabled by -o.
+    waitForFileChanged is YES when forced by program name or the --wait argument
 */
-BOOL				printFiles = NO;
-BOOL				waitForFileChanged = NO;
-BOOL				appAutolaunch = NO;
+BOOL  printFiles = NO;
+BOOL  waitForFileChanged = NO;
+BOOL  appAutolaunch = NO;
 
 /*
-	FIXME: Only partially implemented
+    FIXME: Only partially implemented
 
-	Opening files as other types. This requires symlinks unless stdin is used.
-	That's why only stdin is currently implemented for this feature
-	-- I'm not sure how best to handle it. Should these always be opened as
-	temp files?
+    Opening files as other types. This requires symlinks unless stdin is used.
+    That's why only stdin is currently implemented for this feature
+    -- I'm not sure how best to handle it. Should these always be opened as
+    temp files?
 */
-BOOL				openAs = NO;
-NSString			*openAsType = nil;
+BOOL      openAs = NO;
+NSString  *openAsType = nil;
 
 /* prototypes */
 id connectToApp (NSString *appName, NSString *hostName);
@@ -95,10 +95,10 @@ BOOL openWithApp (NSString *appName, NSString *host, NSString *file, BOOL print,
 int
 doStdInput (NSString *name)
 {
-	NSFileHandle	*fh = [NSFileHandle fileHandleWithStandardInput];
-	NSData			*data = [fh readDataToEndOfFile];
-	NSNumber		*pid = [NSNumber numberWithInt: [process processIdentifier]];
-	NSString		*tempFile = [NSTemporaryDirectory () stringByAppendingPathComponent: name];
+	NSFileHandle  *fh = [NSFileHandle fileHandleWithStandardInput];
+	NSData        *data = [fh readDataToEndOfFile];
+	NSNumber      *pid = [NSNumber numberWithInt: [process processIdentifier]];
+	NSString      *tempFile = [NSTemporaryDirectory () stringByAppendingPathComponent: name];
 
 	// FIXME: this is NOT secure!
 	tempFile = [tempFile stringByAppendingString: [pid stringValue]];
@@ -106,14 +106,15 @@ doStdInput (NSString *name)
 	if (openAs && [openAsType length]) {
 		tempFile = [tempFile stringByAppendingPathExtension: openAsType];
 	} else {
-		char			buffer[8];
-		int				dataLength;
+		char  buffer[8];
+		int   dataLength;
 
 		memset (buffer, '\0', sizeof (buffer));
-		if ([data length] > sizeof (buffer) - 1)
+		if ([data length] > sizeof (buffer) - 1) {
 			[data getBytes: buffer length: sizeof (buffer) - 1];
-		else
+		} else {
 			[data getBytes: buffer length: [data length]];
+		}
 
 		dataLength = strlen (buffer);
 
@@ -125,14 +126,17 @@ doStdInput (NSString *name)
 	[data writeToFile: tempFile atomically: YES];
 
 	if (appNameForced) {
-		if (![opener openTempFile: tempFile withApp: appName])
+		if (![opener openTempFile: tempFile withApp: appName]) {
 			return 1;
+		}
 
 		return 0;
 	} else {
-		if (![opener openTempFile: tempFile])
-			if (![opener openFile: tempFile])
+		if (![opener openTempFile: tempFile]) {
+			if (![opener openFile: tempFile]) {
 				return 1;
+			}
+		}
 	}
 
 	return 0;
@@ -153,11 +157,12 @@ newAppName (NSString *newApp)
 NSString *
 defaultEditor (void)
 {
-	NSString	*defaultEditor = @"TextEdit";
-	NSString	*tmp;
+	NSString  *defaultEditor = @"TextEdit";
+	NSString  *tmp;
 
-	if ((tmp = [defaults stringForKey: @"GSDefaultEditor"]))
+	if ((tmp = [defaults stringForKey: @"GSDefaultEditor"])) {
 		defaultEditor = tmp;
+	}
 
 	return defaultEditor;
 }
@@ -165,10 +170,11 @@ defaultEditor (void)
 BOOL
 redirectStdError (char *filename)
 {
-	signed int	fd = -1;
+	signed int  fd = -1;
 
-	if ((fd = open (filename, O_WRONLY)) < 0)
+	if ((fd = open (filename, O_WRONLY)) < 0) {
 		return NO;
+	}
 	close (2);
 	dup2 (fd, 2);
 	return YES;
@@ -177,47 +183,48 @@ redirectStdError (char *filename)
 void
 usage (NSString *name, NSString *desc)
 {
-	if (!name || !desc)
-		abort();
+	if (!name || !desc) {
+		abort ();
+	}
 
 	printf ("Usage: %s %s\n", [name cString], [desc cString]);
 	printf (
-"Options:\n"
-"    -a APP      Specify an application to use for opening the file(s).\n"
-"                (APP will be launched if it is not running.)\n"
-"    -A APP      Like -a, only APP won't be launched unless a file is opened\n"
-"    -s          If an app is launched, it will be run as if on startup\n"
-"                (Some apps do different things if \"Autolaunched\".)\n"
-"\n"
-"    -f          Read standard input, send to default text editor\n"
-"    -           Read standard input, use -a/-A to decide app\n"
-"\n"
-"    -o          Following files will be opened (this is the default).\n"
-"    -p          Following files will be printed instead of opened.\n"
-"\n"
-"    -e          Following files will be opened with TextEdit\n"
-"    -t          Following files will be opened with the default text editor\n"
-"\n"
-"    -W, --wait  Wait for application to exit before returning.\n"
-"    -h, --help  Display this help and exit\n"
-	);
+	    "Options:\n"
+	    "    -a APP      Specify an application to use for opening the file(s).\n"
+	    "                (APP will be launched if it is not running.)\n"
+	    "    -A APP      Like -a, only APP won't be launched unless a file is opened\n"
+	    "    -s          If an app is launched, it will be run as if on startup\n"
+	    "                (Some apps do different things if \"Autolaunched\".)\n"
+	    "\n"
+	    "    -f          Read standard input, send to default text editor\n"
+	    "    -           Read standard input, use -a/-A to decide app\n"
+	    "\n"
+	    "    -o          Following files will be opened (this is the default).\n"
+	    "    -p          Following files will be printed instead of opened.\n"
+	    "\n"
+	    "    -e          Following files will be opened with TextEdit\n"
+	    "    -t          Following files will be opened with the default text editor\n"
+	    "\n"
+	    "    -W, --wait  Wait for application to exit before returning.\n"
+	    "    -h, --help  Display this help and exit\n"
+	    );
 	exit (0);
 }
 
 /*
-	checkArgs (name, args)
+    checkArgs (name, args)
 
-	Checks the arguments and the program name. Returns the processing mode to
-	be used by the main function.
+    Checks the arguments and the program name. Returns the processing mode to
+    be used by the main function.
 
-	NOTE: This function modifies the object pointed to by its second argument.
+    NOTE: This function modifies the object pointed to by its second argument.
 */
 int
 checkArgs (NSString *name, NSMutableArray *args)
 {
-	NSString	*desc = @"[ options ] FILE ...";
-	BOOL		doHelp = NO;
-	int 		progMode = PM_OPEN;
+	NSString  *desc = @"[ options ] FILE ...";
+	BOOL      doHelp = NO;
+	int       progMode = PM_OPEN;
 
 	[args removeObjectAtIndex: 0];	// remove app name from args
 
@@ -230,37 +237,37 @@ checkArgs (NSString *name, NSMutableArray *args)
 				doHelp = YES;
 				printf ("%s error: not enough arguments\n", [name cString]);
 			} else {
-				NSString	*newAppName = [args objectAtIndex: 0];
-				NSString	*tmp = newAppName;
-				NSString	*ext = [newAppName pathExtension];
-				BOOL		exists, isDir;
+				NSString  *newAppName = [args objectAtIndex: 0];
+				NSString  *tmp = newAppName;
+				NSString  *ext = [newAppName pathExtension];
+				BOOL      exists, isDir;
 
 				/*
-					First, check for absolute path.
-					Second, check for app in current directory.
-					Finally, try passing it off to the opener.
+				    First, check for absolute path.
+				    Second, check for app in current directory.
+				    Finally, try passing it off to the opener.
 				*/
 				// standardize the path
 				if (![newAppName isAbsolutePath]) {
 					tmp = [[[fm currentDirectoryPath]
-							stringByAppendingPathComponent: newAppName]
-							stringByStandardizingPath];
+					        stringByAppendingPathComponent: newAppName]
+					       stringByStandardizingPath];
 				}
 
 				exists = [fm fileExistsAtPath: tmp isDirectory: &isDir];
 				if (exists && isDir
-						&& ([ext isEqualToString: @"app"]
-							|| [ext isEqualToString: @"debug"]
-							|| [ext isEqualToString: @"profile"])) {	// got it
+				    && ([ext isEqualToString: @"app"]
+				        || [ext isEqualToString: @"debug"]
+				        || [ext isEqualToString: @"profile"])) {		// got
+					// it
 				}
 
 				if ([ext isEqualToString: @"app"]	// is it an app?
-						|| [ext isEqualToString: @"debug"]
-						|| [ext isEqualToString: @"profile"]) {
+				    || [ext isEqualToString: @"debug"]
+				    || [ext isEqualToString: @"profile"]) {
 				}
 
 				if (![opener openApp: newAppName]) {	// look for it ourselves
-
 					printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
 					exit (1);
 				}
@@ -303,8 +310,8 @@ checkArgs (NSString *name, NSMutableArray *args)
 
 	// If there is a "help" arg anywhere on the command-line, only do help.
 	if (doHelp
-			|| [args indexOfObject: @"-h"] != NSNotFound
-			|| [args indexOfObject: @"--help"] != NSNotFound) {
+	    || [args indexOfObject: @"-h"] != NSNotFound
+	    || [args indexOfObject: @"--help"] != NSNotFound) {
 		usage (name, desc);
 	}
 
@@ -314,12 +321,12 @@ checkArgs (NSString *name, NSMutableArray *args)
 int
 main (int argc, char** argv, char **env)
 {
-	NSMutableArray	*args = nil;
-	NSEnumerator	*argEnumerator = nil;
-	NSString		*arg = nil;
-	NSString		*processName = nil;
+	NSMutableArray  *args = nil;
+	NSEnumerator    *argEnumerator = nil;
+	NSString        *arg = nil;
+	NSString        *processName = nil;
 
-	int				programMode;
+	int  programMode;
 
 	pool = [NSAutoreleasePool new];	// create the autorelease pool
 
@@ -334,28 +341,30 @@ main (int argc, char** argv, char **env)
 	programMode = checkArgs (processName, args);
 
 	/*
-		FIXME: If we don't redirect stderr, apps' NSLog entries will show up 
-		in the terminal. What we really want is for Workspace to be launching
-		the apps and doing all the logging, so we can use stderr to report 
-		stuff.
+	    FIXME: If we don't redirect stderr, apps' NSLog entries will show up
+	    in the terminal. What we really want is for Workspace to be launching
+	    the apps and doing all the logging, so we can use stderr to report
+	    stuff.
 	*/
 	if (!redirectStdError ("/dev/null")) {
 		printf ("%s: error redirecting stderr: %s\n", [processName cString], strerror (errno));
 		return 1;
 	}
-	
+
 	// Process options...
 #if 0
 	// FIXME: re-enable this by checking whether there's input on stdin ?
-	if ([args count] == 0)	// stdin, open it with editor and don't do anything further
+	if ([args count] == 0) {// stdin, open it with editor and don't do anything
+		// further
 		return doStdInput (processName);
+	}
 #endif
 
 	argEnumerator = [args objectEnumerator];
-	while((arg = [argEnumerator nextObject])) {
-		NSString	*ext = [arg pathExtension];
-		BOOL		isDir = NO;
-		BOOL		exists = NO;
+	while ((arg = [argEnumerator nextObject])) {
+		NSString  *ext = [arg pathExtension];
+		BOOL      isDir = NO;
+		BOOL      exists = NO;
 
 		if ([arg isEqualToString: @"-"]) {	// special filename
 			return doStdInput (processName);
@@ -372,8 +381,8 @@ main (int argc, char** argv, char **env)
 		}
 
 		/*
-			We can't send -unhide: commands to app, they get dropped by the
-			GSListener managing its DO connection.
+		    We can't send -unhide: commands to app, they get dropped by the
+		    GSListener managing its DO connection.
 		*/
 #if 0
 		if ([arg isEqualToString: @"--unhide"]) {
@@ -416,8 +425,7 @@ main (int argc, char** argv, char **env)
 		}
 
 		if ([arg isEqualToString: @"-f"]) {	// stdout to editor
-
-			newAppName (defaultEditor());
+			newAppName (defaultEditor ());
 			return doStdInput (processName);
 			break;
 		}
@@ -431,8 +439,8 @@ main (int argc, char** argv, char **env)
 		// standardize the path
 		if (![arg isAbsolutePath]) {
 			arg = [[[fm currentDirectoryPath]
-					stringByAppendingPathComponent: arg]
-					stringByStandardizingPath];
+			        stringByAppendingPathComponent: arg]
+			       stringByStandardizingPath];
 		}
 
 //		printf ("Filename: %s\n", [arg cString]);
@@ -443,8 +451,8 @@ main (int argc, char** argv, char **env)
 		}
 
 		if ([ext isEqualToString: @"app"]	// is it an app?
-			|| [ext isEqualToString: @"debug"]
-			|| [ext isEqualToString: @"profile"]) {	// 
+		    || [ext isEqualToString: @"debug"]
+		    || [ext isEqualToString: @"profile"]) {	//
 			if (![opener openApp: arg]) {
 				printf ("%s: unable to launch: %s\n", [processName cString], [arg cString]);
 			}
@@ -452,8 +460,9 @@ main (int argc, char** argv, char **env)
 		}
 
 		if (appNameForced) {
-			if (![opener openFile: arg withApp: appName])
+			if (![opener openFile: arg withApp: appName]) {
 				break;
+			}
 
 			continue;
 		}
