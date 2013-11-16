@@ -1,7 +1,8 @@
 #import <Foundation/Foundation.h>
 
-@interface Controller: NSObject {
-	id	infoPanel;
+@interface Controller: NSObject
+{
+	id  infoPanel;
 }
 
 /* NSApplication delegate methods */

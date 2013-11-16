@@ -1,12 +1,12 @@
 /*
-		ScalingScrollView.m
-		Copyright (c) 1995-1996, NeXT Software, Inc.
-		All rights reserved.
-		Author: Mike Ferris
+        ScalingScrollView.m
+        Copyright (c) 1995-1996, NeXT Software, Inc.
+        All rights reserved.
+        Author: Mike Ferris
 
-		You may freely copy, distribute and reuse the code in this example.
-		NeXT disclaims any warranty of any kind, expressed or implied,
-		as to its fitness for any particular use.
+        You may freely copy, distribute and reuse the code in this example.
+        NeXT disclaims any warranty of any kind, expressed or implied,
+        as to its fitness for any particular use.
 */
 
 #import "ScalingScrollView.h"
@@ -20,22 +20,22 @@
 #import <AppKit/NSFont.h>
 
 /* For genstrings:
-	NSLocalizedString(@"10%", @"Zoom popup entry")
-	NSLocalizedString(@"25%", @"Zoom popup entry")
-	NSLocalizedString(@"50%", @"Zoom popup entry")
-	NSLocalizedString(@"75%", @"Zoom popup entry")
-	NSLocalizedString(@"100%", @"Zoom popup entry")
-	NSLocalizedString(@"128%", @"Zoom popup entry")
-	NSLocalizedString(@"200%", @"Zoom popup entry")
-	NSLocalizedString(@"400%", @"Zoom popup entry")
-	NSLocalizedString(@"800%", @"Zoom popup entry")
-	NSLocalizedString(@"1600%", @"Zoom popup entry")
+    NSLocalizedString(@"10%", @"Zoom popup entry")
+    NSLocalizedString(@"25%", @"Zoom popup entry")
+    NSLocalizedString(@"50%", @"Zoom popup entry")
+    NSLocalizedString(@"75%", @"Zoom popup entry")
+    NSLocalizedString(@"100%", @"Zoom popup entry")
+    NSLocalizedString(@"128%", @"Zoom popup entry")
+    NSLocalizedString(@"200%", @"Zoom popup entry")
+    NSLocalizedString(@"400%", @"Zoom popup entry")
+    NSLocalizedString(@"800%", @"Zoom popup entry")
+    NSLocalizedString(@"1600%", @"Zoom popup entry")
 */
-static NSString *_NSDefaultScaleMenuLabels[] = {/* @"Set...", */ @"10%", @"25%", @"50%", @"75%", @"100%", @"128%", @"200%", @"400%", @"800%", @"1600%"};
-static float _NSDefaultScaleMenuFactors[] = {/* 0.0, */ 0.1, 0.25, 0.5, 0.75, 1.0, 1.28, 2.0, 4.0, 8.0, 16.0};
-static unsigned _NSDefaultScaleMenuSelectedItemIndex = 4;
-static float _NSButtonPadding = 1.0;
-static float _NSScaleMenuFontSize = 10.0;
+static NSString  *_NSDefaultScaleMenuLabels[] = { /* @"Set...", */ @"10%", @"25%", @"50%", @"75%", @"100%", @"128%", @"200%", @"400%", @"800%", @"1600%"};
+static float     _NSDefaultScaleMenuFactors[] = { /* 0.0, */ 0.1, 0.25, 0.5, 0.75, 1.0, 1.28, 2.0, 4.0, 8.0, 16.0};
+static unsigned  _NSDefaultScaleMenuSelectedItemIndex = 4;
+static float     _NSButtonPadding = 1.0;
+static float     _NSScaleMenuFontSize = 10.0;
 
 @implementation ScalingScrollView
 
@@ -52,11 +52,11 @@ static float _NSScaleMenuFontSize = 10.0;
 - (void) _makeScalePopUpButton
 {
 	if (_scalePopUpButton == nil) {
-		unsigned int	cnt, numberOfDefaultItems = (sizeof(_NSDefaultScaleMenuLabels) / sizeof(NSString *));
+		unsigned int  cnt, numberOfDefaultItems = (sizeof (_NSDefaultScaleMenuLabels) / sizeof (NSString *));
 #ifdef GNUSTEP
-		id <NSMenuItem> curItem;
+		id <NSMenuItem>  curItem;
 #else
-		NSButtonCell	*curItem;
+		NSButtonCell  *curItem;
 #endif
 
 		// create it
@@ -65,7 +65,7 @@ static float _NSScaleMenuFontSize = 10.0;
 		// fill it
 		for (cnt = 0; cnt < numberOfDefaultItems; cnt++) {
 			[_scalePopUpButton addItemWithTitle: NSLocalizedString (_NSDefaultScaleMenuLabels[cnt], nil)];
-			curItem = [_scalePopUpButton itemAtIndex:cnt];
+			curItem = [_scalePopUpButton itemAtIndex: cnt];
 
 			if (_NSDefaultScaleMenuFactors[cnt] != 0.0) {
 				[curItem setRepresentedObject: [NSNumber numberWithFloat: _NSDefaultScaleMenuFactors[cnt]]];
@@ -75,7 +75,7 @@ static float _NSScaleMenuFontSize = 10.0;
 
 		// hook it up
 		[_scalePopUpButton setTarget: self];
-		[_scalePopUpButton setAction: @selector(scalePopUpAction:)];
+		[_scalePopUpButton setAction: @selector (scalePopUpAction:)];
 
 		// set a suitable font
 		[_scalePopUpButton setFont: [NSFont systemFontOfSize: _NSScaleMenuFontSize]];
@@ -98,38 +98,43 @@ static float _NSScaleMenuFontSize = 10.0;
 	[super tile];
 
 	if (![self hasHorizontalScroller]) {
-		if (_scalePopUpButton) [_scalePopUpButton removeFromSuperview];
+		if (_scalePopUpButton) {
+			[_scalePopUpButton removeFromSuperview];
+		}
 		_scalePopUpButton = nil;
 	} else {
-		NSScroller *horizScroller;
-		NSRect horizScrollerFrame, buttonFrame, incrementLineFrame;
-		
-		if (!_scalePopUpButton) [self _makeScalePopUpButton];
+		NSScroller  *horizScroller;
+		NSRect      horizScrollerFrame, buttonFrame, incrementLineFrame;
+
+		if (!_scalePopUpButton) {
+			[self _makeScalePopUpButton];
+		}
 
 		horizScroller = [self horizontalScroller];
 		horizScrollerFrame = [horizScroller frame];
-		incrementLineFrame = [horizScroller rectForPart:NSScrollerIncrementLine];
+		incrementLineFrame = [horizScroller rectForPart: NSScrollerIncrementLine];
 		buttonFrame = [_scalePopUpButton frame];
 
-		// Now we'll just adjust the horizontal scroller size and set the button size and location.
+		// Now we'll just adjust the horizontal scroller size and set the button
+		// size and location.
 		horizScrollerFrame.size.width = horizScrollerFrame.size.width - buttonFrame.size.width - _NSButtonPadding;
-		[horizScroller setFrameSize:horizScrollerFrame.size];
+		[horizScroller setFrameSize: horizScrollerFrame.size];
 
-		buttonFrame.origin.x = NSMaxX(horizScrollerFrame);
+		buttonFrame.origin.x = NSMaxX (horizScrollerFrame);
 		buttonFrame.size.height = incrementLineFrame.size.height;
 		buttonFrame.origin.y = horizScrollerFrame.origin.y + incrementLineFrame.origin.y;
-		[_scalePopUpButton setFrame:buttonFrame];
+		[_scalePopUpButton setFrame: buttonFrame];
 	}
 }
 
 - (void) scalePopUpAction: (id)sender
 {
 #ifdef GNUSTEP
-	NSNumber *selectedFactorObject = [[_scalePopUpButton selectedItem] representedObject];
+	NSNumber  *selectedFactorObject = [[_scalePopUpButton selectedItem] representedObject];
 #else
-	NSNumber *selectedFactorObject = [[sender selectedCell] representedObject];
+	NSNumber  *selectedFactorObject = [[sender selectedCell] representedObject];
 #endif
-	
+
 	if (selectedFactorObject == nil) {
 		NSLog (@"Scale popup action: setting arbitrary zoom factors is not yet supported.");
 		return;
@@ -146,26 +151,27 @@ static float _NSScaleMenuFontSize = 10.0;
 - (void) setScaleFactor: (float)newScaleFactor
 {
 	if (scaleFactor != newScaleFactor) {
-		NSSize curDocFrameSize, newDocBoundsSize;
-		NSView *clipView = [[self documentView] superview];
-		
+		NSSize  curDocFrameSize, newDocBoundsSize;
+		NSView  *clipView = [[self documentView] superview];
+
 		scaleFactor = newScaleFactor;
-		
+
 		// Get the frame.  The frame must stay the same.
 		curDocFrameSize = [clipView frame].size;
-		
+
 		// The new bounds will be frame divided by scale factor
 		newDocBoundsSize.width = curDocFrameSize.width / newScaleFactor;
 		newDocBoundsSize.height = curDocFrameSize.height / newScaleFactor;
-		
-		[clipView setBoundsSize:newDocBoundsSize];
+
+		[clipView setBoundsSize: newDocBoundsSize];
 	}
 }
 
-- (void) setHasHorizontalScroller: (BOOL) flag
+- (void) setHasHorizontalScroller: (BOOL)flag
 {
-	if (!flag)
+	if (!flag) {
 		[self setScaleFactor: 1.0];
+	}
 
 	[super setHasHorizontalScroller: flag];
 }

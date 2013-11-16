@@ -1,19 +1,19 @@
 /*
-		Document.m
-		Copyright (c) 1995-1996, NeXT Software, Inc.
-		All rights reserved.
-		Author: Ali Ozer
+        Document.m
+        Copyright (c) 1995-1996, NeXT Software, Inc.
+        All rights reserved.
+        Author: Ali Ozer
 
-		You may freely copy, distribute and reuse the code in this example.
-		NeXT disclaims any warranty of any kind, expressed or implied,
-		as to its fitness for any particular use.
+        You may freely copy, distribute and reuse the code in this example.
+        NeXT disclaims any warranty of any kind, expressed or implied,
+        as to its fitness for any particular use.
 
-		Document object for Edit...
+        Document object for Edit...
 */
 
 #include <math.h>
 #include <float.h>
-#include <stdio.h>								// for NULL
+#include <stdio.h>	// for NULL
 
 #include <Foundation/NSArray.h>
 #include <Foundation/NSBundle.h>
@@ -42,8 +42,8 @@
 
 - (void) setupInitialTextViewSharedState
 {
-	NSTextView *textView = [self firstTextView];
-	
+	NSTextView  *textView = [self firstTextView];
+
 	[textView setUsesFontPanel: YES];
 	[textView setDelegate: self];
 	[self setRichText: [[Preferences objectForKey: RichText] boolValue]];
@@ -52,13 +52,13 @@
 
 - (id) init
 {
-	static NSPoint	cascadePoint = {0.0, 0.0};
-	NSLayoutManager	*layoutManager;
+	static NSPoint   cascadePoint = {0.0, 0.0};
+	NSLayoutManager  *layoutManager;
 
 	self = [super init];
 	textStorage = [[NSTextStorage alloc] init];
 
-	if (![NSBundle loadNibNamed: @"Document" owner: self])  {
+	if (![NSBundle loadNibNamed: @"Document" owner: self]) {
 		NSLog (@"Failed to load Document.nib");
 		[self release];
 		return nil;
@@ -75,15 +75,15 @@
 	[[self printInfo] setHorizontalPagination: NSFitPagination];
 	[[self printInfo] setHorizontallyCentered: NO];
 	[[self printInfo] setVerticallyCentered: NO];
-		
+
 	// This gives us our first view
 	[self setHasMultiplePages: [[Preferences objectForKey: ShowPageBreaks] boolValue]];
 
 	// This ensures the first view gets set up correctly
 	[self setupInitialTextViewSharedState];
 
-	if (NSEqualPoints (cascadePoint, NSZeroPoint)) {		/* First time through... */
-		NSRect frame = [[self window] frame];
+	if (NSEqualPoints (cascadePoint, NSZeroPoint)) {	// First time through...
+		NSRect  frame = [[self window] frame];
 		cascadePoint = NSMakePoint (frame.origin.x, NSMaxY (frame));
 	}
 	cascadePoint = [[self window] cascadeTopLeftFromPoint: cascadePoint];
@@ -93,43 +93,47 @@
 	if ([self hasMultiplePages]) {
 		[self setViewSize: [[scrollView documentView] pageRectForPageNumber: 0].size];
 	} else {
-		int		windowHeight = [[Preferences objectForKey: WindowHeight] intValue];
-		int 	windowWidth = [[Preferences objectForKey: WindowWidth] intValue];
-		NSFont	*font = [Preferences objectForKey: [self isRichText] ? RichTextFont : PlainTextFont];
-		NSSize	size;
+		int     windowHeight = [[Preferences objectForKey: WindowHeight] intValue];
+		int     windowWidth = [[Preferences objectForKey: WindowWidth] intValue];
+		NSFont  *font = [Preferences objectForKey: [self isRichText] ? RichTextFont: PlainTextFont];
+		NSSize  size;
 #ifdef GNUSTEP
-		NSFont	*screenFont = [font screenFont];
-		NSGlyph nGlyph;
+		NSFont   *screenFont = [font screenFont];
+		NSGlyph  nGlyph;
 
-		if (screenFont)
+		if (screenFont) {
 			font = screenFont;
+		}
 
-		if ([font respondsToSelector: @selector(glyphForCharacter:)])
+		if ([font respondsToSelector: @selector (glyphForCharacter:)]) {
 			nGlyph = (NSGlyph) [font glyphForCharacter: 'n'];
-		else
+		} else {
 			nGlyph = 'n';
+		}
 
-		if ([font glyphIsEncoded: nGlyph]) {	/* Better to use n-width than the maximum, for rich text fonts... */
+		/* Better to use n-width than the maximum, for rich text fonts... */
+		if ([font glyphIsEncoded: nGlyph]) {
 			size.width = [font advancementForGlyph: nGlyph].width;
 #else
-		if ([font glyphIsEncoded: 'n']) {	/* Better to use n-width than the maximum, for rich text fonts... */
-			size.width = [font advancementForGlyph: nGlyph].width;
+		/* Better to use n-width than the maximum, for rich text fonts... */
+		if ([font glyphIsEncoded: 'n']) {
+			size.width = [font advancementForGlyph: 'n'].width;
 #endif
 		} else {
 			size.width = [font maximumAdvancement].width;
 		}
 
-		size.width	= ceil (size.width * windowWidth + [[[self firstTextView] textContainer] lineFragmentPadding] * 2.0);
+		size.width = ceil (size.width * windowWidth + [[[self firstTextView] textContainer] lineFragmentPadding] * 2.0);
 		size.height = ceil ([font boundingRectForFont].size.height) * windowHeight;
 		[self setViewSize: size];
 	}
 
 NS_DURING
 	[[NSNotificationCenter defaultCenter]
-		addObserver: self
-		   selector: @selector (fixUpScrollViewBackgroundColor:)
-			   name: NSSystemColorsDidChangeNotification
-			 object: nil];
+	 addObserver: self
+	    selector: @selector (fixUpScrollViewBackgroundColor:)
+	        name: NSSystemColorsDidChangeNotification
+	      object: nil];
 NS_HANDLER
 	// Deal with the idiotic exception silently.
 	NSDebugLog (@"%@ caught registering observer, ignoring.", [localException name]);
@@ -162,7 +166,7 @@ NS_ENDHANDLER
 
 + (BOOL) openUntitled
 {
-	Document	*document = [[self alloc] initWithPath: nil encoding: UnknownStringEncoding];
+	Document  *document = [[self alloc] initWithPath: nil encoding: UnknownStringEncoding];
 
 	if (document) {
 		[document setPotentialSaveDirectory: [Document openSavePanelDirectory]];
@@ -176,7 +180,7 @@ NS_ENDHANDLER
 
 + (BOOL) openDocumentWithPath: (NSString *)filename encoding: (int)encoding
 {
-	Document	*document = [self documentForPath: filename];
+	Document  *document = [self documentForPath: filename];
 
 	if (!document) {
 		document = [[self alloc] initWithPath: filename encoding: encoding];
@@ -184,7 +188,7 @@ NS_ENDHANDLER
 
 	if (document) {
 		[document doForegroundLayoutToCharacterIndex: [[Preferences objectForKey: ForegroundLayoutToIndex] intValue]];
-		[[document window] makeKeyAndOrderFront:nil];
+		[[document window] makeKeyAndOrderFront: nil];
 		return YES;
 	} else {
 		return NO;
@@ -192,21 +196,21 @@ NS_ENDHANDLER
 }
 
 /*
-	Clear the delegates of the text views and window, then release all
-	resources and go away...
+    Clear the delegates of the text views and window, then release all
+    resources and go away...
 */
 - (void) dealloc
 {
-	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+	NSNotificationCenter  *center = [NSNotificationCenter defaultCenter];
 
 NS_DURING
 	[center removeObserver: self
-					  name: NSTextStorageDidProcessEditingNotification
-					object: [self textStorage]];
+	                  name: NSTextStorageDidProcessEditingNotification
+	                object: [self textStorage]];
 
 	[center removeObserver: self
-					  name: NSSystemColorsDidChangeNotification
-					object: nil];
+	                  name: NSSystemColorsDidChangeNotification
+	                object: nil];
 NS_HANDLER
 	// Deal with the idiotic exception silently.
 	NSDebugLog (@"%@ caught unregistering observers, ignoring.", [localException name]);
@@ -230,57 +234,58 @@ NS_ENDHANDLER
 	return [scrollView contentSize];
 }
 
-- (void)setViewSize: (NSSize)size
+- (void) setViewSize: (NSSize)size
 {
-	NSWindow	*window = [scrollView window];
-	NSRect		origWindowFrame = [window frame];
+	NSWindow  *window = [scrollView window];
+	NSRect    origWindowFrame = [window frame];
 
 	[window setContentSize:
-		[NSScrollView frameSizeForContentSize: size
-						hasHorizontalScroller: [scrollView hasHorizontalScroller]
-						  hasVerticalScroller: [scrollView hasVerticalScroller]
-						  		   borderType: [scrollView borderType]]];
+	 [NSScrollView frameSizeForContentSize: size
+	                 hasHorizontalScroller: [scrollView hasHorizontalScroller]
+	                   hasVerticalScroller: [scrollView hasVerticalScroller]
+	                            borderType: [scrollView borderType]]];
 
 	[window setFrameTopLeftPoint: NSMakePoint (origWindowFrame.origin.x, NSMaxY (origWindowFrame))];
 }
 
 /*
-	This method causes the text to be laid out in the foreground (approximately)
-	up to the indicated character index.
+    This method causes the text to be laid out in the foreground (approximately)
+    up to the indicated character index.
 */
 - (void) doForegroundLayoutToCharacterIndex: (unsigned)loc
 {
-	unsigned int	len;
+	unsigned int  len;
 
 	if (loc > 0 && (len = [[self textStorage] length]) > 0) {
-		NSRange glyphRange;
+		NSRange  glyphRange;
 
-		if (loc >= len)
+		if (loc >= len) {
 			loc = len - 1;
+		}
 
 		// Find out which glyph index the desired character index corresponds to
 		glyphRange = [[self layoutManager]
-						glyphRangeForCharacterRange: NSMakeRange (loc, 1)
-							   actualCharacterRange: NULL];
+		              glyphRangeForCharacterRange: NSMakeRange (loc, 1)
+		                     actualCharacterRange: NULL];
 
 		/*
-			Now cause layout by asking a question which has to determine
-			where the glyph is
+		    Now cause layout by asking a question which has to determine
+		    where the glyph is
 		*/
 		if (glyphRange.location > 0) {
 			[[self layoutManager]
-				textContainerForGlyphAtIndex: glyphRange.location - 1
-							  effectiveRange: NULL];
+			 textContainerForGlyphAtIndex: glyphRange.location - 1
+			               effectiveRange: NULL];
 		}
 	}
 }
 
 + (NSString *) cleanedUpPath: (NSString *)filename
 {
-	NSString	*resolvedSymlinks = [filename stringByResolvingSymlinksInPath];
+	NSString  *resolvedSymlinks = [filename stringByResolvingSymlinksInPath];
 
 	if ([resolvedSymlinks length] > 0) {
-		NSString	*standardized = [resolvedSymlinks stringByStandardizingPath];
+		NSString  *standardized = [resolvedSymlinks stringByStandardizingPath];
 
 		return [standardized length] ? standardized : resolvedSymlinks;
 	}
@@ -296,10 +301,11 @@ NS_ENDHANDLER
 		documentName = [[filename stringByResolvingSymlinksInPath] copy];
 		[[self window] setTitleWithRepresentedFilename: documentName];
 	} else {
-		NSString	*untitled = _(@"UNTITLED");
+		NSString  *untitled = _(@"UNTITLED");
 
-		if ([self isRichText])
+		if ([self isRichText]) {
 			untitled = [untitled stringByAppendingPathExtension: @"rtf"];
+		}
 
 		if (potentialSaveDirectory) {
 			[[self window] setTitleWithRepresentedFilename: [potentialSaveDirectory stringByAppendingPathComponent: untitled]];
@@ -317,8 +323,9 @@ NS_ENDHANDLER
 
 - (void) setPotentialSaveDirectory: (NSString *)nm
 {
-	if (![[Preferences objectForKey: OpenPanelFollowsMainWindow] boolValue])
+	if (![[Preferences objectForKey: OpenPanelFollowsMainWindow] boolValue]) {
 		return;
+	}
 
 	[potentialSaveDirectory autorelease];
 	potentialSaveDirectory = [nm copy];
@@ -326,8 +333,9 @@ NS_ENDHANDLER
 
 - (NSString *) potentialSaveDirectory
 {
-	if (![[Preferences objectForKey: OpenPanelFollowsMainWindow] boolValue])
+	if (![[Preferences objectForKey: OpenPanelFollowsMainWindow] boolValue]) {
 		return NSHomeDirectory ();
+	}
 
 	return potentialSaveDirectory;
 }
@@ -363,23 +371,24 @@ NS_ENDHANDLER
 - (void) setPrintInfo: (NSPrintInfo *)anObject
 {
 	if (printInfo == anObject
-			|| [[printInfo dictionary] isEqual: [anObject dictionary]])
+	    || [[printInfo dictionary] isEqual: [anObject dictionary]]) {
 		return;
+	}
 
 	[printInfo autorelease];
 	printInfo = [anObject copy];
 
 	if ([self hasMultiplePages]) {
-		unsigned int		cnt;
-		unsigned int		numberOfPages = [self numberOfPages];
-		MultiplePageView	*pagesView = [scrollView documentView];
-		NSArray				*textContainers = [[self layoutManager] textContainers];
+		unsigned int      cnt;
+		unsigned int      numberOfPages = [self numberOfPages];
+		MultiplePageView  *pagesView = [scrollView documentView];
+		NSArray           *textContainers = [[self layoutManager] textContainers];
 
 		[pagesView setPrintInfo: printInfo];
-		
+
 		for (cnt = 0; cnt < numberOfPages; cnt++) {
-			NSRect			textFrame = [pagesView documentRectForPageNumber: cnt];
-			NSTextContainer	*textContainer = [textContainers objectAtIndex: cnt];
+			NSRect           textFrame = [pagesView documentRectForPageNumber: cnt];
+			NSTextContainer  *textContainer = [textContainers objectAtIndex: cnt];
 
 			[textContainer setContainerSize: textFrame.size];
 			[[textContainer textView] setFrame: textFrame];
@@ -410,16 +419,16 @@ NS_ENDHANDLER
 
 - (void) addPage
 {
-	unsigned int		numberOfPages = [self numberOfPages];
-	MultiplePageView	*pagesView = [scrollView documentView];
-	NSSize 				textSize = [pagesView documentSizeInPage];
-	NSTextContainer		*textContainer = [[NSTextContainer alloc] initWithContainerSize: textSize];
-	NSTextView			*textView;
+	unsigned int      numberOfPages = [self numberOfPages];
+	MultiplePageView  *pagesView = [scrollView documentView];
+	NSSize            textSize = [pagesView documentSizeInPage];
+	NSTextContainer   *textContainer = [[NSTextContainer alloc] initWithContainerSize: textSize];
+	NSTextView        *textView;
 
 	[pagesView setNumberOfPages: numberOfPages + 1];
 	textView = [[NSTextView alloc]
-				initWithFrame: [pagesView documentRectForPageNumber: numberOfPages]
-				textContainer: textContainer];
+	            initWithFrame: [pagesView documentRectForPageNumber: numberOfPages]
+	            textContainer: textContainer];
 
 	[textView setHorizontallyResizable: NO];
 	[textView setVerticallyResizable: NO];
@@ -431,10 +440,10 @@ NS_ENDHANDLER
 
 - (void) removePage
 {
-	unsigned int		numberOfPages = [self numberOfPages];
-	NSArray				*textContainers = [[self layoutManager] textContainers];
-	NSTextContainer		*lastContainer = [textContainers objectAtIndex: [textContainers count] - 1];
-	MultiplePageView	*pagesView = [scrollView documentView];
+	unsigned int      numberOfPages = [self numberOfPages];
+	NSArray           *textContainers = [[self layoutManager] textContainers];
+	NSTextContainer   *lastContainer = [textContainers objectAtIndex: [textContainers count] - 1];
+	MultiplePageView  *pagesView = [scrollView documentView];
 
 	[pagesView setNumberOfPages: numberOfPages - 1];
 	[[lastContainer textView] removeFromSuperview];
@@ -442,22 +451,23 @@ NS_ENDHANDLER
 }
 
 /*
-	This method determines whether the document has multiple pages or not.
-	It can be called at any time.
-*/	 
+    This method determines whether the document has multiple pages or not.
+    It can be called at any time.
+*/
 - (void) setHasMultiplePages: (BOOL)flag
 {
 	hasMultiplePages = flag;
 
 	if (hasMultiplePages) {
-		NSTextView *textView = [self firstTextView];
-		MultiplePageView *pagesView = [[MultiplePageView alloc] init];
+		NSTextView        *textView = [self firstTextView];
+		MultiplePageView  *pagesView = [[MultiplePageView alloc] init];
 
 		[scrollView setDocumentView: pagesView];
 
 		[pagesView setPrintInfo: [self printInfo]];
 
-		// MF: Add the first new page before we remove the old container so we can avoid losing all the shared text view state.
+		// MF: Add the first new page before we remove the old container so we
+		// can avoid losing all the shared text view state.
 		[self addPage];
 
 		if (textView) {
@@ -465,18 +475,19 @@ NS_ENDHANDLER
 		}
 
 		[scrollView setHasHorizontalScroller: YES];
-
 	} else {
-		NSSize			size = [scrollView contentSize];
-		NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize: NSMakeSize (size.width, FLT_MAX)];
-		NSTextView		*textView = [[NSTextView alloc] initWithFrame: NSMakeRect (0.0, 0.0, size.width, size.height) textContainer: textContainer];
+		NSSize           size = [scrollView contentSize];
+		NSTextContainer  *textContainer = [[NSTextContainer alloc] initWithContainerSize: NSMakeSize (size.width, FLT_MAX)];
+		NSTextView       *textView = [[NSTextView alloc] initWithFrame: NSMakeRect (0.0, 0.0, size.width, size.height) textContainer: textContainer];
 
-		// Insert the single container as the first container in the layout manager before removing the existing pages in order to preserve the shared view state.
+		// Insert the single container as the first container in the layout
+		// manager before removing the existing pages in order to preserve the
+		// shared view state.
 		[[self layoutManager] insertTextContainer: textContainer atIndex: 0];
 
 		if ([[scrollView documentView] isKindOfClass: [MultiplePageView class]]) {
-			NSArray			*textContainers = [[self layoutManager] textContainers];
-			unsigned int	cnt = [textContainers count];
+			NSArray       *textContainers = [[self layoutManager] textContainers];
+			unsigned int  cnt = [textContainers count];
 
 			while (cnt-- > 1) {
 				[[self layoutManager] removeTextContainerAtIndex: cnt];
@@ -489,19 +500,20 @@ NS_ENDHANDLER
 		[textView setVerticallyResizable: YES];
 		[textView setAutoresizingMask: NSViewWidthSizable];
 #ifndef GNUSTEP
-		[textView setMinSize: size]; // Will be adjusted by the autoresizing...
+		[textView setMinSize: size];// Will be adjusted by the autoresizing...
 #else
-		[textView setMinSize: NSMakeSize (0, 0)]; // is necessary on GNUstep
+		[textView setMinSize: NSMakeSize (0, 0)];	// is necessary on GNUstep
 #endif
-		[textView setMaxSize: NSMakeSize(FLT_MAX, FLT_MAX)]; // Will be adjusted
+		// Will be adjusted
+		[textView setMaxSize: NSMakeSize (FLT_MAX, FLT_MAX)];
 
 		/*
-			The next line should cause the multiple page view and everything
-			else to go away
+		    The next line should cause the multiple page view and everything
+		    else to go away
 		*/
 		[scrollView setDocumentView: textView];
 		[scrollView setHasHorizontalScroller: NO];
-		
+
 		[textView release];
 		[textContainer release];
 	}
@@ -518,9 +530,9 @@ NS_ENDHANDLER
 	[scrollView setHasHorizontalScroller: NO];
 	[[scrollView contentView] setAutoresizesSubviews: YES];
 }
-		
-static NSPopUpButton *encodingPopupButton = nil;
-static NSView *encodingAccessory = nil;
+
+static NSPopUpButton  *encodingPopupButton = nil;
+static NSView         *encodingAccessory = nil;
 
 + (void) loadEncodingPopupButton: (NSPopUpButton *)anObject
 {
@@ -534,15 +546,15 @@ static NSView *encodingAccessory = nil;
 }
 
 /* Outlet method... */
-+ (void)setEncodingAccessory: (id)anObject
++ (void) setEncodingAccessory: (id)anObject
 {
 	encodingAccessory = [anObject retain];
 }
 
 /*
-	Use this method to get the accessory. It reinitailizes the popup, selects
-	the specified item, and also includes or deletes the first entry
-	(corresponding to "Default")
+    Use this method to get the accessory. It reinitailizes the popup, selects
+    the specified item, and also includes or deletes the first entry
+    (corresponding to "Default")
 */
 + (NSView *) encodingAccessory: (int)encoding includeDefaultEntry: (BOOL)includeDefaultItem
 {
@@ -558,27 +570,27 @@ static NSView *encodingAccessory = nil;
 
 - (void) removeAttachments
 {
-	NSTextStorage	*attrString = [self textStorage];
-	unsigned int	loc = 0;
-	unsigned int	end = [attrString length];
+	NSTextStorage  *attrString = [self textStorage];
+	unsigned int   loc = 0;
+	unsigned int   end = [attrString length];
 
 	[attrString beginEditing];
 
-	while (loc < end) { /* Run through the string in terms of attachment runs */
-		NSRange				attachmentRange; /* Attachment attribute run */
-		NSTextAttachment	*attachment;
+	while (loc < end) {	/* Run through the string in terms of attachment runs */
+		NSRange           attachmentRange;	// Attachment attribute run
+		NSTextAttachment  *attachment;
 
-		attachment = [attrString attribute: NSAttachmentAttributeName
-								   atIndex: loc
-					 longestEffectiveRange: &attachmentRange
-								   inRange: NSMakeRange (loc, end - loc)];
+		attachment = [attrString  attribute: NSAttachmentAttributeName
+		                            atIndex: loc
+		              longestEffectiveRange: &attachmentRange
+		                            inRange: NSMakeRange (loc, end - loc)];
 
 		if (attachment) {	// If attachment, make sure it's valid
-			unichar	ch = [[attrString string] characterAtIndex: loc];
+			unichar  ch = [[attrString string] characterAtIndex: loc];
 
 			if (ch == NSAttachmentCharacter) {
 				[attrString replaceCharactersInRange: NSMakeRange (loc, 1) withString: @""];
-				end = [attrString length];		/* New length */
+				end = [attrString length];	/* New length */
 			} else {
 				loc++;	/* Just skip over the current character... */
 			}
@@ -590,68 +602,73 @@ static NSView *encodingAccessory = nil;
 }
 
 /*
-	The hyphenation methods are added to NSLayoutManager in OPENSTEP 4.2. Given
-	that we'd like the app to keep on running against earlier versions of
-	OPENSTEP, we make all hyphenation-related calls check to see if they are
-	implemented.
+    The hyphenation methods are added to NSLayoutManager in OPENSTEP 4.2. Given
+    that we'd like the app to keep on running against earlier versions of
+    OPENSTEP, we make all hyphenation-related calls check to see if they are
+    implemented.
 */
-static BOOL hyphenationSupported (void) {
-	return [NSLayoutManager instancesRespondToSelector: @selector(setHyphenationFactor:)];
+static BOOL
+hyphenationSupported (void)
+{
+	return [NSLayoutManager instancesRespondToSelector: @selector (setHyphenationFactor:)];
 }
 
-- (void) setHyphenationFactor: (float)factor {
-	if (hyphenationSupported ())
+- (void) setHyphenationFactor: (float)factor
+{
+	if (hyphenationSupported ()) {
 		[[self layoutManager] setHyphenationFactor: factor];
+	}
 }
 
-- (float) hyphenationFactor {
-	return hyphenationSupported() ? [[self layoutManager] hyphenationFactor] : 0.0;
+- (float) hyphenationFactor
+{
+	return hyphenationSupported () ?[[self layoutManager] hyphenationFactor] : 0.0;
 }
 
 /*
-	??? Doesn't check to see if the prev value is the same! (Otherwise the
-	first time doesn't work...)
+    ??? Doesn't check to see if the prev value is the same! (Otherwise the
+    first time doesn't work...)
 */
 
 - (void) setRichText: (BOOL)flag
 {
-	NSTextView			*view = [self firstTextView];
-	NSMutableDictionary	*textAttributes = [[NSMutableDictionary alloc] initWithCapacity:2];
+	NSTextView           *view = [self firstTextView];
+	NSMutableDictionary  *textAttributes = [[NSMutableDictionary alloc] initWithCapacity: 2];
 
 	isRichText = flag;
 
 	if (isRichText) {
 		[textAttributes setObject: [Preferences objectForKey: RichTextFont]
-						   forKey: NSFontAttributeName];
+		                   forKey: NSFontAttributeName];
 
 		[textAttributes setObject: [NSParagraphStyle defaultParagraphStyle]
-						   forKey: NSParagraphStyleAttributeName];
+		                   forKey: NSParagraphStyleAttributeName];
 
 		/*
-			Make sure we aren't watching the DidProcessEditing notification
-			since we don't adjust tab stops in rich text.
+		    Make sure we aren't watching the DidProcessEditing notification
+		    since we don't adjust tab stops in rich text.
 		*/
 		[[NSNotificationCenter defaultCenter]
-			removeObserver: self
-					  name: NSTextStorageDidProcessEditingNotification
-					object: [self textStorage]];
+		 removeObserver: self
+		           name: NSTextStorageDidProcessEditingNotification
+		         object: [self textStorage]];
 	} else {
-		[textAttributes setObject: [Preferences objectForKey:PlainTextFont]
-						   forKey: NSFontAttributeName];
+		[textAttributes setObject: [Preferences objectForKey: PlainTextFont]
+		                   forKey: NSFontAttributeName];
 		[textAttributes setObject: [NSParagraphStyle defaultParagraphStyle]
-						   forKey: NSParagraphStyleAttributeName];
+		                   forKey: NSParagraphStyleAttributeName];
 		[self removeAttachments];
-		
+
 		/*
-			Register for DidProcessEditing to fix the tabstops.
+		    Register for DidProcessEditing to fix the tabstops.
 		*/
 		[[NSNotificationCenter defaultCenter]
-			addObserver: self
-			   selector: @selector(textStorageDidProcessEditing:)
-				   name: NSTextStorageDidProcessEditingNotification
-				 object: [self textStorage]];
+		 addObserver: self
+		    selector: @selector (textStorageDidProcessEditing:)
+		        name: NSTextStorageDidProcessEditingNotification
+		      object: [self textStorage]];
 	}
-	
+
 	[view setRichText: isRichText];
 	[view setUsesRuler: isRichText];	// If NO, get rid of the ruler
 	[view setImportsGraphics: isRichText];
@@ -673,10 +690,10 @@ static BOOL hyphenationSupported (void) {
 
 - (void) printDocumentUsingPrintPanel: (BOOL)uiFlag
 {
-	NSPrintOperation *op;
+	NSPrintOperation  *op;
 
 	op = [NSPrintOperation printOperationWithView: [scrollView documentView]
-										printInfo: printInfo];
+	                                    printInfo: printInfo];
 	[op setShowPanels: uiFlag];
 	[op runOperation];
 }
@@ -686,15 +703,16 @@ static BOOL hyphenationSupported (void) {
 	[self printDocumentUsingPrintPanel: YES];
 }
 
-- (void)toggleRich: (id)sender
+- (void) toggleRich: (id)sender
 {
 	if (isRichText && ([textStorage length] > 0)) {
-		int choice = NSRunAlertPanel (_(@"Make Plain Text"), 
-						_(@"Convert document to plain text? This will lose fonts, colors, and other text attribute settings."), 
-						_(@"OK"), _(@"Cancel"), nil);
+		int  choice = NSRunAlertPanel (_(@"Make Plain Text"),
+		                               _(@"Convert document to plain text? This will lose fonts, colors, and other text attribute settings."),
+		                               _(@"OK"), _(@"Cancel"), nil);
 
-		if (choice != NSAlertDefaultReturn)
+		if (choice != NSAlertDefaultReturn) {
 			return;
+		}
 	}
 
 	[self setRichText: !isRichText];
@@ -719,9 +737,9 @@ static BOOL hyphenationSupported (void) {
 
 - (void) runPageLayout: (id)sender
 {
-	NSPrintInfo		*tempPrintInfo = [[self printInfo] copy];
-	NSPageLayout	*pageLayout = [NSPageLayout pageLayout];
-	int				runResult;
+	NSPrintInfo   *tempPrintInfo = [[self printInfo] copy];
+	NSPageLayout  *pageLayout = [NSPageLayout pageLayout];
+	int           runResult;
 
 	runResult = [pageLayout runModalWithPrintInfo: tempPrintInfo];
 	if (runResult == NSOKButton) {
@@ -734,21 +752,21 @@ static BOOL hyphenationSupported (void) {
 - (void) revert: (id)sender
 {
 	if (documentName) {
-		NSString *fileName = [documentName lastPathComponent];
-		int choice = NSRunAlertPanel(_(@"Revert"), 
-								_(@"Revert to saved version of %@?"), 
-								_(@"OK"),
-								_(@"Cancel"),
-								nil,
-								fileName);
+		NSString  *fileName = [documentName lastPathComponent];
+		int       choice = NSRunAlertPanel (_(@"Revert"),
+		                                    _(@"Revert to saved version of %@?"),
+		                                    _(@"OK"),
+		                                    _(@"Cancel"),
+		                                    nil,
+		                                    fileName);
 		if (choice == NSAlertDefaultReturn) {
 			if (![self loadFromPath: documentName encoding: encodingIfPlainText]) {
-				NSRunAlertPanel(_(@"Couldn't Revert"), 
-								_(@"Couldn't revert to saved version of %@."), 
-								_(@"OK"),
-								nil,
-								nil,
-								documentName);
+				NSRunAlertPanel (_(@"Couldn't Revert"),
+				                 _(@"Couldn't revert to saved version of %@."),
+				                 _(@"OK"),
+				                 nil,
+				                 nil,
+				                 documentName);
 			} else {
 				[self setDocumentEdited: NO];
 			}
@@ -779,33 +797,34 @@ static BOOL hyphenationSupported (void) {
 
 + (void) openWithEncodingAccessory: (BOOL)flag
 {
-	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	NSOpenPanel  *panel = [NSOpenPanel openPanel];
 
 	if (flag) {
 		[panel setAccessoryView:
-			[self encodingAccessory: [[Preferences objectForKey: PlainTextEncoding] intValue]
-				includeDefaultEntry: YES]];
+		 [self encodingAccessory: [[Preferences objectForKey: PlainTextEncoding] intValue]
+		     includeDefaultEntry: YES]];
 	}
 
 	[panel setAllowsMultipleSelection: YES];
 	[panel setDirectory: [Document openSavePanelDirectory]];
 
 	if ([panel runModal]) {
-		NSArray *filenames = [panel filenames];
-		unsigned cnt, numFiles = [filenames count];
+		NSArray   *filenames = [panel filenames];
+		unsigned  cnt, numFiles = [filenames count];
 
 		for (cnt = 0; cnt < numFiles; cnt++) {
-			NSString *filename = [filenames objectAtIndex: cnt];
-			if (![Document openDocumentWithPath: filename encoding: flag ? [[encodingPopupButton selectedItem] tag] : UnknownStringEncoding]) {
-				NSString *alternate = (cnt + 1 == numFiles) ? nil : _(@"Abort");
-				unsigned choice = NSRunAlertPanel(_(@"File system error"), 
-								_(@"Couldn't open file %@."), 
-								_(@"OK"),
-								alternate,
-								nil,
-								filename);
-				if (choice == NSCancelButton)
+			NSString  *filename = [filenames objectAtIndex: cnt];
+			if (![Document openDocumentWithPath: filename encoding: flag ?[[encodingPopupButton selectedItem] tag] : UnknownStringEncoding]) {
+				NSString  *alternate = (cnt + 1 == numFiles) ? nil : _(@"Abort");
+				unsigned  choice = NSRunAlertPanel (_(@"File system error"),
+				                                    _(@"Couldn't open file %@."),
+				                                    _(@"OK"),
+				                                    alternate,
+				                                    nil,
+				                                    filename);
+				if (choice == NSCancelButton) {
 					break;
+				}
 			}
 		}
 	}
@@ -833,11 +852,12 @@ static BOOL hyphenationSupported (void) {
 	[[TextFinder sharedInstance] findPrevious: sender];
 }
 
-- (void)enterSelection: (id)sender
+- (void) enterSelection: (id)sender
 {
-	NSRange range = [[self firstTextView] selectedRange];
+	NSRange  range = [[self firstTextView] selectedRange];
+
 	if (range.length) {
-		[[TextFinder sharedInstance] setFindString:[[textStorage string] substringWithRange:range]];
+		[[TextFinder sharedInstance] setFindString: [[textStorage string] substringWithRange: range]];
 	} else {
 		NSBeep ();
 	}
@@ -845,78 +865,78 @@ static BOOL hyphenationSupported (void) {
 
 - (void) jumpToSelection: (id)sender
 {
-	NSTextView *textView = [self firstTextView];
+	NSTextView  *textView = [self firstTextView];
+
 	[textView scrollRangeToVisible: [textView selectedRange]];
 }
 
-
-
 /*
-	Returns YES if the document can be closed. If the document is edited, gives
-	the user a chance to save. Returns NO if the user cancels.
+    Returns YES if the document can be closed. If the document is edited, gives
+    the user a chance to save. Returns NO if the user cancels.
 */
 - (BOOL) canCloseDocument
 {
 	if (isDocumentEdited) {
-		int result = NSRunAlertPanel (
-						_(@"Close"),
-						_(@"Document has been edited. Save?"),
-						_(@"Save"),
-						_(@"Don't Save"),
-						_(@"Cancel"));
+		int  result = NSRunAlertPanel (
+		    _(@"Close"),
+		    _(@"Document has been edited. Save?"),
+		    _(@"Save"),
+		    _(@"Don't Save"),
+		    _(@"Cancel"));
 		if (result == NSAlertDefaultReturn) {	/* Save */
-			if (![self saveDocument: NO])
+			if (![self saveDocument: NO]) {
 				return NO;
+			}
 		} else if (result == NSAlertOtherReturn) {		/* Cancel */
-			return NO;
-		}	/* Don't save case, falls through to the YES return */
+			return NO;	/* Don't save case, falls through to the YES return */
+		}
 	}
 	return YES;
 }
 
 /*
-	Saves the document. Puts up save panel if necessary or if showSavePanel
-	is YES. Returns NO if the user cancels the save...
+    Saves the document. Puts up save panel if necessary or if showSavePanel
+    is YES. Returns NO if the user cancels the save...
 */
 - (BOOL) saveDocument: (BOOL)showSavePanel
 {
-	NSString	*nameForSaving = [self documentName];
-	int			encodingForSaving;
-	BOOL		haveToChangeType = NO;
-	BOOL		showEncodingAccessory = NO;
-		
+	NSString  *nameForSaving = [self documentName];
+	int       encodingForSaving;
+	BOOL      haveToChangeType = NO;
+	BOOL      showEncodingAccessory = NO;
+
 	if ([self isRichText]) {
 		if (nameForSaving
-				&& [[nameForSaving pathExtension] isEqualToString: @"rtfd"]) {
+		    && [[nameForSaving pathExtension] isEqualToString: @"rtfd"]) {
 			encodingForSaving = RichTextWithGraphicsStringEncoding;
 		} else {
 			encodingForSaving = [textStorage containsAttachments] ? RichTextWithGraphicsStringEncoding : RichTextStringEncoding;
 			if ((encodingForSaving == RichTextWithGraphicsStringEncoding)
-					&& nameForSaving
-					&& [[nameForSaving pathExtension] isEqualToString: @"rtf"]) {
-				nameForSaving = nil;	/* Force the user to provide a new name... */
+			    && nameForSaving
+			    && [[nameForSaving pathExtension] isEqualToString: @"rtf"]) {
+				nameForSaving = nil;	// Force the user to provide a new name
 			}
 		}
 	} else {
-		NSString	*string = [textStorage string];
+		NSString  *string = [textStorage string];
 
 		showEncodingAccessory = YES;
 		encodingForSaving = encodingIfPlainText;
 		if ((encodingForSaving != UnknownStringEncoding)
-				&& ![string canBeConvertedToEncoding: encodingForSaving]) {
+		    && ![string canBeConvertedToEncoding: encodingForSaving]) {
 			haveToChangeType = YES;
 			encodingForSaving = UnknownStringEncoding;
 		}
 		if (encodingForSaving == UnknownStringEncoding) {
-			NSStringEncoding defaultEncoding = [[Preferences objectForKey: PlainTextEncoding] intValue];
+			NSStringEncoding  defaultEncoding = [[Preferences objectForKey: PlainTextEncoding] intValue];
 
 			if ([string canBeConvertedToEncoding: defaultEncoding]) {
 				encodingForSaving = defaultEncoding;
 			} else {
-				const int	*plainTextEncoding = SupportedEncodings();
+				const int  *plainTextEncoding = SupportedEncodings ();
 
 				while (*plainTextEncoding != -1) {
-					if ((*plainTextEncoding >= 0) && (*plainTextEncoding != defaultEncoding) && (*plainTextEncoding != NSUnicodeStringEncoding) && (*plainTextEncoding != NSUTF8StringEncoding) && [string canBeConvertedToEncoding:*plainTextEncoding]) {
+					if ((*plainTextEncoding >= 0) && (*plainTextEncoding != defaultEncoding) && (*plainTextEncoding != NSUnicodeStringEncoding) && (*plainTextEncoding != NSUTF8StringEncoding) && [string canBeConvertedToEncoding: *plainTextEncoding]) {
 						encodingForSaving = *plainTextEncoding;
 						break;
 					}
@@ -924,17 +944,18 @@ static BOOL hyphenationSupported (void) {
 				}
 			}
 
-			if (encodingForSaving == UnknownStringEncoding)
+			if (encodingForSaving == UnknownStringEncoding) {
 				encodingForSaving = NSUTF8StringEncoding;
+			}
 
 			if (haveToChangeType) {
-				NSRunAlertPanel(_( @"Save Plain Text"), 
-								_(@"Document can no longer be saved using its original %@ encoding. Please choose another encoding (%@ is one possibility)."), 
-								_(@"OK"),
-								nil,
-								nil,
-								[NSString localizedNameOfStringEncoding: encodingIfPlainText],
-								[NSString localizedNameOfStringEncoding: encodingForSaving]);
+				NSRunAlertPanel (_(@"Save Plain Text"),
+				                 _(@"Document can no longer be saved using its original %@ encoding. Please choose another encoding (%@ is one possibility)."),
+				                 _(@"OK"),
+				                 nil,
+				                 nil,
+				                 [NSString localizedNameOfStringEncoding: encodingIfPlainText],
+				                 [NSString localizedNameOfStringEncoding: encodingForSaving]);
 			}
 		}
 	}
@@ -942,36 +963,36 @@ static BOOL hyphenationSupported (void) {
 	while (1) {
 		if (!nameForSaving || haveToChangeType || showSavePanel) {
 			if (![self getDocumentName: &nameForSaving
-							  encoding: (haveToChangeType || showEncodingAccessory) ? &encodingForSaving : NULL
-							   oldName: nameForSaving
-						   oldEncoding: encodingForSaving])
-				return NO; /* Cancelled */
+			                  encoding: (haveToChangeType || showEncodingAccessory) ? &encodingForSaving: NULL
+			                   oldName: nameForSaving
+			               oldEncoding: encodingForSaving]) {
+				return NO;	/* Cancelled */
+			}
 		}
 
 		/*
-			The value of updateFileNames: below will have to become conditional
-			on whether we're doing Save To at some point.  Also, we'll want to
-			avoid doing the stuff inside the if if we're doing Save To.
+		    The value of updateFileNames: below will have to become conditional
+		    on whether we're doing Save To at some point.  Also, we'll want to
+		    avoid doing the stuff inside the if if we're doing Save To.
 		*/
-		if ([self saveToPath: nameForSaving	encoding: encodingForSaving
-									 updateFilenames: YES]) {
-
-			if (![self isRichText])
+		if ([self saveToPath: nameForSaving encoding: encodingForSaving
+		     updateFilenames: YES]) {
+			if (![self isRichText]) {
 				encodingIfPlainText = encodingForSaving;
+			}
 
 			[self setDocumentName: nameForSaving];
 			[self setDocumentEdited: NO];
 
 			[Document setLastOpenSavePanelDirectory: [nameForSaving stringByDeletingLastPathComponent]];
 			return YES;
-
 		} else {
-			NSRunAlertPanel(@"Couldn't Save",
-					_(@"Couldn't save document as %@."),
-					_(@"OK"),
-					nil,
-					nil,
-					nameForSaving);
+			NSRunAlertPanel (@"Couldn't Save",
+			                 _(@"Couldn't save document as %@."),
+			                 _(@"OK"),
+			                 nil,
+			                 nil,
+			                 nameForSaving);
 			nameForSaving = nil;
 		}
 	}
@@ -979,44 +1000,44 @@ static BOOL hyphenationSupported (void) {
 }
 
 /*
-	Puts up a save panel to get a final name from the user. If the user cancels,
-	returns NO. If encoding is non-NULL, puts up the encoding accessory.
+    Puts up a save panel to get a final name from the user. If the user cancels,
+    returns NO. If encoding is non-NULL, puts up the encoding accessory.
 */
 - (BOOL) getDocumentName: (NSString **)newName
-				encoding: (int *)encodingForSaving
-				 oldName: (NSString *)oldName
-			 oldEncoding: (int)encoding
+   encoding: (int *)encodingForSaving
+   oldName: (NSString *)oldName
+   oldEncoding: (int)encoding
 {
-	NSSavePanel	*panel = [NSSavePanel savePanel];
+	NSSavePanel  *panel = [NSSavePanel savePanel];
 
 	switch (encoding) {
-		case RichTextStringEncoding:
+		case RichTextStringEncoding :
 			[panel setRequiredFileType: @"rtf"];
 			[panel setTitle: _(@"Save RTF")];
 			encodingForSaving = NULL;
 			break;
 
-		case RichTextWithGraphicsStringEncoding:
+		case RichTextWithGraphicsStringEncoding :
 			[panel setRequiredFileType: @"rtfd"];
 			[panel setTitle: _(@"Save RTFD")];
 			encodingForSaving = NULL;
 			break;
 
-		default:
+		default :
 			[panel setTitle: _(@"Save Plain Text")];
 
 			if (encodingForSaving) {
-				unsigned int	cnt;
+				unsigned int  cnt;
 
 				[panel setAccessoryView: [[self class]
-					  encodingAccessory: *encodingForSaving
-					includeDefaultEntry: NO]];
+				                            encodingAccessory: *encodingForSaving
+				                          includeDefaultEntry: NO]];
 
 				for (cnt = 0; cnt < [encodingPopupButton numberOfItems]; cnt++) {
-					int encoding = [[encodingPopupButton itemAtIndex: cnt] tag];
+					int  encoding = [[encodingPopupButton itemAtIndex: cnt] tag];
 					if ((encoding != UnknownStringEncoding)
-							&& ![[textStorage string]
-									canBeConvertedToEncoding: encoding]) {
+					    && ![[textStorage string]
+					         canBeConvertedToEncoding: encoding]) {
 						[[encodingPopupButton itemAtIndex: cnt] setEnabled: NO];
 					}
 				}
@@ -1028,17 +1049,18 @@ static BOOL hyphenationSupported (void) {
 		[Document setLastOpenSavePanelDirectory: potentialSaveDirectory];
 	}
 
-	if (oldName ? [panel runModalForDirectory: [oldName stringByDeletingLastPathComponent]
-										 file: [oldName lastPathComponent]]
-				: [panel runModalForDirectory: [Document openSavePanelDirectory]
-										 file: @""]) {
+	if (oldName ?[panel runModalForDirectory: [oldName stringByDeletingLastPathComponent]
+	                                    file: [oldName lastPathComponent]]
+		: [panel runModalForDirectory: [Document openSavePanelDirectory]
+	                             file: @""]) {
 		*newName = [panel filename];
 
 		if (potentialSaveDirectory) {
-			[self setPotentialSaveDirectory:nil];
+			[self setPotentialSaveDirectory: nil];
 		}
-		if (encodingForSaving)
+		if (encodingForSaving) {
 			*encodingForSaving = [[encodingPopupButton selectedItem] tag];
+		}
 
 		return YES;
 	} else {
@@ -1055,7 +1077,8 @@ static BOOL hyphenationSupported (void) {
 
 - (void) windowWillClose: (NSNotification *)notification
 {
-	NSWindow	*window = [self window];
+	NSWindow  *window = [self window];
+
 	[window setDelegate: nil];
 	[self release];
 }
@@ -1070,14 +1093,14 @@ static BOOL hyphenationSupported (void) {
 }
 
 - (void) textView: (NSTextView *)view
-	doubleClickedOnCell: (id <NSTextAttachmentCell>)cell
-		   inRect: (NSRect)rect
+   doubleClickedOnCell: (id <NSTextAttachmentCell>)cell
+   inRect: (NSRect)rect
 {
-	NSString	*name = [[[cell attachment] fileWrapper] filename];
-	BOOL		success = NO;
+	NSString  *name = [[[cell attachment] fileWrapper] filename];
+	BOOL      success = NO;
 
-	if (name && documentName && ![name isEqualToString: @""] && ![documentName isEqualToString:@""]) {
-		NSString	*fullPath = [documentName stringByAppendingPathComponent:name];
+	if (name && documentName && ![name isEqualToString: @""] && ![documentName isEqualToString: @""]) {
+		NSString  *fullPath = [documentName stringByAppendingPathComponent: name];
 
 		success = [[NSWorkspace sharedWorkspace] openFile: fullPath];
 	}
@@ -1087,46 +1110,49 @@ static BOOL hyphenationSupported (void) {
 	}
 }
 
-- (void)textView: (NSTextView *)view
-	 draggedCell: (id <NSTextAttachmentCell>)cell
-		  inRect: (NSRect)rect
-		   event: (NSEvent *)event
+- (void) textView: (NSTextView *)view
+   draggedCell: (id <NSTextAttachmentCell>)cell
+   inRect: (NSRect)rect
+   event: (NSEvent *)event
 {
-	NSString	*name = [[[cell attachment] fileWrapper] filename];
-	BOOL		success = NO;
+	NSString  *name = [[[cell attachment] fileWrapper] filename];
+	BOOL      success = NO;
 
-	if (name && documentName && ![name isEqualToString:@""] && ![documentName isEqualToString:@""]) {
-		NSString *fullPath = [documentName stringByAppendingPathComponent:name];
-		NSImage *image = nil;
+	if (name && documentName && ![name isEqualToString: @""] && ![documentName isEqualToString: @""]) {
+		NSString  *fullPath = [documentName stringByAppendingPathComponent: name];
+		NSImage   *image = nil;
 
-		if ([cell isKindOfClass:[NSCell class]])
-			image = [(NSCell *)cell image];		/* Cheezy; should really draw the cell into an image... */
-		if (!image)
-			image = [[NSWorkspace sharedWorkspace] iconForFile:fullPath];
+		if ([cell isKindOfClass: [NSCell class]]) {
+			/* Cheezy; should really draw the cell into an image... */
+			image = [(NSCell *) cell image];
+		}
+		if (!image) {
+			image = [[NSWorkspace sharedWorkspace] iconForFile: fullPath];
+		}
 
 		if (image) {
-			NSSize			cellSizeInBaseCoords = [view convertSize: rect.size toView: nil];
-			NSSize			imageSize = [image size];
-			NSPasteboard	*pasteboard = [NSPasteboard pasteboardWithName:NSDragPboard];
+			NSSize        cellSizeInBaseCoords = [view convertSize: rect.size toView: nil];
+			NSSize        imageSize = [image size];
+			NSPasteboard  *pasteboard = [NSPasteboard pasteboardWithName: NSDragPboard];
 
 			[pasteboard declareTypes: [NSArray arrayWithObject: NSFilenamesPboardType] owner: nil];
 			[pasteboard setPropertyList: [NSArray arrayWithObject: fullPath]
-								forType: NSFilenamesPboardType];
+			                    forType: NSFilenamesPboardType];
 
 			if (!NSEqualSizes (cellSizeInBaseCoords, imageSize)) {
-				NSPoint	mouseDownLocation = [view convertPoint: [event locationInWindow] fromView: nil];
-				rect.origin.x = mouseDownLocation.x - (imageSize.width - floor (imageSize.width/4.0));
-				rect.origin.y = mouseDownLocation.y - (imageSize.height - floor (imageSize.height/4.0));
+				NSPoint  mouseDownLocation = [view convertPoint: [event locationInWindow] fromView: nil];
+				rect.origin.x = mouseDownLocation.x - (imageSize.width - floor (imageSize.width / 4.0));
+				rect.origin.y = mouseDownLocation.y - (imageSize.height - floor (imageSize.height / 4.0));
 			} else {
 				/*
-					We need to pass the image origin which means we need to
-					unflip the rect we're getting.
+				    We need to pass the image origin which means we need to
+				    unflip the rect we're getting.
 				*/
 				rect.origin.y += rect.size.height;
 			}
 
 			[view dragImage: image at: rect.origin offset: NSZeroSize
-				event: event pasteboard: pasteboard source: self slideBack: YES];
+			          event: event pasteboard: pasteboard source: self slideBack: YES];
 
 			success = YES;
 		}
@@ -1145,30 +1171,30 @@ static BOOL hyphenationSupported (void) {
 /*** Layout manager delegation message ***/
 
 - (void) layoutManager: (NSLayoutManager *)layoutManager
-	didCompleteLayoutForTextContainer: (NSTextContainer *)textContainer
-				 atEnd: (BOOL)layoutFinishedFlag
+   didCompleteLayoutForTextContainer: (NSTextContainer *)textContainer
+   atEnd: (BOOL)layoutFinishedFlag
 {
 	if ([self hasMultiplePages]) {
-		NSArray *containers = [layoutManager textContainers];
+		NSArray  *containers = [layoutManager textContainers];
 
 		/*
-			Either layout is not finished, or it is but there are glyphs
-			laid nowhere.
+		    Either layout is not finished, or it is but there are glyphs
+		    laid nowhere.
 		*/
 		if (!layoutFinishedFlag || !textContainer) {
-			NSTextContainer *lastContainer = [containers lastObject];
+			NSTextContainer  *lastContainer = [containers lastObject];
 
 			if (!textContainer || textContainer == lastContainer) {
 				/*
-					Add a new page only if the newly full container is the
-					last container or the nowhere container.
+				    Add a new page only if the newly full container is the
+				    last container or the nowhere container.
 				*/
 				[self addPage];
 			}
 		} else {
 			// Layout is done and it all fit.  See if we can axe some pages.
-			unsigned int	lastUsedContainerIndex = [containers indexOfObjectIdenticalTo: textContainer];
-			unsigned int	numContainers = [containers count];
+			unsigned int  lastUsedContainerIndex = [containers indexOfObjectIdenticalTo: textContainer];
+			unsigned int  numContainers = [containers count];
 			while (++lastUsedContainerIndex < numContainers) {
 				[self removePage];
 			}
@@ -1181,12 +1207,12 @@ static BOOL hyphenationSupported (void) {
 static NSArray *
 tabStopArrayForFontAndTabWidth (NSFont *font, unsigned tabWidth)
 {
-	static NSMutableArray	*array = nil;
-	static float			currentWidthOfTab = -1;
+	static NSMutableArray  *array = nil;
+	static float           currentWidthOfTab = -1;
 
-	float			charWidth;
-	float			widthOfTab;
-	unsigned int	i;
+	float         charWidth;
+	float         widthOfTab;
+	unsigned int  i;
 
 	if ([font glyphIsEncoded: (NSGlyph) ' ']) {
 		charWidth = [font advancementForGlyph: (NSGlyph) ' '].width;
@@ -1200,11 +1226,12 @@ tabStopArrayForFontAndTabWidth (NSFont *font, unsigned tabWidth)
 	}
 
 	if (widthOfTab != currentWidthOfTab) {
-//		NSLog (@"Calculating tabstops for font %@, tabWidth %u, real width %f.", font, tabWidth, widthOfTab);
+//		NSLog (@"Calculating tabstops for font %@, tabWidth %u, real width %f.",
+// font, tabWidth, widthOfTab);
 
 		[array removeAllObjects];
 		for (i = 1; i <= 100; i++) {
-			NSTextTab *tab = [[NSTextTab alloc] initWithType: NSLeftTabStopType location: widthOfTab * i];
+			NSTextTab  *tab = [[NSTextTab alloc] initWithType: NSLeftTabStopType location: widthOfTab * i];
 			[array addObject: tab];
 			[tab release];
 		}
@@ -1216,44 +1243,44 @@ tabStopArrayForFontAndTabWidth (NSFont *font, unsigned tabWidth)
 
 - (void) textStorageDidProcessEditing: (NSNotification *)notification
 {
-	NSTextStorage	*theTextStorage = [notification object];
-	NSString		*string = [theTextStorage string];
+	NSTextStorage  *theTextStorage = [notification object];
+	NSString       *string = [theTextStorage string];
 
 	if ([string length] > 0) {
 		/*
-			Generally NSTextStorage's attached to plain text NSTextViews only
-			have one font, but this is not generally true.  To ensure the
-			tabstops are uniform throughout the document we always base them
-			on the font of the first character in the NSTextStorage.
+		    Generally NSTextStorage's attached to plain text NSTextViews only
+		    have one font, but this is not generally true.  To ensure the
+		    tabstops are uniform throughout the document we always base them
+		    on the font of the first character in the NSTextStorage.
 		*/
-		NSFont *font = [theTextStorage attribute: NSFontAttributeName atIndex: 0 effectiveRange: NULL];
+		NSFont  *font = [theTextStorage attribute: NSFontAttributeName atIndex: 0 effectiveRange: NULL];
 
 		/*
-			Substitute a screen font if the layout manager will do so for
-			display.
+		    Substitute a screen font if the layout manager will do so for
+		    display.
 		*/
 		// MF: printing will probably be an issue here...
 		font = [[self layoutManager] substituteFontForFont: font];
 		if ([font isFixedPitch]) {
-			unsigned int	tabWidth = [[Preferences objectForKey: TabWidth] intValue];
-			NSArray			*desiredTabStops = tabStopArrayForFontAndTabWidth (font, tabWidth);
-			NSRange			editedRange = [theTextStorage editedRange];
-			NSRange			eRange;
+			unsigned int  tabWidth = [[Preferences objectForKey: TabWidth] intValue];
+			NSArray       *desiredTabStops = tabStopArrayForFontAndTabWidth (font, tabWidth);
+			NSRange       editedRange = [theTextStorage editedRange];
+			NSRange       eRange;
 
-			NSParagraphStyle		*paraStyle;
-			NSMutableParagraphStyle	*newStyle;
+			NSParagraphStyle         *paraStyle;
+			NSMutableParagraphStyle  *newStyle;
 
 			editedRange = [string lineRangeForRange: editedRange];
 
 			/*
-				We will traverse the edited range by paragraphs, fixing the
-				paragraph styles
+			    We will traverse the edited range by paragraphs, fixing the
+			    paragraph styles
 			*/
 			while (editedRange.length > 0) {
 				paraStyle = [theTextStorage attribute: NSParagraphStyleAttributeName
-											  atIndex: editedRange.location
-								longestEffectiveRange: &eRange
-											  inRange: editedRange];
+				                              atIndex: editedRange.location
+				                longestEffectiveRange: &eRange
+				                              inRange: editedRange];
 
 				if (!paraStyle) {
 					paraStyle = [NSParagraphStyle defaultParagraphStyle];
@@ -1266,8 +1293,8 @@ tabStopArrayForFontAndTabWidth (NSFont *font, unsigned tabWidth)
 					newStyle = [paraStyle mutableCopy];
 					[newStyle setTabStops: desiredTabStops];
 					[theTextStorage addAttribute: NSParagraphStyleAttributeName
-										   value: newStyle
-										   range: eRange];
+					                       value: newStyle
+					                       range: eRange];
 					[newStyle release];
 				}
 
@@ -1283,59 +1310,62 @@ tabStopArrayForFontAndTabWidth (NSFont *font, unsigned tabWidth)
 }
 
 /*
-	Return the document in the specified window.
+    Return the document in the specified window.
 */
 + (Document *) documentForWindow: (NSWindow *)window
 {
-	id delegate = [window delegate];
+	id  delegate = [window delegate];
 
-	if (delegate && [delegate isKindOfClass: [Document class]])
+	if (delegate && [delegate isKindOfClass: [Document class]]) {
 		return delegate;
+	}
 
 	return nil;
 }
 
 /*
-	Return an existing document...
+    Return an existing document...
 */
 + (Document *) documentForPath: (NSString *)filename
 {
-	NSArray			*windows = [[NSApplication sharedApplication] windows];
-	unsigned int	cnt;
-	unsigned int	numWindows = [windows count];
+	NSArray       *windows = [[NSApplication sharedApplication] windows];
+	unsigned int  cnt;
+	unsigned int  numWindows = [windows count];
 
 	filename = [self cleanedUpPath: filename];	/* Clean up the incoming path */
 
 	for (cnt = 0; cnt < numWindows; cnt++) {
-		Document	*document = [Document documentForWindow: [windows objectAtIndex: cnt]];
-		NSString	*docName = [document documentName];	
+		Document  *document = [Document documentForWindow: [windows objectAtIndex: cnt]];
+		NSString  *docName = [document documentName];
 
-		if (docName && [filename isEqual: [self cleanedUpPath: docName]])
+		if (docName && [filename isEqual: [self cleanedUpPath: docName]]) {
 			return document;
+		}
 	}
 	return nil;
 }
 
 + (unsigned int) numberOfOpenDocuments
 {
-	NSArray			*windows = [[NSApplication sharedApplication] windows];
-	unsigned int	cnt;
-	unsigned int	numWindows = [windows count];
-	unsigned int	numDocuments = 0;
+	NSArray       *windows = [[NSApplication sharedApplication] windows];
+	unsigned int  cnt;
+	unsigned int  numWindows = [windows count];
+	unsigned int  numDocuments = 0;
 
 	for (cnt = 0; cnt < numWindows; cnt++) {
-		if ([Document documentForWindow: [windows objectAtIndex: cnt]])
+		if ([Document documentForWindow: [windows objectAtIndex: cnt]]) {
 			numDocuments++;
+		}
 	}
 
 	return numDocuments;
 }
 
 /*
-	Menu validation: Arbitrary numbers to determine the state of the menu items
-	whose titles change. Speeds up the validation... Not zero.
+    Menu validation: Arbitrary numbers to determine the state of the menu items
+    whose titles change. Speeds up the validation... Not zero.
 */
-#define TagForFirst 42
+#define TagForFirst  42
 #define TagForSecond 43
 
 static void
@@ -1348,7 +1378,7 @@ validateToggleItem (NSMenuItem *aCell, BOOL useFirst, NSString *first, NSString 
 #ifdef GNUSTEP
 			[[aCell menu] sizeToFit];
 #else
-			[((NSMenu *)[[(NSCell *)aCell controlView] window]) sizeToFit];
+			[((NSMenu *) [[(NSCell *) aCell controlView] window]) sizeToFit];
 #endif
 		}
 	} else {
@@ -1358,47 +1388,51 @@ validateToggleItem (NSMenuItem *aCell, BOOL useFirst, NSString *first, NSString 
 #ifdef GNUSTEP
 			[[aCell menu] sizeToFit];
 #else
-			[((NSMenu *)[[(NSCell *)aCell controlView] window]) sizeToFit];
+			[((NSMenu *) [[(NSCell *) aCell controlView] window]) sizeToFit];
 #endif
 		}
 	}
 }
 
 /*
-	Menu validation
+    Menu validation
 */
 - (BOOL) validateMenuItem: (NSMenuItem *)aCell
 {
-	SEL			action = [aCell action];
+	SEL  action = [aCell action];
+
 #ifdef GNUSTEP
-	const char	*sel_name = sel_get_name (action);
+	const char  *sel_name = sel_get_name (action);
 
 	if (!strcmp (sel_name, sel_get_name (@selector (toggleRich:)))) {
 		validateToggleItem (aCell, [self isRichText], _(@"&Make Plain Text"), _(@"&Make Rich Text"));
 	} else if (!strcmp (sel_name, sel_get_name (@selector (togglePageBreaks:)))) {
 		validateToggleItem (aCell, [self hasMultiplePages], _(@"&Wrap to Window"), _(@"&Wrap to Page"));
 	} else if (!strcmp (sel_name, sel_get_name (@selector (toggleHyphenation:)))) {
-		if (!hyphenationSupported())	// Disable it
+		if (!hyphenationSupported ()) {	// Disable it
 			return NO;
+		}
 		validateToggleItem (aCell, ([self hyphenationFactor] > 0.0), _(@"Disallow &Hyphenation"), _(@"Allow &Hyphenation"));
 	}
 #else
-	if (action == @selector(toggleRich:)) {
-		validateToggleItem(aCell, [self isRichText], _(@"&Make Plain Text"), _(@"&Make Rich Text"));
-	} else if (action == @selector(togglePageBreaks:)) {
-		validateToggleItem(aCell, [self hasMultiplePages], _(@"&Wrap to Window"), _(@"&Wrap to Page"));
-	} else if (action == @selector(toggleHyphenation:)) {
-		if (!hyphenationSupported()) return NO; /* Disable it... */
-		validateToggleItem(aCell, ([self hyphenationFactor] > 0.0), _(@"Disallow &Hyphenation"), _(@"Allow &Hyphenation"));
+	if (action == @selector (toggleRich:)) {
+		validateToggleItem (aCell, [self isRichText], _(@"&Make Plain Text"), _(@"&Make Rich Text"));
+	} else if (action == @selector (togglePageBreaks:)) {
+		validateToggleItem (aCell, [self hasMultiplePages], _(@"&Wrap to Window"), _(@"&Wrap to Page"));
+	} else if (action == @selector (toggleHyphenation:)) {
+		if (!hyphenationSupported ()) {
+			return NO;	/* Disable it... */
+		}
+		validateToggleItem (aCell, ([self hyphenationFactor] > 0.0), _(@"Disallow &Hyphenation"), _(@"Allow &Hyphenation"));
 	}
 #endif
 	return YES;
 }
 
-static NSString	*lastOpenSavePanelDir = nil;
+static NSString  *lastOpenSavePanelDir = nil;
 
 /*
-	Sets the directory in which a save was last done...
+    Sets the directory in which a save was last done...
 */
 + (void) setLastOpenSavePanelDirectory: (NSString *)dir
 {
@@ -1409,12 +1443,12 @@ static NSString	*lastOpenSavePanelDir = nil;
 }
 
 /*
-	Returns the directory in which open/save panels should come up...
+    Returns the directory in which open/save panels should come up...
 */
 + (NSString *) openSavePanelDirectory
 {
 	if ([[Preferences objectForKey: OpenPanelFollowsMainWindow] boolValue]) {
-		Document *doc = [Document documentForWindow: [NSApp mainWindow]];
+		Document  *doc = [Document documentForWindow: [NSApp mainWindow]];
 
 		if (doc && [doc documentName]) {
 			return [[doc documentName] stringByDeletingLastPathComponent];
@@ -1431,15 +1465,15 @@ static NSString	*lastOpenSavePanelDir = nil;
 @end
 
 /*
-	Get list of supported encodings from the file Encodings.txt (containing
-	comma-separated ints). If the file doesn't exist, a default, built-in
-	list is used.
+    Get list of supported encodings from the file Encodings.txt (containing
+    comma-separated ints). If the file doesn't exist, a default, built-in
+    list is used.
 */
 const int *
 SupportedEncodings (void)
 {
-	static const int	*encodings = NULL;
-	static const int	plainTextFileStringEncodingsSupported[] = {
+	static const int  *encodings = NULL;
+	static const int  plainTextFileStringEncodingsSupported[] = {
 		NSNEXTSTEPStringEncoding,
 		NSISOLatin1StringEncoding,
 		NSWindowsCP1252StringEncoding,
@@ -1451,35 +1485,40 @@ SupportedEncodings (void)
 	};
 
 	if (!encodings) {
-		NSString	*str = [[NSBundle mainBundle] pathForResource: @"Encodings" ofType: @"txt"];
+		NSString  *str = [[NSBundle mainBundle] pathForResource: @"Encodings" ofType: @"txt"];
 
 		if (str && (str = [[NSString alloc] initWithContentsOfFile: str])) {
-			unsigned int	numEncodings = 0;
-			int				encoding;
-			NSScanner		*scanner = [NSScanner scannerWithString:str];
+			unsigned int  numEncodings = 0;
+			int           encoding;
+			NSScanner     *scanner = [NSScanner scannerWithString: str];
 
 			[scanner setCharactersToBeSkipped: [NSCharacterSet characterSetWithCharactersInString: @" ,\t"]];
-			while ([scanner scanInt: &encoding])
-				if ([NSString localizedNameOfStringEncoding: encoding])
+			while ([scanner scanInt: &encoding]) {
+				if ([NSString localizedNameOfStringEncoding: encoding]) {
 					numEncodings++;
+				}
+			}
 
 			if (numEncodings) {
-				int *tmp = NSZoneMalloc (NULL, (numEncodings + 1) * sizeof (int));
+				int  *tmp = NSZoneMalloc (NULL, (numEncodings + 1) * sizeof (int));
 
 				encodings = tmp;
 				[scanner setScanLocation: 0];
 
-				while ([scanner scanInt: tmp])
-					if ([NSString localizedNameOfStringEncoding: *tmp])
+				while ([scanner scanInt: tmp]) {
+					if ([NSString localizedNameOfStringEncoding: *tmp]) {
 						tmp++;
+					}
+				}
 
 				*tmp = -1;
 			}
 			[str release];
 		}
 
-		if (!encodings)
-			encodings = plainTextFileStringEncodingsSupported;		/* Default value... */
+		if (!encodings) {
+			encodings = plainTextFileStringEncodingsSupported;	// Default value
+		}
 	}
 	return encodings;
 }
@@ -1487,24 +1526,25 @@ SupportedEncodings (void)
 void
 SetUpEncodingPopupButton (NSPopUpButton *popup, int selectedEncoding, BOOL includeDefaultItem)
 {
-	BOOL			defaultItemIsIncluded = NO;
-	unsigned int	cnt = [popup numberOfItems];
+	BOOL          defaultItemIsIncluded = NO;
+	unsigned int  cnt = [popup numberOfItems];
 
-	if (cnt <= 1) {		/* Seems like the popup hasn't been initialized yet... */
-		const int *enc = SupportedEncodings ();
+	if (cnt <= 1) {	// Seems like the popup hasn't been initialized yet...
+		const int  *enc = SupportedEncodings ();
 		[popup removeAllItems];
 
 		while (*enc != -1) {
-			[popup addItemWithTitle:[NSString localizedNameOfStringEncoding:*enc]];
-			[[popup lastItem] setTag:*enc];
+			[popup addItemWithTitle: [NSString localizedNameOfStringEncoding: *enc]];
+			[[popup lastItem] setTag: *enc];
 			enc++;
 		}
 	} else {	/* Check to see if the default item is in there... */
 		while (!defaultItemIsIncluded && cnt-- > 0) {
-			NSButtonCell	*item = [popup itemAtIndex:cnt];
+			NSButtonCell  *item = [popup itemAtIndex: cnt];
 
-			if ([item tag] == UnknownStringEncoding)
+			if ([item tag] == UnknownStringEncoding) {
 				defaultItemIsIncluded = YES;
+			}
 		}
 	}
 
@@ -1519,10 +1559,11 @@ SetUpEncodingPopupButton (NSPopUpButton *popup, int selectedEncoding, BOOL inclu
 	cnt = [popup numberOfItems];
 
 	while (cnt-- > 0) {
-		NSButtonCell *item = [popup itemAtIndex: cnt];
+		NSButtonCell  *item = [popup itemAtIndex: cnt];
 		[item setEnabled: YES];
-		if ([item tag] == selectedEncoding)
+		if ([item tag] == selectedEncoding) {
 			[popup selectItemAtIndex: cnt];
+		}
 	}
 }
 
@@ -1535,11 +1576,11 @@ SetUpEncodingPopupButton (NSPopUpButton *popup, int selectedEncoding, BOOL inclu
  8/16/95 aozer	Added plain text tabs (but they're semi broken)
  10/4/95 aozer	Combined open/save and open/save with encoding panels
   3/3/96 aozer	Got rid of page layout accessory
-				Switched over to public RTF/attributed string API
+                Switched over to public RTF/attributed string API
  4/19/96 aozer	Foreground layout
-				Create each document in its own zone
+                Create each document in its own zone
  8/29/96 rick	Added potentialSaveDirectory for untitled docs, to follow the main window at
-				time the untitled doc is created
+                time the untitled doc is created
  11/7/96 aozer	Hyphenation support
 
 */

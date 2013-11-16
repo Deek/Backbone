@@ -1,24 +1,24 @@
 /*
-		Preferences.m
-		Copyright (C) 1995-1996, NeXT Software, Inc.
-		All rights reserved.
-		Author: Ali Ozer
+        Preferences.m
+        Copyright (C) 1995-1996, NeXT Software, Inc.
+        All rights reserved.
+        Author: Ali Ozer
 
-		You may freely copy, distribute and reuse the code in this example.
-		NeXT disclaims any warranty of any kind, expressed or implied,
-		as to its fitness for any particular use.
+        You may freely copy, distribute and reuse the code in this example.
+        NeXT disclaims any warranty of any kind, expressed or implied,
+        as to its fitness for any particular use.
 
-		Preferences controller for Edit...
+        Preferences controller for Edit...
 
-		To add new defaults search for one of the existing keys. Some keys have
-		UI, others don't; use one similar to the one you're adding.
+        To add new defaults search for one of the existing keys. Some keys have
+        UI, others don't; use one similar to the one you're adding.
 
-		displayedValues is a mirror of the UI. These are committed by copying
-		these values to curValues.
+        displayedValues is a mirror of the UI. These are committed by copying
+        these values to curValues.
 
-		This module allows for UI where there is or there isn't an OK button.
-		If you wish to have an OK button, connect OK to ok:, Revert to revert:,
-		and don't call commitDisplayedValues from the various action messages.
+        This module allows for UI where there is or there isn't an OK button.
+        If you wish to have an OK button, connect OK to ok:, Revert to revert:,
+        and don't call commitDisplayedValues from the various action messages.
 */
 
 #import "Preferences.h"
@@ -28,30 +28,31 @@
 static NSDictionary *
 defaultValues (void)
 {
-	static NSDictionary *dict = nil;
+	static NSDictionary  *dict = nil;
+
 	if (!dict) {
 		dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-				[NSNumber numberWithBool:YES], DeleteBackup, 
-				[NSNumber numberWithBool:NO], SaveFilesWritable, 
-				[NSNumber numberWithBool:YES], RichText, 
-				[NSNumber numberWithBool:NO], ShowPageBreaks,
-				[NSNumber numberWithBool:NO], OpenPanelFollowsMainWindow,
-				[NSNumber numberWithBool:NO], WriteBOM,
-				[NSNumber numberWithInt:80], WindowWidth, 
-				[NSNumber numberWithInt:30], WindowHeight, 
-				[NSNumber numberWithInt:UnknownStringEncoding], PlainTextEncoding,
-				[NSNumber numberWithInt:8], TabWidth,
-				[NSNumber numberWithInt:100000], ForegroundLayoutToIndex,		
-				[NSFont userFixedPitchFontOfSize:0.0], PlainTextFont, 
-				[NSFont userFontOfSize:0.0], RichTextFont, 
-				nil];
+		        [NSNumber numberWithBool: YES], DeleteBackup,
+		        [NSNumber numberWithBool: NO], SaveFilesWritable,
+		        [NSNumber numberWithBool: YES], RichText,
+		        [NSNumber numberWithBool: NO], ShowPageBreaks,
+		        [NSNumber numberWithBool: NO], OpenPanelFollowsMainWindow,
+		        [NSNumber numberWithBool: NO], WriteBOM,
+		        [NSNumber numberWithInt: 80], WindowWidth,
+		        [NSNumber numberWithInt: 30], WindowHeight,
+		        [NSNumber numberWithInt: UnknownStringEncoding], PlainTextEncoding,
+		        [NSNumber numberWithInt: 8], TabWidth,
+		        [NSNumber numberWithInt: 100000], ForegroundLayoutToIndex,
+		        [NSFont userFixedPitchFontOfSize: 0.0], PlainTextFont,
+		        [NSFont userFontOfSize: 0.0], RichTextFont,
+		        nil];
 	}
 	return dict;
 }
 
 @implementation Preferences
 
-static Preferences *sharedInstance = nil;
+static Preferences  *sharedInstance = nil;
 
 + (id) objectForKey: (id)key
 {
@@ -95,7 +96,7 @@ static Preferences *sharedInstance = nil;
 - (void) showPanel: (id)sender
 {
 	if (!richTextFontNameField) {
-		if (![NSBundle loadNibNamed: @"Preferences" owner:self])	 {
+		if (![NSBundle loadNibNamed: @"Preferences" owner: self]) {
 			NSLog (@"Failed to load Preferences.nib");
 			NSBeep ();
 			return;
@@ -111,13 +112,13 @@ static Preferences *sharedInstance = nil;
 static void
 showFontInField (NSFont *font, NSTextField *field)
 {
-	[field setStringValue: font ? [NSString stringWithFormat:@"%@ %g", [font fontName], [font pointSize]] : @""];
+	[field setStringValue: font ?[NSString stringWithFormat: @"%@ %g", [font fontName], [font pointSize]] : @""];
 }
 
 - (void) updateUI
 {
-	showFontInField ([displayedValues objectForKey:RichTextFont], richTextFontNameField);
-	showFontInField ([displayedValues objectForKey:PlainTextFont], plainTextFontNameField);
+	showFontInField ([displayedValues objectForKey: RichTextFont], richTextFontNameField);
+	showFontInField ([displayedValues objectForKey: PlainTextFont], plainTextFontNameField);
 	[keepBackupButton setState: [[displayedValues objectForKey: DeleteBackup] boolValue]];
 	[saveFilesWritableButton setState: [[displayedValues objectForKey: SaveFilesWritable] boolValue]];
 	[richTextMatrix selectCellWithTag: [[displayedValues objectForKey: RichText] boolValue] ? 1 : 0];
@@ -134,27 +135,28 @@ showFontInField (NSFont *font, NSTextField *field)
 */
 - (void) miscChanged: (id)sender
 {
-	static NSNumber	*yes = nil;
-	static NSNumber	*no = nil;
-	int				anInt;
-	
+	static NSNumber  *yes = nil;
+	static NSNumber  *no = nil;
+	int              anInt;
+
 	if (!yes) {
 		yes = [[NSNumber alloc] initWithBool: YES];
 		no = [[NSNumber alloc] initWithBool: NO];
 	}
 
-	[displayedValues setObject: ([[richTextMatrix selectedCell] tag] ? yes : no) forKey: RichText];
-	[displayedValues setObject: ([keepBackupButton state] ? yes : no) forKey: DeleteBackup];
-	[displayedValues setObject: ([writeBOMButton state] ? yes : no) forKey: WriteBOM];
-	[displayedValues setObject: ([saveFilesWritableButton state] ? yes : no) forKey: SaveFilesWritable];
-	[displayedValues setObject: ([showPageBreaksButton state] ? yes : no) forKey: ShowPageBreaks];
+	[displayedValues setObject: ([[richTextMatrix selectedCell] tag] ? yes: no) forKey: RichText];
+	[displayedValues setObject: ([keepBackupButton state] ? yes: no) forKey: DeleteBackup];
+	[displayedValues setObject: ([writeBOMButton state] ? yes: no) forKey: WriteBOM];
+	[displayedValues setObject: ([saveFilesWritableButton state] ? yes: no) forKey: SaveFilesWritable];
+	[displayedValues setObject: ([showPageBreaksButton state] ? yes: no) forKey: ShowPageBreaks];
 	[displayedValues setObject: [NSNumber numberWithInt: [[plainTextEncodingPopup selectedItem] tag]] forKey: PlainTextEncoding];
 
 	anInt = [windowWidthField intValue];
 	if (anInt < 1 || anInt > 10000) {
 		anInt = [[displayedValues objectForKey: WindowWidth] intValue];
-		if (anInt < 1 || anInt > 10000)
-			anInt = [[defaultValues() objectForKey: WindowWidth] intValue];
+		if (anInt < 1 || anInt > 10000) {
+			anInt = [[defaultValues () objectForKey: WindowWidth] intValue];
+		}
 		[windowWidthField setIntValue: anInt];
 	} else {
 		[displayedValues setObject: [NSNumber numberWithInt: anInt] forKey: WindowWidth];
@@ -162,9 +164,10 @@ showFontInField (NSFont *font, NSTextField *field)
 
 	anInt = [windowHeightField intValue];
 	if (anInt < 1 || anInt > 10000) {
-		anInt = [[displayedValues objectForKey:WindowHeight] intValue];
-		if (anInt < 1 || anInt > 10000)
-			anInt = [[defaultValues() objectForKey: WindowHeight] intValue];
+		anInt = [[displayedValues objectForKey: WindowHeight] intValue];
+		if (anInt < 1 || anInt > 10000) {
+			anInt = [[defaultValues () objectForKey: WindowHeight] intValue];
+		}
 		[windowHeightField setIntValue: [[displayedValues objectForKey: WindowHeight] intValue]];
 	} else {
 		[displayedValues setObject: [NSNumber numberWithInt: anInt] forKey: WindowHeight];
@@ -175,7 +178,7 @@ showFontInField (NSFont *font, NSTextField *field)
 
 /**** Font changing code ****/
 
-static BOOL changingRTFFont = NO;
+static BOOL  changingRTFFont = NO;
 
 - (void) changeRichTextFont: (id)sender
 {
@@ -231,7 +234,7 @@ static BOOL changingRTFFont = NO;
 
 - (void) revertToDefault: (id)sender
 {
-	curValues = [defaultValues () copy];
+	curValues = [defaultValues ()copy];
 	[self discardDisplayedValues];
 }
 
@@ -241,19 +244,19 @@ static BOOL changingRTFFont = NO;
 }
 
 /**** Code to deal with defaults ****/
-   
-#define getBoolDefault(name) \
-  {NSString *str = [defaults stringForKey:name]; \
-	  [dict setObject:str ? [NSNumber numberWithBool:[str hasPrefix:@"Y"]] : [defaultValues() objectForKey:name] forKey:name];}
 
-#define getIntDefault(name) \
-  {NSString *str = [defaults stringForKey:name]; \
-	  [dict setObject:str ? [NSNumber numberWithInt:[str intValue]] : [defaultValues() objectForKey:name] forKey:name];}
+#define getBoolDefault(name)                         \
+	{NSString  *str = [defaults stringForKey: name]; \
+	 [dict setObject: str ?[NSNumber numberWithBool: [str hasPrefix: @"Y"]] : [defaultValues () objectForKey: name] forKey: name]; }
+
+#define getIntDefault(name)                          \
+	{NSString  *str = [defaults stringForKey: name]; \
+	 [dict setObject: str ?[NSNumber numberWithInt: [str intValue]] : [defaultValues () objectForKey: name] forKey: name]; }
 
 + (NSDictionary *) preferencesFromDefaults
 {
-	NSUserDefaults		*defaults = [NSUserDefaults standardUserDefaults];
-	NSMutableDictionary	*dict = [NSMutableDictionary dictionaryWithCapacity: 10];
+	NSUserDefaults       *defaults = [NSUserDefaults standardUserDefaults];
+	NSMutableDictionary  *dict = [NSMutableDictionary dictionaryWithCapacity: 10];
 
 	getBoolDefault (RichText);
 	getBoolDefault (DeleteBackup);
@@ -274,14 +277,14 @@ static BOOL changingRTFFont = NO;
 }
 
 #define setBoolDefault(name) \
-  {if ([[defaultValues() objectForKey:name] isEqual:[dict objectForKey:name]]) [defaults removeObjectForKey:name]; else [defaults setObject:([[dict objectForKey:name] boolValue]? @"YES" : @"NO") forKey:name];}
+	{if ([[defaultValues () objectForKey: name] isEqual: [dict objectForKey: name]]) {[defaults removeObjectForKey: name]; } else {[defaults setObject: ([[dict objectForKey: name] boolValue] ? @"YES" : @"NO") forKey: name]; }}
 
 #define setIntDefault(name) \
-  {if ([[defaultValues() objectForKey:name] isEqual:[dict objectForKey:name]]) [defaults removeObjectForKey:name]; else [defaults setObject:[[dict objectForKey:name] stringValue] forKey:name];}
+	{if ([[defaultValues () objectForKey: name] isEqual: [dict objectForKey: name]]) {[defaults removeObjectForKey: name]; } else {[defaults setObject: [[dict objectForKey: name] stringValue] forKey: name]; }}
 
 + (void) savePreferencesToDefaults: (NSDictionary *)dict
 {
-	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
+	NSUserDefaults  *defaults = [NSUserDefaults standardUserDefaults];
 
 	setBoolDefault (RichText);
 	setBoolDefault (DeleteBackup);
@@ -296,11 +299,13 @@ static BOOL changingRTFFont = NO;
 	setIntDefault (TabWidth);
 	setIntDefault (ForegroundLayoutToIndex);
 
-	if (![[dict objectForKey: RichTextFont] isEqual: [NSFont userFontOfSize: 0.0]])
+	if (![[dict objectForKey: RichTextFont] isEqual: [NSFont userFontOfSize: 0.0]]) {
 		[NSFont setUserFont: [dict objectForKey: RichTextFont]];
+	}
 
-	if (![[dict objectForKey: PlainTextFont] isEqual: [NSFont userFixedPitchFontOfSize: 0.0]])
+	if (![[dict objectForKey: PlainTextFont] isEqual: [NSFont userFixedPitchFontOfSize: 0.0]]) {
 		[NSFont setUserFixedPitchFont: [dict objectForKey: PlainTextFont]];
+	}
 }
 
 @end
