@@ -59,6 +59,9 @@ NSProcessInfo      *process = nil;
 NSUserDefaults     *defaults = nil;
 BBFileOpener       *opener = nil;
 
+#define PRINT(fmt, ...) \
+    printf ("%s\n", [[NSString stringWithFormat: fmt, __VA_ARGS__] UTF8String])
+
 /*
     Variables for the application to be used.
 
@@ -146,7 +149,7 @@ void
 newAppName (NSString *newApp)
 {
 	if (!newApp) {
-		printf ("%s: no appname given for -a\n", [newApp UTF8String]);
+		PRINT (@"%@: no appname given for -a", newApp);
 		return;
 	}
 
@@ -187,7 +190,7 @@ usage (NSString *name, NSString *desc)
 		abort ();
 	}
 
-	printf ("Usage: %s %s\n", [name cString], [desc cString]);
+	PRINT (@"Usage: %@ %@", name, desc);
 	printf (
 	    "Options:\n"
 	    "    -a APP      Specify an application to use for opening the file(s).\n"
@@ -235,7 +238,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 
 			if ([args count] < 1) {
 				doHelp = YES;
-				printf ("%s error: not enough arguments\n", [name cString]);
+				PRINT (@"%@ error: not enough arguments", name);
 			} else {
 				NSString  *newAppName = [args objectAtIndex: 0];
 				NSString  *tmp = newAppName;
@@ -268,7 +271,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 				}
 
 				if (![opener openApp: newAppName]) {	// look for it ourselves
-					printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
+					PRINT (@"%@: could not contact application: %@", name, appName);
 					exit (1);
 				}
 
@@ -282,7 +285,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 
 			if ([args count] < 2) {
 				doHelp = YES;
-				printf ("%s: not enough arguments\n", [name cString]);
+				PRINT (@"%@: not enough arguments", name);
 			} else {
 				openAs = YES;
 				openAsType = [args objectAtIndex: 0];
@@ -292,7 +295,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 			progMode = PM_APP;
 			appName = [name stringByDeletingPathExtension];
 			if (![opener openApp: appName]) {
-				printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
+				PRINT (@"%@: could not contact application: %@", name, appName);
 				exit (1);
 			}
 			appNameForced = YES;
@@ -301,7 +304,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 			progMode = PM_APP;
 			appName = name;
 			if (![opener openApp: appName]) {
-				printf ("%s: could not contact application: %s\n", [name cString], [appName cString]);
+				PRINT (@"%@: could not contact application: %@", name, appName);
 				exit (1);
 			}
 			appNameForced = YES;
@@ -347,7 +350,7 @@ main (int argc, char** argv, char **env)
 	    stuff.
 	*/
 	if (!redirectStdError ("/dev/null")) {
-		printf ("%s: error redirecting stderr: %s\n", [processName cString], strerror (errno));
+		PRINT (@"%@: error redirecting stderr: %s", processName, strerror (errno));
 		return 1;
 	}
 
@@ -387,7 +390,7 @@ main (int argc, char** argv, char **env)
 #if 0
 		if ([arg isEqualToString: @"--unhide"]) {
 			if (!(app = [opener openApp: arg])) {
-				printf ("%s: could not contact application: %s\n", [processName cString], [appName cString]);
+				PRINT (@"%@: could not contact application: %@", processName, appName);
 				break;
 			}
 
@@ -406,7 +409,7 @@ main (int argc, char** argv, char **env)
 			appNameForced = YES;
 
 			if (![opener openApp: appName]) {
-				printf ("%s: could not contact application: %s\n", [processName cString], [appName cString]);
+				PRINT (@"%@: could not contact application: %@", processName, appName);
 				break;
 			}
 
@@ -443,10 +446,10 @@ main (int argc, char** argv, char **env)
 			       stringByStandardizingPath];
 		}
 
-//		printf ("Filename: %s\n", [arg cString]);
+//		PRINT (@"Filename: %@", arg);
 
 		if (!(exists = [fm fileExistsAtPath: arg isDirectory: &isDir])) {
-			printf ("%s: file not found: %s\n", [processName cString], [arg cString]);
+			PRINT (@"%@: file not found: %@", processName, arg);
 			continue;
 		}
 
@@ -454,7 +457,7 @@ main (int argc, char** argv, char **env)
 		    || [ext isEqualToString: @"debug"]
 		    || [ext isEqualToString: @"profile"]) {	//
 			if (![opener openApp: arg]) {
-				printf ("%s: unable to launch: %s\n", [processName cString], [arg cString]);
+				PRINT (@"%@: unable to launch: %@", processName, arg);
 			}
 			continue;
 		}
@@ -468,7 +471,7 @@ main (int argc, char** argv, char **env)
 		}
 
 		if (![opener openFile: arg]) {	// use default application(s)
-			printf ("%s: unable to open: %s\n", [processName cString], [arg cString]);
+			PRINT (@"%@: unable to open: %@", processName, arg);
 			break;
 		}
 
