@@ -170,6 +170,40 @@ defaultEditor (void)
 	return defaultEditor;
 }
 
+NSString *
+findHeaderFile (NSString *baseName)
+{
+	NSArray         *temp = NSSearchPathForDirectoriesInDomains (NSLibraryDirectory, NSAllDomainsMask, YES);
+	NSMutableArray  *dirList = [[NSMutableArray alloc] initWithCapacity: 6];
+	NSEnumerator    *counter;
+	id              entry;
+
+	counter = [temp objectEnumerator];
+	while ((entry = [counter nextObject])) {
+		[dirList addObject: [entry stringByAppendingPathComponent: @"Headers"]];
+	}
+	[dirList addObject: @"/usr/local/include"];
+	[dirList addObject: @"/usr/include"];
+
+	// reusing counter & entry
+//	PRINT(@"%@", dirList);
+	counter = [dirList objectEnumerator];
+	while ((entry = [counter nextObject])) {
+		NSDirectoryEnumerator  *files = [fm enumeratorAtPath: entry];
+		NSString               *file;
+		while ((file = [files nextObject])) {
+			if ([[[file pathExtension] lowercaseString] isEqualToString: @"h"]) {
+				// got a header file
+				NSString  *path = [entry stringByAppendingPathComponent: file];
+				if ([[path lastPathComponent] isEqualToString: baseName]) {
+					return path;
+				}
+			}
+		}
+	}
+	return nil;
+}
+
 BOOL
 redirectStdError (char *filename)
 {
@@ -201,6 +235,7 @@ usage (NSString *name, NSString *desc)
 	    "\n"
 	    "    -f          Read standard input, send to default text editor\n"
 	    "    -           Read standard input, use -a/-A to decide app\n"
+	    "    -h FILE     Search header locations for FILE and open it\n"
 	    "\n"
 	    "    -o          Following files will be opened (this is the default).\n"
 	    "    -p          Following files will be printed instead of opened.\n"
@@ -209,7 +244,7 @@ usage (NSString *name, NSString *desc)
 	    "    -t          Following files will be opened with the default text editor\n"
 	    "\n"
 	    "    -W, --wait  Wait for application to exit before returning.\n"
-	    "    -h, --help  Display this help and exit\n"
+	    "    --help      Display this help and exit\n"
 	    );
 	exit (0);
 }
@@ -312,9 +347,7 @@ checkArgs (NSString *name, NSMutableArray *args)
 	}
 
 	// If there is a "help" arg anywhere on the command-line, only do help.
-	if (doHelp
-	    || [args indexOfObject: @"-h"] != NSNotFound
-	    || [args indexOfObject: @"--help"] != NSNotFound) {
+	if (doHelp || [args indexOfObject: @"--help"] != NSNotFound) {
 		usage (name, desc);
 	}
 
@@ -437,6 +470,13 @@ main (int argc, char** argv, char **env)
 			newAppName (defaultEditor ());
 
 			continue;
+		}
+
+		if ([arg isEqualToString: @"-h"]) {	// find header file
+			NSString  *tmp = findHeaderFile ([argEnumerator nextObject]);
+			if (tmp && [tmp length]) {
+				arg = tmp;
+			}
 		}
 
 		// standardize the path
