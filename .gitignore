@@ -12,3 +12,11 @@ shared*_obj/
 *ChangeLog
 *term.gdt
 *term.gpr
+/System/Backbone.make
+/System/autom4te.cache/
+/System/config.h
+/System/config.h.in
+/System/config.log
+/System/config.status
+/System/configure
+/System/stamp-h

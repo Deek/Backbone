@@ -1,45 +1,23 @@
-# Make sure that GNUSTEP_MAKEFILES is set.
-# First, try the "gnustep-config" program which should be in the path somewhere.
-# If that fails, try sourcing the GNUstep.conf file (which should be a legal Make fragment).
-# Finally, just give up and assume the default value.
-ifeq ($(GNUSTEP_MAKEFILES),)
-GNUSTEP_MAKEFILES=$(shell gnustep-config --variable=GNUSTEP_MAKEFILES)
-ifeq ($(GNUSTEP_MAKEFILES),)
--include /etc/GNUstep/GNUstep.conf
-ifeq ($(GNUSTEP_MAKEFILES),)
-GNUSTEP_MAKEFILES=/usr/GNUstep/Library/Makefiles
-endif
-endif
-endif
-
-export GNUSTEP_MAKEFILES
-export TOP_SRCDIR= $(CURDIR)
+export GNUSTEP_MAKEFILES=@GNUSTEP_MAKEFILES@
+export TOP_SRCDIR=@abs_top_srcdir@
 export GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
-
-include Backbone.make
 
 include $(GNUSTEP_MAKEFILES)/common.make
 
 # Additional flags to pass to the C compiler
-ADDITIONAL_OBJCFLAGS += -Wall -std=gnu99
-ADDITIONAL_CFLAGS += -Wall -std=gnu99
+ADDITIONAL_CPPFLAGS += @DEFS@ -I@abs_top_srcdir@
+ADDITIONAL_OBJCFLAGS += $(filter-out -O2,@OBJCFLAGS@)
+ADDITIONAL_CFLAGS += 
 ifeq ($(werror), yes)
 ADDITIONAL_OBJCFLAGS += -Werror
 ADDITIONAL_CFLAGS += -Werror
 endif
 
-# work around gcc 3.3 strict-aliasing bug in selector handling
-ifeq ($(shell $(CC) -dumpversion | cut -d. -f1,2), 3.3)
-ADDITIONAL_OBJCFLAGS += -fno-strict-aliasing
-endif
+include $(TOP_SRCDIR)/Backbone.make
 
-# work around gcc 4.1 bug in constant strings
-ifeq ($(shell $(CC) -dumpversion | cut -d. -f1,2), 4.1)
-ADDITIONAL_OBJCFLAGS += -Wno-unused-variable
-endif
-
-export ADDITIONAL_OBJCFLAGS
+export ADDITIONAL_CPPFLAGS
 export ADDITIONAL_CFLAGS
+export ADDITIONAL_OBJCFLAGS
 
 SUBPROJECTS= \
 	Frameworks/PrefsModule \
@@ -52,6 +30,24 @@ SUBPROJECTS= \
 	Tools/open
 
 include $(GNUSTEP_MAKEFILES)/aggregate.make
+
+configure: configure.ac
+	cd '@top_srcdir@' && autoconf
+
+config.h.in: stamp-h.in
+stamp-h.in: configure.ac
+	cd '@top_srcdir@' && autoheader
+	echo timestamp > @top_srcdir@/stamp-h.in
+
+config.h: stamp-h
+stamp-h: config.h.in config.status
+Backbone.make: Backbone.make.in config.status
+GNUmakefile: GNUmakefile.in config.status
+	@top_srcdir@/config.status $@
+
+config.status: configure
+	@top_srcdir@/config.status --recheck
+	touch $@
 
 here=		$(shell pwd)
 distdir=	Backbone-System-$(BACKBONE_VERSION)

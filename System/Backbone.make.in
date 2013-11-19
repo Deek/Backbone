@@ -1,4 +1,4 @@
-BBFRAMEWORKS=$(TOP_SRCDIR)/Frameworks
+BBFRAMEWORKS=@abs_top_srcdir@/Frameworks
 
 #
 # Framework stuff
@@ -19,4 +19,4 @@ ifneq ($(FRAMEWORKS),)
 ADDITIONAL_INCLUDE_DIRS += -I$(BBFRAMEWORKS)
 endif
 
-BACKBONE_VERSION=0.0.1
+BACKBONE_VERSION=@PACKAGE_VERSION@
