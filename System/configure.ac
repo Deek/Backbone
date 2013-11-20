@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.59c])
-AC_INIT([Backbone-System], [0.1.0], [deek@d2dc.net])
+AC_INIT([Backbone], [0.1.0],,, [http://backbone.nongnu.org/])
 AC_LANG([Objective C])
 AC_CONFIG_SRCDIR([Backbone.make.in])
 AC_CONFIG_HEADERS([config.h])
@@ -139,6 +139,17 @@ AC_CONFIG_FILES([
 	GNUmakefile
 	Backbone.make
 	Applications/Terminal/GNUmakefile
+	Applications/TextEdit/GNUmakefile
+	Applications/Preferences/GNUmakefile
+	Applications/Preferences/Modules/Time/GNUmakefile
+	Applications/Preferences/Modules/Font/GNUmakefile
+	Applications/Preferences/Modules/Defaults/GNUmakefile
+	Applications/Preferences/Modules/PrefsApp/GNUmakefile
+	Applications/Preferences/Modules/Keyboard/GNUmakefile
+	Applications/Preferences/Modules/Colors/GNUmakefile
+	Frameworks/PrefsModule/GNUmakefile
+	Fonts/GNUmakefile
+	Tools/open/GNUmakefile
 ])
 
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
@@ -171,3 +182,4 @@ AC_OUTPUT
 #  include <pty.h>
 #endif
 #endif
+

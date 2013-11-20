@@ -12,6 +12,7 @@ shared*_obj/
 *ChangeLog
 *term.gdt
 *term.gpr
+GNUmakefile
 /System/Backbone.make
 /System/autom4te.cache/
 /System/config.h
