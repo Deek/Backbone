@@ -153,8 +153,11 @@ AC_CONFIG_FILES([
 	GNUmakefile
 	Backbone.make
 	Applications/Terminal/GNUmakefile
+	Applications/Terminal/TerminalInfo.plist
 	Applications/TextEdit/GNUmakefile
+	Applications/TextEdit/TextEditInfo.plist
 	Applications/Preferences/GNUmakefile
+	Applications/Preferences/PreferencesInfo.plist
 	Applications/Preferences/Modules/Time/GNUmakefile
 	Applications/Preferences/Modules/Font/GNUmakefile
 	Applications/Preferences/Modules/Defaults/GNUmakefile

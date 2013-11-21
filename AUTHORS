@@ -1,0 +1,42 @@
+The Backbone Project was started by:
+
+	Alexander Malmberg <alex@malmberg.org>
+	Jeff Teunissen <deek@d2dc.net>
+	Nicolas Roard <nicolas@roard.com>
+
+Preferences was originally written by Jeff Teunissen.
+Terminal was originally written by Alexander Malmberg.
+
+TextEdit was originally written by Next Software (now part of Apple, Inc.), and
+ported to GNUstep by Jeff Teunissen.
+
+The 'open' tool was written by Jeff Teunissen, based on an original work by 
+Gregory Casamento <greg.casamento@yahoo.com>.
+
+Additional thanks to:
+
+	David Ayers <David.Ayers@brainag.com>:
+		fixes in Preferences
+
+	Chris B. Vetter:
+		FreeBSD support
+		German translations (Terminal)
+
+	Erik Dalen:
+		Terminal's application icon
+
+	"Sir Raorn":
+		Font preferences module
+		Russian translations (Preferences)
+
+	Fabien Vallon:
+		Defaults preferences module
+		French translations
+
+	Ahmet Soyata <un4gotten@linux-sevenler.org>:
+		Turkish translations
+
+	Riccardo Mottola <rm@gnu.org>:
+		forkpty() code (Terminal)
+
+and probably some more people we can't think of...

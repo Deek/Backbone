@@ -22,3 +22,6 @@ GNUmakefile
 /System/configure
 /System/stamp-h
 /System/aclocal.m4
+PreferencesInfo.plist
+TerminalInfo.plist
+TextEditInfo.plist

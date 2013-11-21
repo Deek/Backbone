@@ -1,0 +1,14 @@
+{
+    ApplicationDescription = "The @PACKAGE_NAME@ terminal emulator";
+    ApplicationIcon = Terminal;
+    ApplicationName = Terminal;
+    ApplicationRelease = "@PACKAGE_STRING@";
+    ApplicationURL = "@PACKAGE_URL@";
+    Authors = (
+	"Alexander Malmberg <alex@malmberg.org>",
+	"Jeff Teunissen <deek@d2dc.net>"
+    );
+    Copyright = "Copyright \u00a9 2002-2013 Contributors of the Backbone Project";
+    CopyrightDescription = "Released under the GNU GPL. See COPYING for details.";
+    FullVersionID = "@PACKAGE_NAME@";
+}

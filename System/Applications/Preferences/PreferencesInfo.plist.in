@@ -1,15 +1,15 @@
 {
-    ApplicationDescription = "Backbone Preferences Manager";
+    ApplicationDescription = "@PACKAGE_NAME@ Preferences Manager";
     ApplicationIcon = Preferences;
     ApplicationName = Preferences;
-    ApplicationRelease = "1.2.99 gamma";
-    ApplicationURL = "http://backbone.nongnu.org/";
+    ApplicationRelease = "@PACKAGE_STRING@";
+    ApplicationURL = "@PACKAGE_URL@";
     Authors = (
 	"Jeff Teunissen <deek@d2dc.net>"
     );
-    Copyright = "Copyright \U00a9 2002-2010 Dusk to Dawn Computing";
+    Copyright = "Copyright \U00a9 2002-2013 Contributors of the Backbone Project";
     CopyrightDescription = "Released under GNU GPLv2+; See GPLv2 for details.";
-    FullVersionID = "1.2.99";
+    FullVersionID = "@PACKAGE_VERSION@";
     NSTypes = (
     	{
 	    NSName = "prefs";
