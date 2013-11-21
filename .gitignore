@@ -21,3 +21,4 @@ GNUmakefile
 /System/config.status
 /System/configure
 /System/stamp-h
+/System/aclocal.m4

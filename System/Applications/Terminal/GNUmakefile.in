@@ -18,6 +18,9 @@ ADDITIONAL_OBJCFLAGS += -D$(subst -,_,$(GNUSTEP_HOST_OS))
 #	-Wmissing-prototypes -Wmissing-declarations \
 #	-Wnested-externs -Wno-unused-parameter
 
+Terminal_C_FILES = \
+	forkpty.c
+
 Terminal_OBJC_FILES = \
 	main.m \
 	\
@@ -39,7 +42,7 @@ Terminal_OBJC_FILES = \
 	\
 	Label.m
 
-Terminal_LDFLAGS = -lutil
+Terminal_LDFLAGS = @FORKPTY_LIBS@ @OPENPTY_LIBS@ @LIBICONV@
 
 Terminal_LOCALIZED_RESOURCE_FILES = Localizable.strings
 Terminal_LANGUAGES = English Swedish German French Spanish Hungarian Turkish \

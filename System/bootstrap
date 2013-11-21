@@ -26,4 +26,4 @@ if test -n "$errors" ; then
 	exit 1
 fi
 
-autoheader && autoconf
+aclocal && autoheader && autoconf

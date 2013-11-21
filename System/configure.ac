@@ -9,6 +9,10 @@ AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_OBJC
+
+# clear objcflags, GNUstep already sets us up mostly
+OBJCFLAGS=
+
 AC_PROG_OBJCPP
 AC_PROG_GREP
 AC_PROG_SED
@@ -73,40 +77,50 @@ fi
 
 # Checks for libraries.
 
+# Check for iconv (Terminal needs libiconv on lots of stupid systems)
+BB_ICONV
+
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(
-	[sys/ioctl.h termios.h termio.h pcap.h stropts.h]
-)
+AC_CHECK_HEADERS([sys/ioctl.h sys/types.h fcntl.h termios.h stropts.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 #AC_TYPE_SIZE_T
 
 # Checks for library functions.
-AC_CHECK_FUNCS([foo])
+#AC_CHECK_FUNCS([foo])
 
-FORKPTY_LIBS=""
-AC_CHECK_FUNC([forkpty], FORKPTY=yes, FORKPTY=no)
-if test "$FORKPTY" = "yes"; then
-	AC_CHECK_HEADER([pty.h], HAVE_PTY_H=yes, HAVE_PTY_H=no)
-	if test "$HAVE_PTY_H" = "yes"; then
-		AC_DEFINE([HAVE_PTY_H], 1, [Define if <pty.h> works])
-	fi
-else
-	AC_CHECK_LIB([util], [forkpty], FORKPTY_IN_LIBUTIL=yes, FORKPTY_IN_LIBUTIL=no)
-	if test "$FORKPTY_IN_LIBUTIL" = "yes"; then
-		AC_CHECK_HEADER([libutil.h], HAVE_LIBUTIL_H=yes, HAVE_LIBUTIL_H=no)
-		AC_CHECK_HEADER([pty.h], HAVE_PTY_H=yes, HAVE_PTY_H=no)
+OPENPTY_LIBS=
+FORKPTY_LIBS=
+saved_LIBS="$LIBS"
+LIBS=
+AC_SEARCH_LIBS([forkpty], [util],
+	HAVE_FORKPTY=yes
+	AC_DEFINE([HAVE_FORKPTY], 1, [Define if you have a working forkpty() function])
+	FORKPTY_LIBS="$LIBS"
+	,
+	[HAVE_FORKPTY=no]
+)
+LIBS="$saved_LIBS"
 
-		if test "$HAVE_LIBUTIL_H" = "yes"; then
-			FORKPTY_LIBS="-lutil"
-			AC_DEFINE([HAVE_LIBUTIL_H], 1, [Define if <libutil.h> works])
-		fi
-		if test "$HAVE_PTY_H" = "yes"; then
-			AC_DEFINE([HAVE_PTY_H], 1, [Define if <pty.h> works])
-		fi
-	fi
+AC_CHECK_HEADERS([libutil.h pty.h util.h])
+
+# we only ever need openpty if we don't have forkpty (if we don't have forkpty,
+# we probably don't have openpty either, so this is just covering all bases).
+# It's just that we don't want to conflict with an already-existing openpty.
+if test "x$HAVE_FORKPTY" = xno; then
+	saved_LIBS="$LIBS"
+	LIBS=
+	AC_SEARCH_LIBS([openpty], [util],
+		HAVE_OPENPTY=yes
+		AC_DEFINE([HAVE_OPENPTY], 1, [Define if you have a working openpty() function])
+		OPENPTY_LIBS="$LIBS"
+		,
+		[HAVE_OPENPTY=no]
+	)
+	LIBS="$saved_LIBS"
 fi
+AC_SUBST([OPENPTY_LIBS])
 AC_SUBST([FORKPTY_LIBS])
 
 # Make sure that GNUSTEP_MAKEFILES is set.

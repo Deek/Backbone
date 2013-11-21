@@ -12,35 +12,12 @@ TODO: Move pty and child process handling to another class. Make this a
 stupid but fast character cell display view.
 */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <math.h>
 #include <unistd.h>
-
-#ifdef __NetBSD__
-#  include <sys/types.h>
-#  include <sys/ioctl.h>
-#  include <termios.h>
-#  include <pcap.h>
-#else
-#ifdef freebsd
-#  include <sys/types.h>
-#  include <sys/ioctl.h>
-#  include <termios.h>
-#  include <libutil.h>
-#  include <pcap.h>
-#else
-#  include <termio.h>
-#endif
-#endif
-
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#ifndef freebsd
-#ifndef __NetBSD__
-#  include <pty.h>
-#endif
-#endif
 
 #include <Foundation/NSBundle.h>
 #include <Foundation/NSDebug.h>
@@ -58,10 +35,11 @@ stupid but fast character cell display view.
 #include <AppKit/NSScroller.h>
 #include <AppKit/DPSOperators.h>
 
+#include "forkpty.h"
+
 #include "TerminalView.h"
 
 #include "TerminalViewPrefs.h"
-
 
 /* TODO */
 @interface NSView (unlockfocus)
@@ -855,7 +833,7 @@ static void set_foreground(NSGraphicsContext *gc,
 	ADD_DIRTY(0,y,sx,1);
 }
 
--(screen_char_t) ts_getCharAt: (int)x:(int)y
+-(screen_char_t) ts_getCharAt: (int)x : (int)y
 {
 	NSDebugLLog(@"ts",@"getCharAt: %i:%i",x,y);
 	return SCREEN(x,y);
