@@ -15,6 +15,9 @@ lots borrowed from linux/drivers/char/console.c, GNU GPL:ed
  *  Copyright (C) 1991, 1992  Linus Torvalds
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSDebug.h>
@@ -1122,7 +1125,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 		{
 			screen_char_t ch;
 
-			char *inp;
+			ICONV_CONST char *inp;
 			size_t in_size;
 			char *outp;
 			size_t out_size;
@@ -1235,7 +1238,7 @@ Translates '\n' to '\r' when sending.
 			insize=4;
 			outsize=sizeof(buf);
 			outp=buf;
-			ret=iconv(iconv_input_state,(char **)&inp,&insize,&outp,&outsize);
+			ret=iconv(iconv_input_state,(ICONV_CONST char **)&inp,&insize,&outp,&outsize);
 			if (outsize!=sizeof(buf))
 			{
 				[ts ts_sendCString: (const char *)buf  length: sizeof(buf)-outsize];
