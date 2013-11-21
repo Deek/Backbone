@@ -19,12 +19,12 @@ AC_DEFUN([BB_ICONV_LINK],
   dnl because if the user has installed libiconv and not disabled its use
   dnl via --without-libiconv-prefix, he wants to use it. The first
   dnl AC_LINK_IFELSE will then fail, the second AC_LINK_IFELSE will succeed.
-  am_save_CPPFLAGS="$CPPFLAGS"
+  bb_save_CPPFLAGS="$CPPFLAGS"
   AC_LIB_APPENDTOVAR([CPPFLAGS], [$INCICONV])
 
-  AC_CACHE_CHECK([for iconv], [am_cv_func_iconv], [
-    am_cv_func_iconv="no, consider installing GNU libiconv"
-    am_cv_lib_iconv=no
+  AC_CACHE_CHECK([for iconv], [bb_cv_func_iconv], [
+    bb_cv_func_iconv="no, consider installing GNU libiconv"
+    bb_cv_lib_iconv=no
     AC_LINK_IFELSE(
       [AC_LANG_PROGRAM(
          [[
@@ -34,9 +34,9 @@ AC_DEFUN([BB_ICONV_LINK],
          [[iconv_t cd = iconv_open("","");
            iconv(cd,NULL,NULL,NULL,NULL);
            iconv_close(cd);]])],
-      [am_cv_func_iconv=yes])
-    if test "$am_cv_func_iconv" != yes; then
-      am_save_LIBS="$LIBS"
+      [bb_cv_func_iconv=yes])
+    if test "$bb_cv_func_iconv" != yes; then
+      bb_save_LIBS="$LIBS"
       LIBS="$LIBS $LIBICONV"
       AC_LINK_IFELSE(
         [AC_LANG_PROGRAM(
@@ -47,17 +47,17 @@ AC_DEFUN([BB_ICONV_LINK],
            [[iconv_t cd = iconv_open("","");
              iconv(cd,NULL,NULL,NULL,NULL);
              iconv_close(cd);]])],
-        [am_cv_lib_iconv=yes]
-        [am_cv_func_iconv=yes])
-      LIBS="$am_save_LIBS"
+        [bb_cv_lib_iconv=yes]
+        [bb_cv_func_iconv=yes])
+      LIBS="$bb_save_LIBS"
     fi
   ])
-  if test "$am_cv_func_iconv" = yes; then
-    AC_CACHE_CHECK([for working iconv], [am_cv_func_iconv_works], [
+  if test "$bb_cv_func_iconv" = yes; then
+    AC_CACHE_CHECK([for working iconv], [bb_cv_func_iconv_works], [
       dnl This tests against bugs in AIX 5.1, AIX 6.1..7.1, HP-UX 11.11,
       dnl Solaris 10.
-      am_save_LIBS="$LIBS"
-      if test $am_cv_lib_iconv = yes; then
+      bb_save_LIBS="$LIBS"
+      if test $bb_cv_lib_iconv = yes; then
         LIBS="$LIBS $LIBICONV"
       fi
       AC_RUN_IFELSE(
@@ -160,36 +160,36 @@ int main ()
     result |= 16;
   return result;
 }]])],
-        [am_cv_func_iconv_works=yes],
-        [am_cv_func_iconv_works=no],
+        [bb_cv_func_iconv_works=yes],
+        [bb_cv_func_iconv_works=no],
         [
 changequote(,)dnl
          case "$host_os" in
-           aix* | hpux*) am_cv_func_iconv_works="guessing no" ;;
-           *)            am_cv_func_iconv_works="guessing yes" ;;
+           aix* | hpux*) bb_cv_func_iconv_works="guessing no" ;;
+           *)            bb_cv_func_iconv_works="guessing yes" ;;
          esac
 changequote([,])dnl
         ])
-      LIBS="$am_save_LIBS"
+      LIBS="$bb_save_LIBS"
     ])
-    case "$am_cv_func_iconv_works" in
-      *no) am_func_iconv=no am_cv_lib_iconv=no ;;
-      *)   am_func_iconv=yes ;;
+    case "$bb_cv_func_iconv_works" in
+      *no) bb_func_iconv=no bb_cv_lib_iconv=no ;;
+      *)   bb_func_iconv=yes ;;
     esac
   else
-    am_func_iconv=no am_cv_lib_iconv=no
+    bb_func_iconv=no bb_cv_lib_iconv=no
   fi
-  if test "$am_func_iconv" = yes; then
+  if test "$bb_func_iconv" = yes; then
     AC_DEFINE([HAVE_ICONV], [1],
       [Define if you have the iconv() function and it works.])
   fi
-  if test "$am_cv_lib_iconv" = yes; then
+  if test "$bb_cv_lib_iconv" = yes; then
     AC_MSG_CHECKING([how to link with libiconv])
     AC_MSG_RESULT([$LIBICONV])
   else
     dnl If $LIBICONV didn't lead to a usable library, we don't need $INCICONV
     dnl either.
-    CPPFLAGS="$am_save_CPPFLAGS"
+    CPPFLAGS="$bb_save_CPPFLAGS"
     LIBICONV=
     LTLIBICONV=
   fi
@@ -218,9 +218,9 @@ m4_define([gl_iconv_AC_DEFUN],
 gl_iconv_AC_DEFUN([BB_ICONV],
 [
   BB_ICONV_LINK
-  if test "$am_cv_func_iconv" = yes; then
+  if test "$bb_cv_func_iconv" = yes; then
     AC_MSG_CHECKING([for iconv declaration])
-    AC_CACHE_VAL([am_cv_proto_iconv], [
+    AC_CACHE_VAL([bb_cv_proto_iconv], [
       AC_COMPILE_IFELSE(
         [AC_LANG_PROGRAM(
            [[
@@ -237,18 +237,18 @@ size_t iconv();
 #endif
            ]],
            [[]])],
-        [am_cv_proto_iconv_arg1=""],
-        [am_cv_proto_iconv_arg1="const"])
-      am_cv_proto_iconv="extern size_t iconv (iconv_t cd, $am_cv_proto_iconv_arg1 char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t *outbytesleft);"])
-    am_cv_proto_iconv=`echo "[$]am_cv_proto_iconv" | tr -s ' ' | sed -e 's/( /(/'`
+        [bb_cv_proto_iconv_arg1=""],
+        [bb_cv_proto_iconv_arg1="const"])
+      bb_cv_proto_iconv="extern size_t iconv (iconv_t cd, $bb_cv_proto_iconv_arg1 char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t *outbytesleft);"])
+    bb_cv_proto_iconv=`echo "[$]bb_cv_proto_iconv" | tr -s ' ' | sed -e 's/( /(/'`
     AC_MSG_RESULT([
-         $am_cv_proto_iconv])
-    AC_DEFINE_UNQUOTED([ICONV_CONST], [$am_cv_proto_iconv_arg1],
+         $bb_cv_proto_iconv])
+    AC_DEFINE_UNQUOTED([ICONV_CONST], [$bb_cv_proto_iconv_arg1],
       [Define as const if the declaration of iconv() needs const.])
     dnl Also substitute ICONV_CONST in the gnulib generated <iconv.h>.
     m4_ifdef([gl_ICONV_H_DEFAULTS],
       [AC_REQUIRE([gl_ICONV_H_DEFAULTS])
-       if test -n "$am_cv_proto_iconv_arg1"; then
+       if test -n "$bb_cv_proto_iconv_arg1"; then
          ICONV_CONST="const"
        fi
       ])
