@@ -68,6 +68,6 @@ $(TOP_SRCDIR)/config.status: $(TOP_SRCDIR)/configure
 	touch $@
 
 GNUmakefile: GNUmakefile.in $(TOP_SRCDIR)/Backbone.make $(TOP_SRCDIR)/config.status $(TOP_SRCDIR)/stamp-h
-	cd '$(TOP_SRCDIR)' && ./config.status $(SRCDIR)`basename $@`
+	@cd '$(TOP_SRCDIR)' && ./config.status $(SRCDIR)`basename $@`
 
 before-all:: GNUmakefile
