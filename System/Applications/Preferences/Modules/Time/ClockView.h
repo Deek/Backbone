@@ -29,10 +29,10 @@
 	$Id$
 */
 #ifndef PA_M_Time_ClockView_h
-#define PA_M_Time_CLockView_h
+#define PA_M_Time_ClockView_h
 
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
 
 #include <Foundation/NSCalendarDate.h>

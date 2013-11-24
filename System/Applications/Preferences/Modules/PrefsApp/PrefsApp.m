@@ -27,11 +27,8 @@
 		59 Temple Place - Suite 330
 		Boston, MA  02111-1307, USA
 */
-static const char rcsid[] = 
-	"$Id$";
-
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
 
 #import <Foundation/NSDebug.h>

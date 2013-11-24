@@ -80,7 +80,6 @@ Preferences_LANGUAGES= \
 # Header files
 #
 Preferences_HEADERS= \
-	Config.h \
 	BundleController.h \
 	Controller.h \
 	PrefsController.h

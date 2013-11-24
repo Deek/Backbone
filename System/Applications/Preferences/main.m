@@ -1,8 +1,6 @@
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
-
-RCSID("$Id$");
 
 #include <AppKit/NSApplication.h>
 #include <Foundation/NSBundle.h>

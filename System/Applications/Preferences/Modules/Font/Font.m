@@ -25,10 +25,8 @@
 		Boston, MA  02111-1307, USA
 */
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
-
-RCSID("$Id$");
 
 #include <math.h>
 

@@ -30,7 +30,7 @@
 #define PA_PrefsController_h
 
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
 
 #include <AppKit/NSNibDeclarations.h>

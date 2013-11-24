@@ -30,7 +30,7 @@
 #define PA_M_Defaults_Defaults_h
 
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
 
 #include <Foundation/NSUserDefaults.h>

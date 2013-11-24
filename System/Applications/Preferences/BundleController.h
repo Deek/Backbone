@@ -31,7 +31,7 @@
 #define PA_BundleController_h
 
 #ifdef HAVE_CONFIG_H
-# include "Config.h"
+# include "config.h"
 #endif
 
 #include <Foundation/NSArray.h>
