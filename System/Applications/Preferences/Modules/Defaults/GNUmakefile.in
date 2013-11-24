@@ -1,11 +1,8 @@
-include $(GNUSTEP_MAKEFILES)/common.make
+include @GNUSTEP_MAKEFILES@/common.make
 
 BUNDLE_NAME=		Defaults
 BUNDLE_EXTENSION=	.prefs
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_LIBRARY)/Preferences
-
-FRAMEWORKS= PrefsModule
-include $(TOP_SRCDIR)/Backbone.make
 
 Defaults_LANGUAGES= \
 	English
@@ -24,6 +21,11 @@ Defaults_PRINCIPAL_CLASS= \
 
 -include GNUmakefile.preamble
 
-include $(GNUSTEP_MAKEFILES)/bundle.make
+include @GNUSTEP_MAKEFILES@/bundle.make
+
+FRAMEWORKS= PrefsModule
+
+TOP_SRCDIR=@top_srcdir@
+include $(TOP_SRCDIR)/Backbone.make
 
 -include GNUmakefile.postamble

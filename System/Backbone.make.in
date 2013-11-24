@@ -1,4 +1,25 @@
+export GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
+
+BACKBONE_VERSION = @PACKAGE_VERSION@
 BBFRAMEWORKS=@abs_top_srcdir@/Frameworks
+
+AUXILIARY_CPPFLAGS += @DEFS@
+AUXILIARY_INCLUDE_DIRS += -I@abs_top_srcdir@
+AUXILIARY_OBJCFLAGS += @OBJCFLAGS@
+ifeq ($(werror), yes)
+ADDITIONAL_OBJCFLAGS += -Werror
+ADDITIONAL_CFLAGS += -Werror
+endif
+
+ifeq ($(TOP_SRCDIR),)
+$(error TOP_SRCDIR not set in GNUmakefile)
+endif
+
+ifeq ($(TOP_SRCDIR),.)
+SRCDIR=
+else
+SRCDIR=$(subst @abs_top_srcdir@/,,$(shell pwd))/
+endif
 
 #
 # Framework stuff
@@ -16,7 +37,37 @@ endef
 $(foreach fw,$(FRAMEWORKS), $(eval $(call FRAMEWORK_link, $(fw))))
 
 ifneq ($(FRAMEWORKS),)
-ADDITIONAL_INCLUDE_DIRS += -I$(BBFRAMEWORKS)
+AUXILIARY_INCLUDE_DIRS += -I$(BBFRAMEWORKS)
 endif
 
-BACKBONE_VERSION=@PACKAGE_VERSION@
+#
+# Dependency stuff
+#
+# Since we include this in almost every other makefile, we can make every
+# makefile be able to regenerate configure when it's changed.
+#
+$(TOP_SRCDIR)/configure: $(TOP_SRCDIR)/configure.ac
+	@cd '$(TOP_SRCDIR)' && autoconf
+
+$(TOP_SRCDIR)/config.h.in: $(TOP_SRCDIR)/stamp-h.in
+$(TOP_SRCDIR)/stamp-h.in: $(TOP_SRCDIR)/configure.ac
+	@cd '$(TOP_SRCDIR)' && autoheader
+	echo timestamp > $(TOP_SRCDIR)/stamp-h.in
+
+$(TOP_SRCDIR)/config.h: $(TOP_SRCDIR)/stamp-h
+	@cd '$(TOP_SRCDIR)' && ./config.status config.h
+
+$(TOP_SRCDIR)/stamp-h: $(TOP_SRCDIR)/config.h.in $(TOP_SRCDIR)/config.status
+	@cd '$(TOP_SRCDIR)' && ./config.status stamp-h
+
+$(TOP_SRCDIR)/Backbone.make: $(TOP_SRCDIR)/Backbone.make.in $(TOP_SRCDIR)/config.status
+	@cd '$(TOP_SRCDIR)' && ./config.status Backbone.make
+
+$(TOP_SRCDIR)/config.status: $(TOP_SRCDIR)/configure
+	@cd '$(TOP_SRCDIR)' && ./config.status --recheck
+	touch $@
+
+GNUmakefile: GNUmakefile.in $(TOP_SRCDIR)/Backbone.make $(TOP_SRCDIR)/config.status $(TOP_SRCDIR)/stamp-h
+	cd '$(TOP_SRCDIR)' && ./config.status $(SRCDIR)`basename $@`
+
+before-all:: GNUmakefile

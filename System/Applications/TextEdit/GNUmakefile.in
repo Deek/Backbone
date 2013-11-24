@@ -1,4 +1,4 @@
-include $(GNUSTEP_MAKEFILES)/common.make
+include @GNUSTEP_MAKEFILES@/common.make
 
 APP_NAME=			TextEdit
 PACKAGE_NAME=			TextEdit
@@ -57,6 +57,9 @@ TextEdit_OBJC_FILES += Edit_main.m
 
 -include GNUmakefile.preamble
 
-include $(GNUSTEP_MAKEFILES)/application.make
+include @GNUSTEP_MAKEFILES@/application.make
+
+TOP_SRCDIR=@top_srcdir@
+include $(TOP_SRCDIR)/Backbone.make
 
 -include GNUmakefile.postamble

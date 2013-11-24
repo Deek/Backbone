@@ -1,23 +1,4 @@
-export GNUSTEP_MAKEFILES=@GNUSTEP_MAKEFILES@
-export TOP_SRCDIR=@abs_top_srcdir@
-export GNUSTEP_INSTALLATION_DOMAIN=SYSTEM
-
-include $(GNUSTEP_MAKEFILES)/common.make
-
-# Additional flags to pass to the C compiler
-ADDITIONAL_CPPFLAGS += @DEFS@ -I@abs_top_srcdir@
-ADDITIONAL_OBJCFLAGS += $(filter-out -O2,@OBJCFLAGS@)
-ADDITIONAL_CFLAGS += 
-ifeq ($(werror), yes)
-ADDITIONAL_OBJCFLAGS += -Werror
-ADDITIONAL_CFLAGS += -Werror
-endif
-
-include $(TOP_SRCDIR)/Backbone.make
-
-export ADDITIONAL_CPPFLAGS
-export ADDITIONAL_CFLAGS
-export ADDITIONAL_OBJCFLAGS
+include @GNUSTEP_MAKEFILES@/common.make
 
 SUBPROJECTS= \
 	Frameworks/PrefsModule \
@@ -29,63 +10,7 @@ SUBPROJECTS= \
 	\
 	Tools/open
 
-include $(GNUSTEP_MAKEFILES)/aggregate.make
+include @GNUSTEP_MAKEFILES@/aggregate.make
 
-configure: configure.ac
-	cd '@top_srcdir@' && autoconf
-
-config.h.in: stamp-h.in
-stamp-h.in: configure.ac
-	cd '@top_srcdir@' && autoheader
-	echo timestamp > @top_srcdir@/stamp-h.in
-
-config.h: stamp-h
-stamp-h: config.h.in config.status
-Backbone.make: Backbone.make.in config.status
-GNUmakefile: GNUmakefile.in config.status
-	@top_srcdir@/config.status $@
-
-config.status: configure
-	@top_srcdir@/config.status --recheck
-	touch $@
-
-here=		$(shell pwd)
-distdir=	Backbone-System-$(BACKBONE_VERSION)
-
-distfiles :=	$(shell find . -type f -print | egrep -ve '($(distdir)|CVS|/\..*$$|\.tar\..*$$)')
-distdirs :=	$(shell find . -type d -print | egrep -ve '($(distdir)|CVS|/\..*$$|^\.$$)')
-
-#changelog: ChangeLog
-#ChangeLog:
-#	@-echo "Creating ChangeLog from CVS. This may take some time..."
-#	@-perl -w .misc/cvs2cl --stdout -b --utc -U .misc/logNames.txt > $@
-
-#distdir: distclean changelog
-distdir: distclean
-	@-echo "Making distribution tree for Backbone System v$(BACKBONE_VERSION)"
-	@-rm -rf $(distdir)
-	@mkdir $(distdir)
-	@-chmod 755 $(distdir)
-	@echo "	Creating directories..."
-	@for dir in $(distdirs); do \
-	  mkdir "$(distdir)/$$dir"; \
-	done
-	@echo "	Copying files..."
-	@for file in $(distfiles); do \
-	  if test -d "$(here)/$$file"; then \
-	    cp -pr "$(here)/$$file" "$(distdir)/$$file"; \
-	  else \
-	    test -f "$(distdir)/$$file" \
-	    || ln "$(here)/$$file" "$(distdir)/$$file" 2> /dev/null \
-	    || cp -p "$(here)/$$file" "$(distdir)/$$file" || :; \
-	  fi; \
-	done
-
-distro: distdir
-	-chmod -R a+r $(distdir)
-	tar -ch $(distdir) | gzip -9 > $(distdir).tar.gz
-	tar -ch $(distdir) | bzip2 -9 > $(distdir).tar.bz2
-	-rm -rf $(distdir)
-
-#.PHONY: changelog ChangeLog distdir distro
-.PHONY: distdir distro
+TOP_SRCDIR=@top_srcdir@
+include $(TOP_SRCDIR)/Backbone.make

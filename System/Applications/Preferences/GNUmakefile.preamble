@@ -2,13 +2,10 @@
 ADDITIONAL_CPPFLAGS +=
 
 # Additional flags to pass to the Objective-C compiler
-ADDITIONAL_OBJCFLAGS += -DHAVE_CONFIG_H
+ADDITIONAL_OBJCFLAGS +=
 
 # Additional flags to pass to the C compiler
-ADDITIONAL_CFLAGS += -DHAVE_CONFIG_H
-
-export ADDITIONAL_OBJCFLAGS
-export ADDITIONAL_CFLAGS
+ADDITIONAL_CFLAGS +=
 
 # Additional include directories the compiler should search
 ADDITIONAL_INCLUDE_DIRS +=

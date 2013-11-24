@@ -25,7 +25,7 @@
 #
 #	$Id$
 
-include $(GNUSTEP_MAKEFILES)/common.make
+include @GNUSTEP_MAKEFILES@/common.make
 
 FRAMEWORK_NAME=		PrefsModule
 
@@ -38,7 +38,9 @@ PrefsModule_DEPLOY_WITH_CURRENT_VERSION=yes
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 
-include $(GNUSTEP_MAKEFILES)/aggregate.make
-include $(GNUSTEP_MAKEFILES)/framework.make
+include @GNUSTEP_MAKEFILES@/framework.make
+
+TOP_SRCDIR=@top_srcdir@
+include $(TOP_SRCDIR)/Backbone.make
 
 -include GNUmakefile.postamble

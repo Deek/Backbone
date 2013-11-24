@@ -23,9 +23,8 @@
 #		59 Temple Place - Suite 330
 #		Boston, MA  02111-1307, USA
 #
-#	$Id$
 
-include $(GNUSTEP_MAKEFILES)/common.make
+include @GNUSTEP_MAKEFILES@/common.make
 
 #
 # Subprojects
@@ -45,17 +44,10 @@ SUBPROJECTS=	\
 #
 # Main application
 #
-PACKAGE_NAME=		Preferences
 APP_NAME=		Preferences
-VERSION=		1.2.99beta
+
 Preferences_PRINCIPAL_CLASS=	NSApplication
 Preferences_APPLICATION_ICON=	Preferences.tiff
-
-ifeq ($(TOP_SRCDIR),)
-export TOP_SRCDIR :=	$(CURDIR)/../..
-endif
-FRAMEWORKS= PrefsModule
-include $(TOP_SRCDIR)/Backbone.make
 
 #
 # Resource files
@@ -110,7 +102,12 @@ Preferences_C_FILES=
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 
-include $(GNUSTEP_MAKEFILES)/aggregate.make
-include $(GNUSTEP_MAKEFILES)/application.make
+include @GNUSTEP_MAKEFILES@/aggregate.make
+include @GNUSTEP_MAKEFILES@/application.make
+
+FRAMEWORKS= PrefsModule
+
+TOP_SRCDIR=@top_srcdir@
+include $(TOP_SRCDIR)/Backbone.make
 
 -include GNUmakefile.postamble

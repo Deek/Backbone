@@ -1,11 +1,8 @@
-include $(GNUSTEP_MAKEFILES)/common.make
+include @GNUSTEP_MAKEFILES@/common.make
 
 BUNDLE_NAME=		Colors
 BUNDLE_EXTENSION=	.prefs
 BUNDLE_INSTALL_DIR=	$(GNUSTEP_LIBRARY)/Preferences
-
-FRAMEWORKS= PrefsModule
-include $(TOP_SRCDIR)/Backbone.make
 
 Colors_LANGUAGES= \
 	English
@@ -26,6 +23,11 @@ Colors_OBJC_FILES= \
 
 -include GNUmakefile.preamble
 
-include $(GNUSTEP_MAKEFILES)/bundle.make
+include @GNUSTEP_MAKEFILES@/bundle.make
+
+FRAMEWORKS= PrefsModule
+
+TOP_SRCDIR=@top_srcdir@
+include $(TOP_SRCDIR)/Backbone.make
 
 -include GNUmakefile.postamble
