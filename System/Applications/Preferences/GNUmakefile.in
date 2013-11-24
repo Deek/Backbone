@@ -98,6 +98,13 @@ Preferences_OBJC_FILES= \
 #
 Preferences_C_FILES=
 
+# Additional directories to be created during installation
+ADDITIONAL_INSTALL_DIRS += \
+	$(GNUSTEP_USER_DIR)/$(GNUSTEP_USER_DIR_LIBRARY)/$(APP_NAME) \
+	$(GNUSTEP_LOCAL_LIBRARY)/$(APP_NAME) \
+	$(GNUSTEP_NETWORK_LIBRARY)/$(APP_NAME) \
+	$(GNUSTEP_SYSTEM_LIBRARY)/$(APP_NAME)
+
 -include GNUmakefile.preamble
 -include GNUmakefile.local
 

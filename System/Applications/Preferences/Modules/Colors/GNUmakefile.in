@@ -21,6 +21,15 @@ Colors_OBJC_FILES= \
 	Colors+TableView.m \
 	Preview.m
 
+# Additional directories to be created during installation
+ADDITIONAL_INSTALL_DIRS += \
+	$(GNUSTEP_LIBRARY)/Colors \
+	$(GNUSTEP_USER_DIR)/$(GNUSTEP_USER_DIR_LIBRARY)/Colors
+
+# Things to do after installing
+after-install::
+	$(INSTALL) -m644 $(wildcard *.colorScheme) $(GNUSTEP_LIBRARY)/Colors
+
 -include GNUmakefile.preamble
 
 include @GNUSTEP_MAKEFILES@/bundle.make
