@@ -1,4 +1,9 @@
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include "Colors.h"
+#include "Preview.h"
 
 @implementation Colors (Actions)
 
