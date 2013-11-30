@@ -62,6 +62,13 @@ if test "x$GOBJC" = xyes; then
 	AC_MSG_RESULT($OBJCVER)
 
 	BB_OBJC_OPTION([-std=gnu99])
+	BB_OBJC_OPTION([-Wall])
+	BB_OBJC_OPTION([-Wextra])
+	BB_OBJC_OPTION([-Wdeclaration-after-statement])
+	BB_OBJC_OPTION([-Winit-self])
+	BB_OBJC_OPTION([-Wno-implicit-int])
+	BB_OBJC_OPTION([-Wno-unused-parameter])
+	BB_OBJC_OPTION([-Wsequence-point])
 
 	AC_MSG_CHECKING([for broken $OBJC versions])
 	if test $OBJC_MAJ -eq 3 -a $OBJC_MIN -eq 3; then
