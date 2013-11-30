@@ -10,6 +10,9 @@
 
         File I/O code... We define a few convenience methods on NSAttributedString as well.
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import <AppKit/AppKit.h>
 #import "Document.h"

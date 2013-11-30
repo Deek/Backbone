@@ -8,6 +8,9 @@
         NeXT disclaims any warranty of any kind, expressed or implied,
         as to its fitness for any particular use.
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import "ScalingScrollView.h"
 

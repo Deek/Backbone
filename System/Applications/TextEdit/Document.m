@@ -10,6 +10,9 @@
 
         Document object for Edit...
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <math.h>
 #include <float.h>

@@ -20,6 +20,9 @@
         findPrevious:
         enterSelection: (calls setFindString:)
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import <AppKit/AppKit.h>
 #import "TextFinder.h"

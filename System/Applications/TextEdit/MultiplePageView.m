@@ -10,6 +10,9 @@
 
         View which holds all the pages together in the multiple-page case
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import <AppKit/AppKit.h>
 #import "MultiplePageView.h"

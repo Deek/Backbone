@@ -10,6 +10,9 @@
 
         Central controller object for Edit...
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import <Foundation/NSFileManager.h>
 #import <AppKit/NSApplication.h>

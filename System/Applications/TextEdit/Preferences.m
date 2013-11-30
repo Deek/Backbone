@@ -20,6 +20,9 @@
         If you wish to have an OK button, connect OK to ok:, Revert to revert:,
         and don't call commitDisplayedValues from the various action messages.
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #import "Preferences.h"
 #import <Foundation/Foundation.h>

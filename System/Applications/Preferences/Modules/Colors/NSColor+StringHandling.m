@@ -1,3 +1,7 @@
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <Foundation/NSScanner.h>
 #include <Foundation/NSString.h>
 #include <Foundation/NSUserDefaults.h>

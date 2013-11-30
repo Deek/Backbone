@@ -6,6 +6,9 @@ can redistribute it and/or modify it under the terms of the GNU General
 Public License as published by the Free Software Foundation; version 2
 of the License. See COPYING or main.m for more information.
 */
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <Foundation/NSString.h>
 #include <Foundation/NSDebug.h>
