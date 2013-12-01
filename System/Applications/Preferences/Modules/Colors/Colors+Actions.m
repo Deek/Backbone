@@ -36,7 +36,7 @@
 	}
 
 	if (key) {
-		NSMutableDictionary	*colors = [defaults dictionaryForKey: @"CustomColors"];
+		NSMutableDictionary	*colors = (NSMutableDictionary *)[defaults dictionaryForKey: @"CustomColors"];
 
 		if (!colors)
 			colors = [NSMutableDictionary new];
@@ -53,6 +53,10 @@
 - (IBAction) removeScheme: (id)sender;
 - (IBAction) updateSystemColors: (id)sender;
 */
+- (IBAction) saveScheme: (id)sender {}
+- (IBAction) colorSelected: (id)sender {}
+- (IBAction) removeScheme: (id)sender {}
+
 - (IBAction) schemeSelected: (id)sender
 {
 	NSString	*file;

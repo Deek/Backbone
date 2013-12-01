@@ -224,7 +224,7 @@ static BOOL doneLaunching = NO;
 	[[[aBundle principalClass] alloc] initWithOwner: self];
 }
 
-- (id <PrefsController>) prefsController
+- (id) prefsController
 {
 	return prefsController;
 }
