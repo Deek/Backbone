@@ -15,6 +15,7 @@
 #import "ScalingScrollView.h"
 
 #import <Foundation/NSBundle.h>
+#import <Foundation/NSDebug.h>
 #import <Foundation/NSGeometry.h>
 #import <Foundation/NSValue.h>
 #import <AppKit/NSPopUpButton.h>
@@ -125,6 +126,13 @@ static float     _NSScaleMenuFontSize = 10.0;
 
 		buttonFrame.origin.x = NSMaxX (horizScrollerFrame);
 		buttonFrame.size.height = incrementLineFrame.size.height;
+
+		if (!buttonFrame.size.height) {
+			NSDebugLLog(@"Workarounds", @"ERROR: Scroller frame height 0!");
+			buttonFrame.origin.y = NSMinY (horizScrollerFrame) - 5;
+			buttonFrame.size.height = horizScrollerFrame.size.height - 1;
+		}
+
 		buttonFrame.origin.y = horizScrollerFrame.origin.y + incrementLineFrame.origin.y;
 		[_scalePopUpButton setFrame: buttonFrame];
 	}
