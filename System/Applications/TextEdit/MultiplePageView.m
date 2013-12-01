@@ -47,6 +47,12 @@
 		NSRect  rect = NSZeroRect;
 		rect.size = [printInfo paperSize];
 		rect.size.height = rect.size.height * numPages;
+
+		if ([[self superview] isKindOfClass: [NSClipView class]]) {
+			[(NSClipView *)[self superview] setBackgroundColor:
+			                                 [NSColor windowBackgroundColor]];
+		}
+
 		if (numPages > 1) {
 			rect.size.height += [self pageSeparatorHeight] * (numPages - 1);
 		}
