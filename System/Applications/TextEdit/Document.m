@@ -20,6 +20,7 @@
 
 #include <Foundation/NSArray.h>
 #include <Foundation/NSBundle.h>
+#include <Foundation/NSDebug.h>
 #include <Foundation/NSGeometry.h>
 #include <Foundation/NSNotification.h>
 #include <Foundation/NSString.h>
@@ -610,7 +611,12 @@ static NSView         *encodingAccessory = nil;
 static BOOL
 hyphenationSupported (void)
 {
+#ifdef GNUSTEP
+	NSDebugLLog (@"Workarounds", @"GNUstep does not support hyphenation, but implements the methods.");
+	return NO;
+#else
 	return [NSLayoutManager instancesRespondToSelector: @selector (setHyphenationFactor:)];
+#endif
 }
 
 - (void) setHyphenationFactor: (float)factor
