@@ -188,12 +188,7 @@
 
 	[[NSFontManager sharedFontManager] setFontMenu:
 	 [[[[menu itemWithTitle: @"Format"] submenu] itemWithTitle: @"Font"] submenu]];
-
-	[NSApp setWindowsMenu: [[menu itemWithTitle: @"Windows"] submenu]];
-
-	[NSApp setServicesMenu: [[menu itemWithTitle: @"Services"] submenu]];
 }
-
 #endif
 
 @end

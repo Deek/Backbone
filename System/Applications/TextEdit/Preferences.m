@@ -115,7 +115,7 @@ static Preferences  *sharedInstance = nil;
 static void
 showFontInField (NSFont *font, NSTextField *field)
 {
-	[field setStringValue: font ?[NSString stringWithFormat: @"%@ %g", [font fontName], [font pointSize]] : @""];
+	[field setStringValue: font ?[NSString stringWithFormat: @"%@ %g", [font displayName], [font pointSize]] : @""];
 }
 
 - (void) updateUI
