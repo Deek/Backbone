@@ -172,7 +172,12 @@
 		[lineColor set];
 		for (cnt = firstPage; cnt <= lastPage; cnt++) {
 			NSRect  docRect = NSInsetRect ([self documentRectForPageNumber: cnt], -1.0, -1.0);
+#ifdef GNUSTEP
+			NSDebugLLog (@"Workarounds", @"GNUstep can't deal with zero-thickness lines");
+			NSFrameRectWithWidth (docRect, 1.0);
+#else
 			NSFrameRectWithWidth (docRect, 0.0);
+#endif
 		}
 
 		if ([[self superview] isKindOfClass: [NSClipView class]]) {
