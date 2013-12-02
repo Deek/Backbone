@@ -129,7 +129,6 @@ static float     _NSScaleMenuFontSize = 10.0;
 
 		if (!buttonFrame.size.height) {
 			NSDebugLLog(@"Workarounds", @"ERROR: Scroller frame height 0!");
-			buttonFrame.origin.y = NSMinY (horizScrollerFrame) - 5;
 			buttonFrame.size.height = horizScrollerFrame.size.height - 1;
 		}
 
