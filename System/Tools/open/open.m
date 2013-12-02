@@ -99,16 +99,47 @@ NSString  *openAsType = nil;
 id connectToApp (NSString *appName, NSString *hostName);
 BOOL openWithApp (NSString *appName, NSString *host, NSString *file, BOOL print, BOOL temp);
 
+@interface NSData (WriteToFD)
+
+- (BOOL) writeToFileDescriptor: (int)fd;
+
+@end
+
+@implementation NSData (WriteToFD)
+
+- (BOOL) writeToFileDescriptor: (int)fd
+{
+	size_t		bytesLeft = [self length];
+	const void	*bytes = [self bytes];
+
+	while (bytesLeft > 0) {
+		ssize_t	bytesWritten = write (fd, bytes, [self length]);
+		if (bytesWritten == -1) {	// bad juju
+			PRINT (@"Can't write output: %s", strerror (errno));
+			return NO;
+		} else {
+			bytesLeft -= bytesWritten;
+		}
+	}
+	fdatasync (fd);
+	if (bytesLeft) {
+		PRINT (@"%@: writeToFD: something went really wrong!", appName);
+		return NO;
+	}
+
+	return YES;
+}
+
+@end
+
 int
 doStdInput (NSString *name)
 {
-	NSFileHandle  *fh = [NSFileHandle fileHandleWithStandardInput];
-	NSData        *data = [fh readDataToEndOfFile];
-	NSNumber      *pid = [NSNumber numberWithInt: [process processIdentifier]];
-	NSString      *tempFile = [NSTemporaryDirectory () stringByAppendingPathComponent: name];
+	NSFileHandle	*fh = [NSFileHandle fileHandleWithStandardInput];
+	NSData			*data = [fh readDataToEndOfFile];
+	NSString		*tempFile = [NSTemporaryDirectory () stringByAppendingPathComponent: name];
 
-	// FIXME: this is NOT secure!
-	tempFile = [tempFile stringByAppendingString: [pid stringValue]];
+	tempFile = [tempFile stringByAppendingString: @"XXXXXX"];
 
 	if (openAs && [openAsType length]) {
 		tempFile = [tempFile stringByAppendingPathExtension: openAsType];
@@ -130,7 +161,26 @@ doStdInput (NSString *name)
 		}
 	}
 
-	[data writeToFile: tempFile atomically: YES];
+	// open temp file
+	{
+		char	*name = strdup([tempFile fileSystemRepresentation]);
+		int		extLen = [[tempFile pathExtension] length];
+		int		fd;
+
+		if (extLen > 0)	// this is the 'suffix'
+			extLen++;	// ...plus the period beginning the extension, if any
+
+		if ((fd = mkstemps (name, extLen)) != -1) {
+			// mkstemps() changed name
+			tempFile = [NSString stringWithUTF8String: name];
+
+			// write our data to it
+			[data writeToFileDescriptor: fd];
+			close (fd);
+		} else {
+			return 1;
+		}
+	}
 
 	if (appNameForced) {
 		if (![opener openTempFile: tempFile withApp: appName]) {

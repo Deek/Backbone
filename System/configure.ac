@@ -89,13 +89,26 @@ BB_ICONV
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([sys/ioctl.h sys/types.h fcntl.h termios.h stropts.h])
+AC_CHECK_HEADERS([sys/ioctl.h sys/types.h fcntl.h termios.h stdlib.h stropts.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 #AC_TYPE_SIZE_T
 
 # Checks for library functions.
-#AC_CHECK_FUNCS([foo])
+AC_CHECK_FUNC([fdatasync], [func_fdatasync=yes], [func_fdatasync=no])
+if test "x$func_fdatasync" != "xyes"; then
+	AC_CHECK_FUNC([fsync], [func_fsync=yes], [func_fsync=no])
+	if test "x$func_fsync" = "xyes"; then
+		AC_DEFINE([fdatasync], [fsync], [Define to 'fsync' if you don't have fdatasync()])
+	else
+		AC_MSG_ERROR([neither fdatasync() nor fsync() found])
+	fi
+fi
+
+AC_CHECK_FUNC([mkstemps], [func_mkstemps=yes], [func_mkstemps=no])
+if test "x$func_fdatasync" != "xyes"; then
+	AC_MSG_ERROR([mkstemps() not found. Backbone's 'open' tool requires a working mkstemps().])
+fi
 
 OPENPTY_LIBS=
 FORKPTY_LIBS=
