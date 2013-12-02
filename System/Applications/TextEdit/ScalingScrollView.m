@@ -175,6 +175,10 @@ static float     _NSScaleMenuFontSize = 10.0;
 		newDocBoundsSize.height = curDocFrameSize.height / newScaleFactor;
 
 		[clipView setBoundsSize: newDocBoundsSize];
+#ifdef GNUSTEP
+		NSDebugLLog (@"Workarounds", @"GNUstep doesn't redraw the clipview when the bounds change.");
+		[clipView setNeedsDisplay: YES];
+#endif
 	}
 }
 
