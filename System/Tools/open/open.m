@@ -300,13 +300,8 @@ checkArgs (NSString *name, NSMutableArray *args)
 				if (exists && isDir
 				    && ([ext isEqualToString: @"app"]
 				        || [ext isEqualToString: @"debug"]
-				        || [ext isEqualToString: @"profile"])) {		// got
-					// it
-				}
-
-				if ([ext isEqualToString: @"app"]	// is it an app?
-				    || [ext isEqualToString: @"debug"]
-				    || [ext isEqualToString: @"profile"]) {
+				        || [ext isEqualToString: @"profile"])) {	// got it
+					newAppName = tmp;
 				}
 
 				if (![opener openApp: newAppName]) {	// look for it ourselves
