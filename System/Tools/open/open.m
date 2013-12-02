@@ -48,6 +48,7 @@
 #include <Foundation/NSFileManager.h>
 #include <Foundation/NSFileHandle.h>
 #include <Foundation/NSPathUtilities.h>
+#include <Foundation/NSURL.h>
 #include <Foundation/NSUserDefaults.h>
 #include <Foundation/NSValue.h>
 
@@ -404,6 +405,11 @@ main (int argc, char** argv, char **env)
 		NSString  *ext = [arg pathExtension];
 		BOOL      isDir = NO;
 		BOOL      exists = NO;
+
+		if ([arg hasPrefix: @"file:"]) {
+			arg = [[NSURL URLWithString: arg] path];
+			ext = [arg pathExtension];
+		}
 
 		if ([arg isEqualToString: @"-"]) {	// special filename
 			return doStdInput (processName);
