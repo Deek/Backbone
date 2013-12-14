@@ -36,9 +36,7 @@ endef
 
 $(foreach fw,$(FRAMEWORKS), $(eval $(call FRAMEWORK_link, $(fw))))
 
-ifneq ($(FRAMEWORKS),)
 AUXILIARY_INCLUDE_DIRS += -I$(BBFRAMEWORKS)
-endif
 
 #
 # Dependency stuff
