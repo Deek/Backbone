@@ -24,8 +24,6 @@ Colors_OBJC_FILES= \
 
 # Additional directories to be created during installation
 ADDITIONAL_INSTALL_DIRS += \
-	$(GNUSTEP_LIBRARY)/Colors \
-	$(GNUSTEP_USER_DIR)/$(GNUSTEP_USER_DIR_LIBRARY)/Colors
 	$(GNUSTEP_LIBRARY)/Colors
 
 -include GNUmakefile.preamble
