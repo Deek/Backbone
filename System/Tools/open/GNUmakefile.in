@@ -6,6 +6,8 @@ TOOL_NAME=	open
 # The source files to be compiled
 open_OBJC_FILES= \
 	BBFileOpener.m \
+	desktop.m \
+	run.m \
 	open.m
 
 -include GNUmakefile.preamble

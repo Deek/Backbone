@@ -89,12 +89,16 @@ BB_ICONV
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([sys/ioctl.h sys/types.h fcntl.h termios.h stdlib.h stropts.h unistd.h])
+AC_CHECK_HEADERS(
+	sys/ioctl.h sys/types.h sys/wait.h fcntl.h termios.h stdlib.h stropts.h \
+	unistd.h
+)
 
 # Checks for typedefs, structures, and compiler characteristics.
 #AC_TYPE_SIZE_T
 
 # Checks for library functions.
+AC_CHECK_FUNCS([wait waitpid])
 AC_CHECK_FUNC([fdatasync], [func_fdatasync=yes], [func_fdatasync=no])
 if test "x$func_fdatasync" != "xyes"; then
 	AC_CHECK_FUNC([fsync], [func_fsync=yes], [func_fsync=no])

@@ -55,8 +55,11 @@
 #include <AppKit/NSApplication.h>
 
 #include "BBFileOpener.h"
+
+#include "desktop.h"
 #include "open.h"
 #include "print.h"
+#include "run.h"
 
 NSAutoreleasePool  *pool = nil;
 NSFileManager      *fm = nil;
@@ -542,6 +545,11 @@ main (int argc, char** argv, char **env)
 
 		if (!(exists = [fm fileExistsAtPath: arg isDirectory: &isDir])) {
 			PRINT (@"%@: file not found: %@", processName, arg);
+			continue;
+		}
+
+		if ([ext isEqualToString: @"desktop"]) {	// XDG .desktop file
+			launchDesktopFile (arg);
 			continue;
 		}
 
