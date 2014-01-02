@@ -56,15 +56,13 @@
 
 #include "BBFileOpener.h"
 #include "open.h"
+#include "print.h"
 
 NSAutoreleasePool  *pool = nil;
 NSFileManager      *fm = nil;
 NSProcessInfo      *process = nil;
 NSUserDefaults     *defaults = nil;
 BBFileOpener       *opener = nil;
-
-#define PRINT(fmt, ...) \
-    printf ("%s\n", [[NSString stringWithFormat: fmt, __VA_ARGS__] UTF8String])
 
 /*
     Variables for the application to be used.

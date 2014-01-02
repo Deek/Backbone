@@ -41,20 +41,13 @@
 
 #include "BBFileOpener.h"
 
+#include "print.h"
+
 static NSUserDefaults  *defaults = nil;
 static NSWorkspace     *workspace = nil;
 static NSFileManager   *fm = nil;
 
 static BBFileOpener  *sharedInstance = nil;
-
-#define DEBUG
-
-#ifdef DEBUG
-# define DPRINT(fmt, ...) \
-    printf ("%s\n", [[NSString stringWithFormat: fmt, __VA_ARGS__] UTF8String])
-#else
-# define DPRINT(fmt, ...)
-#endif
 
 @interface BBFileOpener (Private)
 - (id) connectToApp: (NSString *)fileName;
