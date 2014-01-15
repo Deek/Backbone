@@ -9,6 +9,8 @@ SUBPROJECTS= \
 	Applications/Terminal \
 	Applications/TextEdit \
 	\
+	Palettes/BBAppKit \
+	\
 	Tools/open
 
 include @GNUSTEP_MAKEFILES@/aggregate.make

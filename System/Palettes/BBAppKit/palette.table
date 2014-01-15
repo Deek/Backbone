@@ -1,0 +1,13 @@
+{
+    NibFile = "BBAppKit";
+    Class = "BBAppKitPalette";
+    Icon = "Backbone2";
+    ExportClasses = (
+	BBVCTextField,
+	BBVCTextFieldCell
+    );
+    ExportImages = (
+    );
+    SubstituteClasses = {
+    };
+}

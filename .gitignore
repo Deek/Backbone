@@ -4,6 +4,7 @@
 *.debug/
 *.framework/
 *.nfont/
+*.palette/
 *.prefs/
 *.profile/
 dejavu-ttf-*

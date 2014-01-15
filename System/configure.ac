@@ -191,6 +191,7 @@ AC_CONFIG_FILES([
 	Frameworks/BBAppKit/GNUmakefile
 	Frameworks/PrefsModule/GNUmakefile
 	Fonts/GNUmakefile
+	Palettes/BBAppKit/GNUmakefile
 	Tools/open/GNUmakefile
 ])
 
