@@ -3,6 +3,7 @@ include @GNUSTEP_MAKEFILES@/common.make
 
 SUBPROJECTS= \
 	Frameworks/PrefsModule \
+	Frameworks/BBAppKit \
 	\
 	Fonts \
 	Applications/Preferences \
