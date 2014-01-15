@@ -33,6 +33,9 @@ TextEdit_LANGUAGES= \
 	German \
 	Russian
 
+FRAMEWORKS= \
+	BBAppKit
+
 #
 # Source
 #

@@ -147,11 +147,11 @@ showFontInField (NSFont *font, NSTextField *field)
 		no = [[NSNumber alloc] initWithBool: NO];
 	}
 
-	[displayedValues setObject: ([[richTextMatrix selectedCell] tag] ? yes: no) forKey: RichText];
-	[displayedValues setObject: ([keepBackupButton state] ? yes: no) forKey: DeleteBackup];
-	[displayedValues setObject: ([writeBOMButton state] ? yes: no) forKey: WriteBOM];
-	[displayedValues setObject: ([saveFilesWritableButton state] ? yes: no) forKey: SaveFilesWritable];
-	[displayedValues setObject: ([showPageBreaksButton state] ? yes: no) forKey: ShowPageBreaks];
+	[displayedValues setObject: ([[richTextMatrix selectedCell] tag] ? yes : no) forKey: RichText];
+	[displayedValues setObject: ([keepBackupButton state] ? yes : no) forKey: DeleteBackup];
+	[displayedValues setObject: ([writeBOMButton state] ? yes : no) forKey: WriteBOM];
+	[displayedValues setObject: ([saveFilesWritableButton state] ? yes : no) forKey: SaveFilesWritable];
+	[displayedValues setObject: ([showPageBreaksButton state] ? yes : no) forKey: ShowPageBreaks];
 	[displayedValues setObject: [NSNumber numberWithInt: [[plainTextEncodingPopup selectedItem] tag]] forKey: PlainTextEncoding];
 
 	anInt = [windowWidthField intValue];
