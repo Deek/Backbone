@@ -11,6 +11,51 @@
 
 @implementation BBVCTextFieldCell
 
+/**
+	This is ugly.
+
+	What we do here is clone all of the attributes we know about from a "donor"
+	cell, so that we can replace it later. It would probably be better to use
+	coding or something, but this is working so far.
+*/
+- (id) initWithTextFieldCell: (NSTextFieldCell *)aCell
+{
+	self = [super initTextCell: [aCell stringValue]];
+
+	[self setAction: [aCell action]];
+	[self setAlignment: [aCell alignment]];
+	[self setAllowsEditingTextAttributes: [aCell allowsEditingTextAttributes]];
+	[self setAllowsMixedState: [aCell allowsMixedState]];
+	[self setAllowsUndo: [aCell allowsUndo]];
+	[self setBackgroundColor: [aCell backgroundColor]];
+//	[self setBackgroundStyle: [aCell backgroundStyle]];
+	[self setBaseWritingDirection: [aCell baseWritingDirection]];
+	[self setBezeled: [aCell isBezeled]];
+	[self setBezelStyle: [aCell bezelStyle]];
+	[self setBordered: [aCell isBordered]];
+	[self setContinuous: [aCell isContinuous]];
+	[self setDrawsBackground: [aCell drawsBackground]];
+	[self setEditable: [aCell isEditable]];
+	[self setEnabled: [aCell isEnabled]];
+	[self setImportsGraphics: [aCell importsGraphics]];
+	[self setLineBreakMode: [aCell lineBreakMode]];
+	[self setMenu: [aCell menu]];
+//	[self setPlaceholder: [aCell placeholder]];
+	[self setRefusesFirstResponder: [aCell refusesFirstResponder]];
+	[self setRepresentedObject: [aCell representedObject]];
+	[self setScrollable: [aCell isScrollable]];
+	[self setShowsFirstResponder: [aCell showsFirstResponder]];
+	[self setTag: [aCell tag]];
+	[self setTarget: [aCell target]];
+	[self setTextColor: [aCell textColor]];
+//	[self setUserInterfaceLayoutDirection: [aCell userInterfaceLayoutDirection]];
+//	[self setUsesSingleLineMode: [aCell usesSingleLineMode]];
+	[self setWraps: [aCell wraps]];
+	[self setState: [aCell state]];
+
+	return self;
+}
+
 - (void) drawInteriorWithFrame: (NSRect)cellFrame inView: (NSView *)controlView
 {
 	NSAttributedString  *str = [self attributedStringValue];

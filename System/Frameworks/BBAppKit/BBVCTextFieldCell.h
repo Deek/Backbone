@@ -43,6 +43,8 @@
 - (void) drawInteriorWithFrame: (NSRect)cellFrame inView: (NSView *)controlView;
 - (NSRect) titleRectForBounds: (NSRect)theRect;
 
+- (id) initWithTextFieldCell: (NSTextFieldCell *)aCell;
+
 @end
 
 #endif	// _BB_BBAppKit_BBVCTextFieldCell_h_

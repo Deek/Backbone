@@ -29,4 +29,13 @@ static Class cellClass;
 		cellClass = newClass;
 }
 
+- (void) awakeFromNib
+{
+	BBVCTextFieldCell *new = [[BBVCTextFieldCell alloc] initWithTextFieldCell: _cell];
+	id tmp = _cell;
+
+	_cell = new;
+	[tmp release];
+}
+
 @end
