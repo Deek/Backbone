@@ -198,31 +198,3 @@ AC_CONFIG_FILES([
 AC_CONFIG_FILES([stamp-h], [echo timestamp > stamp-h])
 
 AC_OUTPUT
-
-#ifdef __NetBSD__
-#  include <sys/types.h>
-#  include <sys/ioctl.h>
-#  include <termios.h>
-#  include <pcap.h>
-#else
-#ifdef freebsd
-#  include <sys/types.h>
-#  include <sys/ioctl.h>
-#  include <termios.h>
-#  include <libutil.h>
-#  include <pcap.h>
-#else
-#  include <termio.h>
-#endif
-#endif
-
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#ifndef freebsd
-#ifndef __NetBSD__
-#  include <pty.h>
-#endif
-#endif
-
