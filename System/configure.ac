@@ -188,6 +188,7 @@ AC_CONFIG_FILES([
 	Applications/Preferences/Modules/PrefsApp/GNUmakefile
 	Applications/Preferences/Modules/Keyboard/GNUmakefile
 	Applications/Preferences/Modules/Colors/GNUmakefile
+	Frameworks/BBAppKit/GNUmakefile
 	Frameworks/PrefsModule/GNUmakefile
 	Fonts/GNUmakefile
 	Tools/open/GNUmakefile
