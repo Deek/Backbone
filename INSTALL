@@ -1,0 +1,27 @@
+INSTALLING BACKBONE
+~~~~~~~~~~ ~~~~~~~~
+
+If you're trying to build Backbone from a source code repository (and, let's 
+be honest, you almost certainly are), you'll need the following packages:
+
+GNU autoconf 2.60a or later.
+gnustep-make
+gnustep-base
+gnustep-gui
+
+On some systems (like Solaris), you may need:
+
+GNU libiconv
+
+The basic process for building and installing Backbone is: 
+
+cd System
+./bootstrap && ./configure && make && sudo make install
+
+'bootstrap' is a simple script used to run autoconf and some of its tools,
+which in turn create the 'configure' script, which Backbone uses to figure
+out what kind of system you have, where your GNUstep stuff is, and so on.
+
+Any errors should be reported to Jeff Teunissen <deek@d2dc.net>, who is
+in charge of the build system.
+
