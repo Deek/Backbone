@@ -110,7 +110,7 @@ if test "x$func_fdatasync" != "xyes"; then
 fi
 
 AC_CHECK_FUNC([mkstemps], [func_mkstemps=yes], [func_mkstemps=no])
-if test "x$func_fdatasync" != "xyes"; then
+if test "x$func_mkstemps" != "xyes"; then
 	AC_MSG_ERROR([mkstemps() not found. Backbone's 'open' tool requires a working mkstemps().])
 fi
 
