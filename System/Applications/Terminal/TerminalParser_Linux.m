@@ -282,6 +282,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 				intensity = 0;
 				break;
 			case 4:
+			case 21:	/* Pre-Linux 4.17, same as 22 */
 				underline = 1;
 				break;
 			case 5:
@@ -317,7 +318,6 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 				disp_ctrl = 1;
 				toggle_meta = 1;
 				break;
-			case 21:
 			case 22:
 				intensity = 1;
 				break;
@@ -330,7 +330,15 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 			case 27:
 				reverse = 0;
 				break;
-			case 38: /* ANSI X3.64-1979 (SCO-ish?)
+			case 38: /* xterm 256/24bit color selection */
+				if (par[++i] == 5) {		/* 256 color */
+					if (par[++i] < 16)		/* IBGR */
+						color = par[i] | background;
+				} else if (par[i] == 2) {	/* 24-bit */
+					i += 3;	// ignore next 3 codes
+				}
+				break;
+#if 0			 /* Pre-Linux 3.16: ANSI X3.64-1979 (SCO-ish?)
 				  * Enables underscore, white foreground
 				  * with white underscore (Linux - use
 				  * default foreground).
@@ -338,6 +346,7 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 				color = (def_color & 0x0f) | background;
 				underline = 1;
 				break;
+#endif
 			case 39: /* ANSI X3.64-1979 (SCO-ish?)
 				  * Disable underline option.
 				  * Reset colour to default? It did this
@@ -345,6 +354,14 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 				  */
 				color = (def_color & 0x0f) | background;
 				underline = 0;
+				break;
+			case 48: /* xterm 256 background color selection */
+				if (par[++i] == 5) {		/* 256 color */
+					if (par[++i] < 16)		/* IBGR */
+						color = color_table[par[i]]<<4 | foreground;
+				} else if (par[i] == 2) {	/* 24-bit */
+					i += 3;	// ignore next 3 codes
+				}
 				break;
 			case 49:
 				color = (def_color & 0xf0) | foreground;
@@ -355,6 +372,12 @@ static unsigned char color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7,
 						| background;
 				else if (par[i] >= 40 && par[i] <= 47)
 					color = (color_table[par[i]-40]<<4)
+						| foreground;
+				else if (par[i] >= 90 && par[i] <= 97)		/* bright FG */
+					color = color_table[8+(par[i]-90)]
+						| background;
+				else if (par[i] >= 100 && par[i] <= 107)	/* bright BG */
+					color = (color_table[8+(par[i]-100)]<<4)
 						| foreground;
 				break;
 		}
