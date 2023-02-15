@@ -41,7 +41,7 @@ Terminal_OBJC_FILES = \
 	\
 	Label.m
 
-Terminal_LDFLAGS = @FORKPTY_LIBS@ @OPENPTY_LIBS@ @LIBICONV@
+Terminal_OBJC_LIBS = @FORKPTY_LIBS@ @OPENPTY_LIBS@ @LIBICONV@
 
 Terminal_LOCALIZED_RESOURCE_FILES = Localizable.strings
 Terminal_LANGUAGES = English Swedish German French Spanish Hungarian Turkish \
